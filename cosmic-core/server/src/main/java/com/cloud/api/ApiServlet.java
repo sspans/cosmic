@@ -112,6 +112,9 @@ public class ApiServlet extends HttpServlet {
                 resp.setContentType(HttpUtils.XML_CONTENT_TYPE);
             }
 
+            // Allow UI to be running on separate host.
+            resp.addHeader("Access-Control-Allow-Origin", "*");
+
             HttpSession session = req.getSession(false);
             final Object[] responseTypeParam = params.get(ApiConstants.RESPONSE);
             if (responseTypeParam != null) {
