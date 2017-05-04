@@ -4083,8 +4083,8 @@ class VPC:
         self.__dict__.update(items)
 
     @classmethod
-    def create(cls, api_client, services, vpcofferingid,
-               zoneid, networkDomain=None, account=None,
+    def create(cls, api_client, services, vpcofferingid=None,
+               zoneid=None, networkDomain=None, account=None,
                domainid=None, **kwargs):
         """Creates the virtual private connection (VPC)"""
 

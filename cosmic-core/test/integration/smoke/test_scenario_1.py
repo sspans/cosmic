@@ -3,7 +3,12 @@ from nose.plugins.attrib import attr
 from marvin.cloudstackTestCase import cloudstackTestCase
 from marvin.lib.base import (
     Domain,
-    Account
+    Account,
+    VPC,
+    VirtualMachine,
+    Network,
+    NetworkACL,
+    PublicIPAddress
 )
 
 from marvin.lib.utils import (
@@ -66,7 +71,7 @@ class TestScenario1(cloudstackTestCase):
         if domain['data']['name'] == 'ROOT':
             self.logger.debug("ROOT domain selected, not creating.")
             domain_list = Domain.list(
-                self.api_client,
+                api_client=self.api_client,
                 name=domain['data']['name']
             )
 
@@ -75,7 +80,7 @@ class TestScenario1(cloudstackTestCase):
         else:
             self.logger.debug("Creating domain: " + domain['data']['name'] + "-" + random_string)
             domain_obj = Domain.create(
-                self.api_client,
+                api_client=self.api_client,
                 name=domain['data']['name'] + "-" + random_string
             )
 
@@ -86,16 +91,63 @@ class TestScenario1(cloudstackTestCase):
         self.logger.debug("Deploying account: " + account['data']['username'])
 
         account_obj = Account.create(
-            self.api_client,
-            services=account,
+            api_client=self.api_client,
+            services=account['data'],
             domainid=domain_obj.uuid
         )
 
         for vpc in account['data']['vpcs']:
             self.deploy_vpc(vpc, account_obj)
 
+        for vm in account['data']['virtualmachines']:
+            self.deploy_vm(vm, account_obj)
+
     def deploy_vpc(self, vpc, account_obj):
         self.logger.debug("Deploying vpc: " + vpc['data']['name'])
 
         # TODO -> A LOT!
+        vpc_obj = VPC.create(
+            api_client=self.api_client,
+            services=vpc['data']
+        )
 
+        for network in vpc['data']['networks']:
+            self.deploy_network(network, vpc_obj)
+
+        for acl in vpc['data']['acls']:
+            self.deploy_acl(acl, vpc_obj)
+
+        for publicipaddress in vpc['data']['publicipaddresses']:
+            self.deploy_publicipaddress(publicipaddress, vpc_obj)
+
+    def deploy_network(self, network, vpc_obj):
+        self.logger.debug("Deploying network: " + network['data']['name'])
+
+        network_obj = Network.create(
+            self.api_client,
+            services=network['data']
+        )
+
+    def deploy_acl(self, acl, vpc_obj):
+        self.logger.debug("Deploying acl: " + acl['data']['name'])
+
+        acl_obj = NetworkACL.create(
+            api_client=self.api_client,
+            services=acl['data']
+        )
+
+    def deploy_publicipaddress(self, publicipaddress, vpc_obj):
+        self.logger.debug("Deploying public IP address: " + publicipaddress['data']['name'])
+
+        publicipaddress_obj = PublicIPAddress.create(
+            api_client=self.api_client,
+            services=publicipaddress['data']
+        )
+
+    def deploy_vm(self, vm, account_obj):
+        self.logger.debug("Deploying virtual machine: " + vm['data']['name'])
+
+        vm_obj = VirtualMachine.create(
+            self.api_client,
+            services=vm['data']
+        )
