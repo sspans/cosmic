@@ -1,4 +1,115 @@
 test_data = {
+    "scenario_1": {
+        "metadata": {
+            "description": "This scenario contains an account with 1 VPC 1 tier and 1 VM, there will be a port forward "
+                           "from the public ip address to the VM.",
+            "hierarchy": "domain -> account (user) -> vpc (static routes, publicips (acl) -> portforward, "
+                         "private gateways) -> tiers (acl) -> vms"
+        },
+        "data": {
+            "domains": [
+                {
+                    "metadata": {},
+                    "data": {
+                        "name": "ROOT",
+                        "accounts": [
+                            {
+                                "metadata": {},
+                                "data": {
+                                    "accounttype": 2,
+                                    "email": "john@doe.com",
+                                    "firstname": "John",
+                                    "lastname": "Doe",
+                                    "password": "password",
+                                    "username": "john",
+                                    "vpcs": [
+                                        {
+                                            "metadata": {},
+                                            "data": {
+                                                "cidr": "10.0.0.0/16",
+                                                "displaytext": "vpc",
+                                                "name": "vpc",
+                                                "vpcofferingname": "Default VPC offering",
+                                                "networks": [
+                                                    {
+                                                        "metadata": {},
+                                                        "data": {
+                                                            "displaytext": "tier",
+                                                            "name": "tier",
+                                                            "networkofferingname": "DefaultIsolatedNetworkOfferingForVpcNetworks",
+                                                            "aclname": "acl",
+                                                            "cidr": "10.0.0.0/24",
+                                                            "gateway": "10.0.0.1",
+                                                        }
+                                                    }
+                                                ],
+                                                "acls": [
+                                                    {
+                                                        "metadata": {},
+                                                        "data": {
+                                                            "name": "acl",
+                                                            "rules": [
+                                                                {
+                                                                    "protocol": "TCP",
+                                                                    "cidrlist": "0.0.0.0/0",
+                                                                    "startport": 22,
+                                                                    "endport": 22,
+                                                                    "traffictype": "Ingress"
+                                                                }
+                                                            ]
+                                                        }
+                                                    }
+                                                ],
+                                                "publicipaddresses": [
+                                                    {
+                                                        "metadata": {},
+                                                        "data": {
+                                                            "portforwards": [
+                                                                {
+                                                                    "metadata": {},
+                                                                    "data": {
+                                                                        "privateport": 22,
+                                                                        "publicport": 22,
+                                                                        "protocol": "TCP",
+                                                                        "virtualmachinename": "vm",
+                                                                    }
+                                                                }
+                                                            ]
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ],
+                                    "virtualmachines": [
+                                        {
+                                            "metadata": {},
+                                            "data": {
+                                                "name": "vm",
+                                                "displayname": "vm",
+                                                "templatename": "tiny linux kvm",
+                                                "serviceofferingname": "Small Instance",
+                                                "nics": [
+                                                    {
+                                                        "metadata": {},
+                                                        "data": {
+                                                            "networkname": "tier"
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+
+    },
+
     "region": {
         "regionid": "2",
         "regionname": "Region2",

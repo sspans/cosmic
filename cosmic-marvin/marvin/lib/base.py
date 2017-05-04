@@ -38,7 +38,7 @@ class Domain:
         self.__dict__.update(items)
 
     @classmethod
-    def create(cls, api_client, services, name=None, networkdomain=None,
+    def create(cls, api_client, services=None, name=None, networkdomain=None,
                parentdomainid=None):
         """Creates an domain"""
 
@@ -97,8 +97,11 @@ class Account:
         """Creates an account"""
         cmd = createAccount.createAccountCmd()
 
-        # 0 - User, 1 - Root Admin, 2 - Domain Admin
-        cmd.accounttype = 2 if (admin and domainid) else int(admin)
+        if "accounttype" in services:
+            cmd.accounttype = services["accounttype"]
+        else:
+            # 0 - User, 1 - Root Admin, 2 - Domain Admin
+            cmd.accounttype = 2 if (admin and domainid) else int(admin)
 
         cmd.email = services["email"]
         cmd.firstname = services["firstname"]
