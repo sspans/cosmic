@@ -1,3 +1,5 @@
+import traceback
+
 from nose.plugins.attrib import attr
 
 from marvin.cloudstackTestCase import cloudstackTestCase
@@ -108,7 +110,8 @@ class TestScenario1(cloudstackTestCase):
         # TODO -> A LOT!
         vpc_obj = VPC.create(
             api_client=self.api_client,
-            services=vpc['data']
+            services=vpc['data'],
+            zone_name="MCCT-SHARED-1"
         )
 
         for network in vpc['data']['networks']:
@@ -125,7 +128,9 @@ class TestScenario1(cloudstackTestCase):
 
         network_obj = Network.create(
             self.api_client,
-            services=network['data']
+            services=network['data'],
+            vpcid=vpc_obj.id,
+            zoneid=vpc_obj.zoneid
         )
 
     def deploy_acl(self, acl, vpc_obj):
