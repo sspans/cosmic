@@ -30,6 +30,7 @@ from utils import (
     random_gen
 )
 
+import common
 
 class Domain:
     """ Domain Life Cycle """
@@ -2741,6 +2742,8 @@ class Network:
             cmd.networkofferingid = networkofferingid
         elif "networkoffering" in services:
             cmd.networkofferingid = services["networkoffering"]
+        elif "networkofferingname" in services:
+            cmd.networkofferingid = common.get_default_network_offering(api_client)
 
         if zoneid:
             cmd.zoneid = zoneid
@@ -4091,8 +4094,16 @@ class VPC:
         cmd = createVPC.createVPCCmd()
         cmd.name = "-".join([services["name"], random_gen()])
         cmd.displaytext = "-".join([services["displaytext"], random_gen()])
-        cmd.vpcofferingid = vpcofferingid
-        cmd.zoneid = zoneid
+
+        if vpcofferingid:
+            cmd.vpcofferingid = vpcofferingid
+        else:
+            cmd.vpcofferingid = common.get_default_vpc_offering(api_client)
+        if zoneid:
+            cmd.zoneid = zoneid
+        else:
+            zone = common.get_zone(api_client=api_client, zone_name=kwargs.get("zone_name"))
+            cmd.zoneid = zone.id
         if "cidr" in services:
             cmd.cidr = services["cidr"]
         if account:
