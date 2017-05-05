@@ -2734,6 +2734,7 @@ class Network:
                gateway=None, netmask=None, cidr=None,
                vpcid=None, aclid=None, vlan=None, ipexclusionlist=None):
         """Create Network for account"""
+        print(">>>>>>>>>>>>> creating tier")
         cmd = createNetwork.createNetworkCmd()
         cmd.name = services["name"]
         cmd.displaytext = services["displaytext"]
@@ -2791,6 +2792,7 @@ class Network:
             cmd.vpcid = vpcid
         if aclid:
             cmd.aclid = aclid
+        print(">>>>>>>>>>>>> tier created")
         return Network(api_client.createNetwork(cmd).__dict__)
 
     def delete(self, api_client):
@@ -4090,7 +4092,7 @@ class VPC:
                zoneid=None, networkDomain=None, account=None,
                domainid=None, **kwargs):
         """Creates the virtual private connection (VPC)"""
-
+        print(">>>>>>>>>>>>> creating vpc")
         cmd = createVPC.createVPCCmd()
         cmd.name = "-".join([services["name"], random_gen()])
         cmd.displaytext = "-".join([services["displaytext"], random_gen()])
@@ -4113,6 +4115,7 @@ class VPC:
         if networkDomain:
             cmd.networkDomain = networkDomain
         [setattr(cmd, k, v) for k, v in kwargs.items()]
+        print(">>>>>>>>>>>>> vpc created")
         return VPC(api_client.createVPC(cmd).__dict__)
 
     def update(self, api_client, name=None, displaytext=None):
