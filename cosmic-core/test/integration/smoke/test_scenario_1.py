@@ -91,37 +91,43 @@ class TestScenario1(cloudstackTestCase):
 
     def deploy_account(self, account, domain_obj):
         self.logger.debug("Deploying account: " + account['data']['username'])
+        try:
+            account_obj = Account.create(
+                api_client=self.api_client,
+                services=account['data'],
+                domainid=domain_obj.uuid
+            )
 
-        account_obj = Account.create(
-            api_client=self.api_client,
-            services=account['data'],
-            domainid=domain_obj.uuid
-        )
+            for vpc in account['data']['vpcs']:
+                self.deploy_vpc(vpc, account_obj)
 
-        for vpc in account['data']['vpcs']:
-            self.deploy_vpc(vpc, account_obj)
-
-        for vm in account['data']['virtualmachines']:
-            self.deploy_vm(vm, account_obj)
+            for vm in account['data']['virtualmachines']:
+                self.deploy_vm(vm, account_obj)
+        except Exception as e:
+            self.logger.debug(">>>>>>>>>>>> " + traceback.format_exc())
 
     def deploy_vpc(self, vpc, account_obj):
         self.logger.debug("Deploying vpc: " + vpc['data']['name'])
 
         # TODO -> A LOT!
-        vpc_obj = VPC.create(
-            api_client=self.api_client,
-            services=vpc['data'],
-            zone_name="MCCT-SHARED-1"
-        )
+        try:
+            vpc_obj = VPC.create(
+                api_client=self.api_client,
+                services=vpc['data'],
+                zone_name="MCCT-SHARED-1"
+            )
 
-        for network in vpc['data']['networks']:
-            self.deploy_network(network, vpc_obj)
+            for network in vpc['data']['networks']:
+                self.deploy_network(network, vpc_obj)
 
-        for acl in vpc['data']['acls']:
-            self.deploy_acl(acl, vpc_obj)
+            for acl in vpc['data']['acls']:
+                self.deploy_acl(acl, vpc_obj)
 
-        for publicipaddress in vpc['data']['publicipaddresses']:
-            self.deploy_publicipaddress(publicipaddress, vpc_obj)
+            for publicipaddress in vpc['data']['publicipaddresses']:
+                self.deploy_publicipaddress(publicipaddress, vpc_obj)
+
+        except Exception as e:
+            self.logger.debug(">>>>>>>>>>>> " + traceback.format_exc())
 
     def deploy_network(self, network, vpc_obj):
         self.logger.debug("Deploying network: " + network['data']['name'])

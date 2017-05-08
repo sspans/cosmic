@@ -4099,13 +4099,15 @@ class VPC:
 
         if vpcofferingid:
             cmd.vpcofferingid = vpcofferingid
-        else:
-            cmd.vpcofferingid = common.get_default_vpc_offering(api_client)
+        elif "vpcofferingname" in services:
+            cmd.vpcofferingid = common.get_vpc_offering(api_client, services["vpcofferingname"])
+
         if zoneid:
             cmd.zoneid = zoneid
-        else:
+        elif zone_name in kwargs.keys():
             zone = common.get_zone(api_client=api_client, zone_name=kwargs.get("zone_name"))
             cmd.zoneid = zone.id
+
         if "cidr" in services:
             cmd.cidr = services["cidr"]
         if account:

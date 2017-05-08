@@ -285,6 +285,12 @@ def get_default_vpc_offering(api_client):
     return next(iter(offerings or []), None)
 
 
+def get_vpc_offering(api_client, name):
+    offerings = list_vpc_offerings(api_client)
+    offerings = [offering for offering in offerings if offering.name == name]
+    return next(iter(offerings or []), None)
+
+
 def get_default_redundant_vpc_offering(api_client):
     offerings = list_vpc_offerings(api_client)
     offerings = [offering for offering in offerings if offering.name == 'Redundant VPC offering']
@@ -297,43 +303,48 @@ def get_default_network_offering(api_client):
     return next(iter(offerings or []), None)
 
 
+def get_network_offering(api_client, name):
+    offerings = list_network_offerings(api_client)
+    offerings = [offering for offering in offerings if offering.name == name]
+    return next(iter(offerings or []), None)
+
+
 def get_default_guest_network_offering(api_client):
     offerings = list_network_offerings(api_client)
-    offerings = [offering for offering in offerings if offering.name == 'DefaultIsolatedNetworkOfferingWithSourceNatService']
+    offerings = [offering for offering in offerings if
+                 offering.name == 'DefaultIsolatedNetworkOfferingWithSourceNatService']
     return next(iter(offerings or []), None)
 
 
 def get_default_network_offering_no_load_balancer(api_client):
     offerings = list_network_offerings(api_client)
-    offerings = [offering for offering in offerings if offering.name == 'DefaultIsolatedNetworkOfferingForVpcNetworksNoLB']
+    offerings = [offering for offering in offerings if
+                 offering.name == 'DefaultIsolatedNetworkOfferingForVpcNetworksNoLB']
     return next(iter(offerings or []), None)
 
 
 def get_default_isolated_network_offering(api_client):
-
     offerings = list_network_offerings(api_client)
     offerings = [offering for offering in offerings if offering.name == 'DefaultIsolatedNetworkOffering']
     return next(iter(offerings or []), None)
 
 
 def get_default_isolated_network_offering_with_egress(api_client):
-
     offerings = list_network_offerings(api_client)
     offerings = [offering for offering in offerings if offering.name == 'DefaultIsolatedNetworkOfferingWithEgress']
     return next(iter(offerings or []), None)
 
 
 def get_default_redundant_isolated_network_offering(api_client):
-
     offerings = list_network_offerings(api_client)
     offerings = [offering for offering in offerings if offering.name == 'DefaultRedundantIsolatedNetworkOffering']
     return next(iter(offerings or []), None)
 
 
 def get_default_redundant_isolated_network_offering_with_egress(api_client):
-
     offerings = list_network_offerings(api_client)
-    offerings = [offering for offering in offerings if offering.name == 'DefaultRedundantIsolatedNetworkOfferingWithEgress']
+    offerings = [offering for offering in offerings if
+                 offering.name == 'DefaultRedundantIsolatedNetworkOfferingWithEgress']
     return next(iter(offerings or []), None)
 
 
@@ -364,4 +375,10 @@ def get_default_deny_vpc_acl(api_client, vpc):
 def get_default_private_network_offering(api_client):
     offerings = list_network_offerings(api_client)
     offerings = [offering for offering in offerings if offering.name == 'DefaultPrivateGatewayNetworkOffering']
+    return next(iter(offerings or []), None)
+
+
+def get_private_network_offering(api_client, name):
+    offerings = list_network_offerings(api_client)
+    offerings = [offering for offering in offerings if offering.name == name]
     return next(iter(offerings or []), None)
