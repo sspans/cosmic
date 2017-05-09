@@ -63,7 +63,7 @@ class TestScenario1(cloudstackTestCase):
         except:
             self.logger.debug(">>>>>>>>>>>> ", traceback.format_exc())
             raise
-        
+
     def setup_infra(self, scenario):
         self.logger.debug("Deploying scenario")
 
@@ -110,14 +110,17 @@ class TestScenario1(cloudstackTestCase):
 
     def deploy_vpc(self, vpc, account_obj):
         self.logger.debug("Deploying vpc: " + vpc['data']['name'])
-
-        # TODO -> A LOT!
-        vpc_obj = VPC.create(
-            api_client=self.api_client,
-            data=vpc['data'],
-            zone=self.zone,
-            account=account_obj
-        )
+        try:
+            # TODO -> A LOT!
+            vpc_obj = VPC.create(
+                api_client=self.api_client,
+                data=vpc['data'],
+                zone=self.zone,
+                account=account_obj
+            )
+        except:
+            self.logger.debug(">>>>>>>>>>>> ", traceback.format_exc())
+            raise
 
         for network in vpc['data']['networks']:
             self.deploy_network(network, vpc_obj)
@@ -130,21 +133,28 @@ class TestScenario1(cloudstackTestCase):
 
     def deploy_network(self, network, vpc_obj):
         self.logger.debug("Deploying network: " + network['data']['name'])
-        network_obj = Network.create(
-            self.api_client,
-            services=network['data'],
-            vpc=vpc_obj,
-            zone=self.zone
-        )
+        try:
+            network_obj = Network.create(
+                self.api_client,
+                services=network['data'],
+                vpc=vpc_obj,
+                zone=self.zone
+            )
+        except:
+            self.logger.debug(">>>>>>>>>>>> ", traceback.format_exc())
+            raise
 
     def deploy_acl(self, acl, vpc_obj):
         self.logger.debug("Deploying acl: " + acl['data']['name'])
-
-        acl_obj = NetworkACL.create(
-            api_client=self.api_client,
-            services=acl['data']
-        )
-
+        try:
+            acl_obj = NetworkACL.create(
+                api_client=self.api_client,
+                services=acl['data']
+            )
+        except:
+            self.logger.debug(">>>>>>>>>>>> ", traceback.format_exc())
+            raise
+        
     def deploy_publicipaddress(self, publicipaddress, vpc_obj):
         self.logger.debug("Deploying public IP address: " + publicipaddress['data']['name'])
 
