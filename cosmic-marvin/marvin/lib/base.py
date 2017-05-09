@@ -2743,7 +2743,8 @@ class Network:
         elif "networkoffering" in services:
             cmd.networkofferingid = services["networkoffering"]
         elif "networkofferingname" in services:
-            cmd.networkofferingid = common.get_network_offering(api_client, services["networkofferingname"])
+            networkoffering = common.get_network_offering(api_client, services["networkofferingname"])
+            cmd.networkofferingid = networkoffering.id
 
         if zoneid:
             cmd.zoneid = zoneid
@@ -2783,8 +2784,12 @@ class Network:
 
         if accountid:
             cmd.account = accountid
+        elif vpc:
+            cmd.account = vpc.accountid
         if domainid:
             cmd.domainid = domainid
+        elif vpc:
+            cmd.domainid = vpc.domainid
         if projectid:
             cmd.projectid = projectid
         if vpcid:
@@ -4102,7 +4107,8 @@ class VPC:
         if vpcofferingid:
             cmd.vpcofferingid = vpcofferingid
         elif "vpcofferingname" in services:
-            cmd.vpcofferingid = common.get_vpc_offering(api_client, services["vpcofferingname"])
+            vpcoffering = common.get_vpc_offering(api_client, services["vpcofferingname"])
+            cmd.vpcofferingid = vpcoffering.id
 
         if zoneid:
             cmd.zoneid = zoneid
@@ -4112,9 +4118,11 @@ class VPC:
         if "cidr" in services:
             cmd.cidr = services["cidr"]
         if account:
-            cmd.account = account
+            cmd.account = account.name
         if domainid:
             cmd.domainid = domainid
+        elif account:
+            cmd.domainid = account.domainid
         if networkDomain:
             cmd.networkDomain = networkDomain
         [setattr(cmd, k, v) for k, v in kwargs.items()]
