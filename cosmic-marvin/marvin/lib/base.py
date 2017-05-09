@@ -2728,13 +2728,12 @@ class Network:
         self.__dict__.update(items)
 
     @classmethod
-    def create(cls, api_client, services, accountid=None, domainid=None,
+    def create(cls, api_client, data=None, services=None, accountid=None, domainid=None,
                networkofferingid=None, projectid=None,
                subdomainaccess=None, zoneid=None,
                gateway=None, netmask=None, cidr=None,
-               vpcid=None, aclid=None, vlan=None, ipexclusionlist=None):
+               vpcid=None, aclid=None, vlan=None, ipexclusionlist=None, vpc=None, zone=None):
         """Create Network for account"""
-        print(">>>>>>>>>>>>> creating tier")
         cmd = createNetwork.createNetworkCmd()
         cmd.name = services["name"]
         cmd.displaytext = services["displaytext"]
@@ -2744,12 +2743,12 @@ class Network:
         elif "networkoffering" in services:
             cmd.networkofferingid = services["networkoffering"]
         elif "networkofferingname" in services:
-            cmd.networkofferingid = common.get_default_network_offering(api_client)
+            cmd.networkofferingid = common.get_network_offering(api_client, services["networkofferingname"])
 
         if zoneid:
             cmd.zoneid = zoneid
-        elif "zoneid" in services:
-            cmd.zoneid = services["zoneid"]
+        elif zone:
+            cmd.zoneid = zone.id
 
         if ipexclusionlist:
             cmd.ipexclusionlist = ipexclusionlist
@@ -2790,9 +2789,10 @@ class Network:
             cmd.projectid = projectid
         if vpcid:
             cmd.vpcid = vpcid
+        elif vpc:
+            cmd.vpcid = vpc.id
         if aclid:
             cmd.aclid = aclid
-        print(">>>>>>>>>>>>> tier created")
         return Network(api_client.createNetwork(cmd).__dict__)
 
     def delete(self, api_client):
@@ -4088,11 +4088,13 @@ class VPC:
         self.__dict__.update(items)
 
     @classmethod
-    def create(cls, api_client, services, vpcofferingid=None,
-               zoneid=None, networkDomain=None, account=None,
+    def create(cls, api_client, data=None, services=None, vpcofferingid=None,
+               zoneid=None, networkDomain=None, account=None, zone = None,
                domainid=None, **kwargs):
         """Creates the virtual private connection (VPC)"""
-        print(">>>>>>>>>>>>> creating vpc")
+        if data:
+            services = data
+
         cmd = createVPC.createVPCCmd()
         cmd.name = "-".join([services["name"], random_gen()])
         cmd.displaytext = "-".join([services["displaytext"], random_gen()])
@@ -4104,8 +4106,7 @@ class VPC:
 
         if zoneid:
             cmd.zoneid = zoneid
-        elif zone_name in kwargs.keys():
-            zone = common.get_zone(api_client=api_client, zone_name=kwargs.get("zone_name"))
+        elif zone:
             cmd.zoneid = zone.id
 
         if "cidr" in services:
@@ -4117,7 +4118,7 @@ class VPC:
         if networkDomain:
             cmd.networkDomain = networkDomain
         [setattr(cmd, k, v) for k, v in kwargs.items()]
-        print(">>>>>>>>>>>>> vpc created")
+
         return VPC(api_client.createVPC(cmd).__dict__)
 
     def update(self, api_client, name=None, displaytext=None):

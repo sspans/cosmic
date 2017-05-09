@@ -18,6 +18,7 @@ from marvin.lib.utils import (
     random_gen
 )
 from marvin.utils.MarvinLog import MarvinLog
+from marvin.lib.common import get_zone
 
 
 class TestScenario1(cloudstackTestCase):
@@ -27,6 +28,8 @@ class TestScenario1(cloudstackTestCase):
 
         cls.test_client = super(TestScenario1, cls).getClsTestClient()
         cls.api_client = cls.test_client.getApiClient()
+
+        cls.zone = get_zone(cls.api_client, cls.test_client.getZoneForTests())
 
         # Retrieve test data
         cls.services = cls.test_client.getParsedTestDataConfig().copy()
@@ -51,8 +54,9 @@ class TestScenario1(cloudstackTestCase):
         try:
             cleanup_resources(self.api_client, self.method_cleanup, self.logger)
 
-        except Exception as e:
-            raise Exception("Exception: %s" % e)
+        except:
+            self.logger.debug(">>>>>>>>>>>>>> ", traceback.format_exc())
+            raise
 
     @attr(tags=['advanced'])
     def test_01(self):
@@ -91,52 +95,45 @@ class TestScenario1(cloudstackTestCase):
 
     def deploy_account(self, account, domain_obj):
         self.logger.debug("Deploying account: " + account['data']['username'])
-        try:
-            account_obj = Account.create(
-                api_client=self.api_client,
-                services=account['data'],
-                domainid=domain_obj.uuid
-            )
+        account_obj = Account.create(
+            api_client=self.api_client,
+            services=account['data'],
+            domainid=domain_obj.uuid
+        )
 
-            for vpc in account['data']['vpcs']:
-                self.deploy_vpc(vpc, account_obj)
+        for vpc in account['data']['vpcs']:
+            self.deploy_vpc(vpc, account_obj)
 
-            for vm in account['data']['virtualmachines']:
-                self.deploy_vm(vm, account_obj)
-        except Exception as e:
-            self.logger.debug(">>>>>>>>>>>> " + traceback.format_exc())
+        for vm in account['data']['virtualmachines']:
+            self.deploy_vm(vm, account_obj)
 
     def deploy_vpc(self, vpc, account_obj):
         self.logger.debug("Deploying vpc: " + vpc['data']['name'])
 
         # TODO -> A LOT!
-        try:
-            vpc_obj = VPC.create(
-                api_client=self.api_client,
-                services=vpc['data'],
-                zone_name="MCCT-SHARED-1"
-            )
+        vpc_obj = VPC.create(
+            api_client=self.api_client,
+            data=vpc['data'],
+            zone=self.zone,
+            account=account_obj
+        )
 
-            for network in vpc['data']['networks']:
-                self.deploy_network(network, vpc_obj)
+        for network in vpc['data']['networks']:
+            self.deploy_network(network, vpc_obj)
 
-            for acl in vpc['data']['acls']:
-                self.deploy_acl(acl, vpc_obj)
+        for acl in vpc['data']['acls']:
+            self.deploy_acl(acl, vpc_obj)
 
-            for publicipaddress in vpc['data']['publicipaddresses']:
-                self.deploy_publicipaddress(publicipaddress, vpc_obj)
-
-        except Exception as e:
-            self.logger.debug(">>>>>>>>>>>> " + traceback.format_exc())
+        for publicipaddress in vpc['data']['publicipaddresses']:
+            self.deploy_publicipaddress(publicipaddress, vpc_obj)
 
     def deploy_network(self, network, vpc_obj):
         self.logger.debug("Deploying network: " + network['data']['name'])
-
         network_obj = Network.create(
             self.api_client,
             services=network['data'],
-            vpcid=vpc_obj.id,
-            zoneid=vpc_obj.zoneid
+            vpc=vpc_obj,
+            zone=self.zone
         )
 
     def deploy_acl(self, acl, vpc_obj):
