@@ -1,4 +1,3 @@
-from base import NetworkACLList
 from marvin.cloudstackAPI import (
     listConfigurations,
     listDomains,
@@ -267,6 +266,16 @@ def list_vpc_offerings(api_client, **kwargs):
     return api_client.listVPCOfferings(cmd)
 
 
+def list_network_acl_lists(api_client, **kwargs):
+    """List Network ACL lists"""
+
+    cmd = listNetworkACLLists.listNetworkACLListsCmd()
+    [setattr(cmd, k, v) for k, v in kwargs.items()]
+    if 'account' in kwargs.keys() and 'domainid' in kwargs.keys():
+        cmd.listall = True
+    return api_client.listNetworkACLLists(cmd)
+
+
 def get_hypervisor_type(api_client):
     """Return the hypervisor type of the hosts in setup"""
 
@@ -355,19 +364,19 @@ def get_default_virtual_machine_offering(api_client):
 
 
 def get_default_acl(api_client, name):
-    acls = NetworkACLList.list(api_client)
+    acls = list_network_acl_lists(api_client)
     acls = [acl for acl in acls if acl.name == name]
     return next(iter(acls or []), None)
 
 
 def get_default_allow_vpc_acl(api_client, vpc):
-    acls = NetworkACLList.list(api_client, vpcid=vpc.id)
+    acls = list_network_acl_lists(api_client, vpcid=vpc.id)
     acls = [acl for acl in acls if acl.name == 'default_allow']
     return next(iter(acls or []), None)
 
 
 def get_default_deny_vpc_acl(api_client, vpc):
-    acls = NetworkACLList.list(api_client, vpcid=vpc.id)
+    acls = list_network_acl_lists(api_client, vpcid=vpc.id)
     acls = [acl for acl in acls if acl.name == 'default_deny']
     return next(iter(acls or []), None)
 
