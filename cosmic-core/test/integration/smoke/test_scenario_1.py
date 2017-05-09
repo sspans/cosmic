@@ -42,8 +42,8 @@ class TestScenario1(cloudstackTestCase):
         try:
             cleanup_resources(cls.api_client, cls.class_cleanup, cls.logger)
 
-        except Exception as e:
-            raise Exception("Exception: %s" % e)
+        except:
+            raise
 
     def setUp(self):
 
@@ -53,16 +53,17 @@ class TestScenario1(cloudstackTestCase):
 
         try:
             cleanup_resources(self.api_client, self.method_cleanup, self.logger)
-
         except:
-            self.logger.debug(">>>>>>>>>>>>>> ", traceback.format_exc())
             raise
 
     @attr(tags=['advanced'])
     def test_01(self):
-
-        self.setup_infra(self.services['scenario_1'])
-
+        try:
+            self.setup_infra(self.services['scenario_1'])
+        except:
+            self.logger.debug(">>>>>>>>>>>> ", traceback.format_exc())
+            raise
+        
     def setup_infra(self, scenario):
         self.logger.debug("Deploying scenario")
 
