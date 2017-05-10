@@ -437,7 +437,7 @@ class VirtualMachine:
         elif "serviceoffering" in services:
             cmd.serviceofferingid = services["serviceoffering"]
         elif "serviceofferingname" in services:
-            cmd.serviceofferingid = services["serviceofferingname"]
+            cmd.serviceofferingid = common.get_virtual_machine_offering(api_client, services["serviceofferingname"])
 
         if zoneid:
             cmd.zoneid = zoneid

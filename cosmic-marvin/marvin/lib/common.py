@@ -363,6 +363,12 @@ def get_default_virtual_machine_offering(api_client):
     return next(iter(offerings or []), None)
 
 
+def get_virtual_machine_offering(api_client, name):
+    offerings = list_service_offering(api_client)
+    offerings = [offering for offering in offerings if offering.name == name]
+    return next(iter(offerings or []), None)
+
+
 def get_default_acl(api_client, name):
     acls = list_network_acl_lists(api_client)
     acls = [acl for acl in acls if acl.name == name]
