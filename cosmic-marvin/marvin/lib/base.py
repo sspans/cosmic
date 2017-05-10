@@ -1512,8 +1512,10 @@ class PublicIPAddress:
     @classmethod
     def create(cls, api_client, accountid=None, zoneid=None, domainid=None,
                services=None, networkid=None, projectid=None, vpcid=None,
-               isportable=False):
+               isportable=False, vpc=None, data=None):
         """Associate Public IP address"""
+        if data:
+            services = data
         cmd = associateIpAddress.associateIpAddressCmd()
 
         if accountid:
@@ -1542,6 +1544,9 @@ class PublicIPAddress:
 
         if vpcid:
             cmd.vpcid = vpcid
+        elif vpc:
+            cmd.vpcid = vpc.id
+
         return PublicIPAddress(api_client.associateIpAddress(cmd).__dict__)
 
     def delete(self, api_client):

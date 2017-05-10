@@ -72,6 +72,7 @@ test_data = {
                                                                         "publicport": 22,
                                                                         "protocol": "TCP",
                                                                         "virtualmachinename": "vm",
+                                                                        "nic": "10.0.0.2"
                                                                     }
                                                                 }
                                                             ]
@@ -93,6 +94,7 @@ test_data = {
                                                     {
                                                         "metadata": {},
                                                         "data": {
+                                                            "guestip": "10.0.0.2",
                                                             "networkname": "tier"
                                                         }
                                                     }

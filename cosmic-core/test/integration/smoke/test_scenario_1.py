@@ -108,12 +108,12 @@ class TestScenario1(cloudstackTestCase):
         )
 
         for vpc in account['data']['vpcs']:
-            self.deploy_vpc(vpc, account_obj)
+            self.deploy_vpc(vpc, account['virtualmachines'], account_obj)
 
         for vm in account['data']['virtualmachines']:
             self.deploy_vm(vm, account_obj)
 
-    def deploy_vpc(self, vpc, account_obj):
+    def deploy_vpc(self, vpc, virtualmachines, account_obj):
         self.logger.debug("Deploying vpc: " + vpc['data']['name'])
         try:
             # TODO -> A LOT!
@@ -135,8 +135,8 @@ class TestScenario1(cloudstackTestCase):
 
         # self.deploy_acls(vpc['data']['acls'], vpc_obj)
         #
-        # for publicipaddress in vpc['data']['publicipaddresses']:
-        #     self.deploy_publicipaddress(publicipaddress, vpc_obj)
+        for publicipaddress in vpc['data']['publicipaddresses']:
+            self.deploy_publicipaddress(publicipaddress, virtualmachines, vpc_obj)
 
     def deploy_network(self, network, vpc_obj):
         self.logger.debug("Deploying network: " + network['data']['name'])
@@ -154,35 +154,15 @@ class TestScenario1(cloudstackTestCase):
         print(">>>>>>>>>>>")
         print(vars(network_obj))
 
-    # def deploy_acls(self, acls, vpc_obj):
-    #     self.logger.debug("Deploying acls for vpc: " + vpc_obj.name)
-    #     try:
-    #         acl_list = NetworkACLList.create(
-    #             api_client=self.api_client,
-    #             data=acls['data']['name'],
-    #             vpcid=vpc_obj.id
-    #         )
-    #         for rule in acls['data']['rules']:
-    #             self.logger.debug("Deploying acl rules: " + acls['data']['name'])
-    #
-    #         acl_obj = NetworkACL.create(
-    #             api_client=self.api_client,
-    #             data=acl['data'],
-    #             vpc=vpc_obj
-    #         )
-    #     except:
-    #         self.logger.debug(">>>>>>>>>>>> " + traceback.format_exc())
-    #         raise
-    #
-    #     print(">>>>>>>>>>>")
-    #     print(vars(acl_obj))
-
-    def deploy_publicipaddress(self, publicipaddress, vpc_obj):
+    def deploy_publicipaddress(self, publicipaddress, virtualmachines, vpc_obj):
         self.logger.debug("Deploying public IP address: " + publicipaddress['data']['name'])
+        # for vm in virtualmachines:
+        #     if vm['data']['name'] == publicipaddress['data']['name']:
 
         publicipaddress_obj = PublicIPAddress.create(
             api_client=self.api_client,
-            services=publicipaddress['data']
+            data=publicipaddress['data'],
+            vpc=vpc_obj
         )
 
     def deploy_vm(self, vm, account_obj):
