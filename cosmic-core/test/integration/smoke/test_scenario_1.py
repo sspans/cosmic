@@ -20,7 +20,10 @@ from marvin.lib.utils import (
     random_gen
 )
 from marvin.utils.MarvinLog import MarvinLog
-from marvin.lib.common import get_zone
+from marvin.lib.common import (
+    get_zone,
+    get_network
+)
 
 
 class TestScenario1(cloudstackTestCase):
@@ -173,32 +176,6 @@ class TestScenario1(cloudstackTestCase):
     #
     #     print(">>>>>>>>>>>")
     #     print(vars(acl_obj))
-    #
-    # def define_acl(self, acl):
-    #
-    #     try:
-    #         command = replaceNetworkACLList.replaceNetworkACLListCmd()
-    #         command.aclid = acl.id
-    #         command.publicipid = self.public_ip1.ipaddress.id
-    #         response = self.api_client.replaceNetworkACLList(command)
-    #
-    #     except Exception as e:
-    #         self.logger.debug(">>>>>>>>>>> " + traceback.format_exc())
-    #         raise Exception("Exception: %s" % e)
-    #
-    #
-    # def define_custom_acl(self, acl_config, acl_entry_config):
-    #
-    #     acl = NetworkACLList.create(self.api_client,
-    #         self.attributes['acls'][acl_config],
-    #         vpcid=self.vpc1.id)
-    #
-    #     NetworkACL.create(self.api_client,
-    #         self.attributes['acls'][acl_config]['entries'][acl_entry_config],
-    #         networkid=self.network1.id,
-    #         aclid=acl.id)
-    #
-    #     self.define_acl(acl)
 
     def deploy_publicipaddress(self, publicipaddress, vpc_obj):
         self.logger.debug("Deploying public IP address: " + publicipaddress['data']['name'])
@@ -211,9 +188,20 @@ class TestScenario1(cloudstackTestCase):
     def deploy_vm(self, vm, account_obj):
         self.logger.debug("Deploying virtual machine: " + vm['data']['name'])
         try:
+            network_list = []
+            for nic in vm['data']['nics']:
+                network = get_network(
+                    api_client=self.api_client,
+                    name=nic['data']['networkname']
+                )
+                network_list.append(network)
+
             vm_obj = VirtualMachine.create(
                 self.api_client,
-                services=vm['data']
+                data=vm['data'],
+                zone=self.zone,
+                account=account_obj,
+                networks=network_list
             )
         except:
             self.logger.debug(">>>>>>>>>>> " + traceback.format_exc())

@@ -391,3 +391,9 @@ def get_private_network_offering(api_client, name):
     offerings = list_network_offerings(api_client)
     offerings = [offering for offering in offerings if offering.name == name]
     return next(iter(offerings or []), None)
+
+
+def get_network(api_client, name):
+    networks = list_networks(api_client)
+    networks = [network for network in networks if network.name == name]
+    return next(iter(networks or []), None)

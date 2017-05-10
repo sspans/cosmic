@@ -418,27 +418,33 @@ class VirtualMachine:
         virtual_machine.public_ip = nat_rule.ipaddress
 
     @classmethod
-    def create(cls, api_client, services, templateid=None, accountid=None,
+    def create(cls, api_client, data=None, services=None, templateid=None, accountid=None,
                domainid=None, zoneid=None, networkids=None,
                serviceofferingid=None, securitygroupids=None,
                projectid=None, startvm=None, diskofferingid=None,
                affinitygroupnames=None, affinitygroupids=None, group=None,
                hostid=None, keypair=None, ipaddress=None, mode='default',
                method='GET', hypervisor=None, customcpunumber=None,
-               customcpuspeed=None, custommemory=None, rootdisksize=None):
+               customcpuspeed=None, custommemory=None, rootdisksize=None,
+               zone=None, networks=None, account=None):
         """Create the instance"""
-
+        if data:
+            services = data
         cmd = deployVirtualMachine.deployVirtualMachineCmd()
 
         if serviceofferingid:
             cmd.serviceofferingid = serviceofferingid
         elif "serviceoffering" in services:
             cmd.serviceofferingid = services["serviceoffering"]
+        elif "serviceofferingname" in services:
+            cmd.serviceofferingid = services["serviceofferingname"]
 
         if zoneid:
             cmd.zoneid = zoneid
         elif "zoneid" in services:
             cmd.zoneid = services["zoneid"]
+        elif zone:
+            cmd.zoneid = zone.id
 
         if hypervisor:
             cmd.hypervisor = hypervisor
@@ -453,11 +459,14 @@ class VirtualMachine:
             cmd.account = accountid
         elif "account" in services:
             cmd.account = services["account"]
-
+        elif account:
+            cmd.account = account.id
         if domainid:
             cmd.domainid = domainid
         elif "domainid" in services:
             cmd.domainid = services["domainid"]
+        elif account:
+            cmd.domainid = account.domainid
 
         if networkids:
             cmd.networkids = networkids
@@ -465,6 +474,10 @@ class VirtualMachine:
         elif "networkids" in services:
             cmd.networkids = services["networkids"]
             allow_egress = False
+        elif networks:
+            cmd.networkids = []
+            for network in networks:
+                cmd.networkids += network.id
         else:
             # When no networkids are passed, network
             # is created using the "defaultOfferingWithSourceNAT"
@@ -476,6 +489,8 @@ class VirtualMachine:
             cmd.templateid = templateid
         elif "template" in services:
             cmd.templateid = services["template"]
+        elif "templatename" in services:
+            cmd.templateid = services["templatename"]
 
         if diskofferingid:
             cmd.diskofferingid = diskofferingid
