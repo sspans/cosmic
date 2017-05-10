@@ -2734,6 +2734,9 @@ class Network:
                gateway=None, netmask=None, cidr=None,
                vpcid=None, aclid=None, vlan=None, ipexclusionlist=None, vpc=None, zone=None):
         """Create Network for account"""
+        if data:
+            services = data
+
         cmd = createNetwork.createNetworkCmd()
         cmd.name = services["name"]
         cmd.displaytext = services["displaytext"]
@@ -2785,7 +2788,7 @@ class Network:
         if accountid:
             cmd.account = accountid
         elif vpc:
-            cmd.account = vpc.accountid
+            cmd.account = vpc.account
         if domainid:
             cmd.domainid = domainid
         elif vpc:
@@ -2842,10 +2845,12 @@ class NetworkACL:
         self.__dict__.update(items)
 
     @classmethod
-    def create(cls, api_client, services, networkid=None, protocol=None,
+    def create(cls, api_client, data=None, services=None, networkid=None, protocol=None,
                number=None, aclid=None, action='Allow',
                traffictype=None, cidrlist=None):
         """Create network ACL rules(Ingress/Egress)"""
+        if data:
+            services = data
 
         if cidrlist is None:
             cidrlist = []
@@ -2922,8 +2927,10 @@ class NetworkACLList:
 
     @classmethod
     def create(
-            cls, api_client, services, name=None, description=None, vpcid=None):
+            cls, api_client, data=None, services=None, name=None, description=None, vpcid=None, vpc=None):
         """Create network ACL container list"""
+        if data:
+            service = data
 
         cmd = createNetworkACLList.createNetworkACLListCmd()
         if "name" in services:
@@ -2940,6 +2947,8 @@ class NetworkACLList:
             cmd.vpcid = services["vpcid"]
         elif vpcid:
             cmd.vpcid = vpcid
+        elif vpc:
+            cmd.vpcid = vpc.id
 
         return NetworkACLList(api_client.createNetworkACLList(cmd).__dict__)
 
