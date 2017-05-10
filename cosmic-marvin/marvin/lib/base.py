@@ -461,7 +461,7 @@ class VirtualMachine:
         elif "account" in services:
             cmd.account = services["account"]
         elif account:
-            cmd.account = account.id
+            cmd.account = account.name
         if domainid:
             cmd.domainid = domainid
         elif "domainid" in services:
