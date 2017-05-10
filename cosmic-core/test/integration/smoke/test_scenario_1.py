@@ -108,7 +108,7 @@ class TestScenario1(cloudstackTestCase):
         )
 
         for vpc in account['data']['vpcs']:
-            self.deploy_vpc(vpc, account['virtualmachines'], account_obj)
+            self.deploy_vpc(vpc, account['data']['virtualmachines'], account_obj)
 
         for vm in account['data']['virtualmachines']:
             self.deploy_vm(vm, account_obj)
