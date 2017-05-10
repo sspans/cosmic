@@ -437,7 +437,8 @@ class VirtualMachine:
         elif "serviceoffering" in services:
             cmd.serviceofferingid = services["serviceoffering"]
         elif "serviceofferingname" in services:
-            cmd.serviceofferingid = common.get_virtual_machine_offering(api_client, services["serviceofferingname"])
+            serviceoffering = common.get_virtual_machine_offering(api_client, services["serviceofferingname"])
+            cmd.serviceofferingid = serviceoffering.id
 
         if zoneid:
             cmd.zoneid = zoneid
@@ -477,7 +478,8 @@ class VirtualMachine:
         elif networks:
             cmd.networkids = []
             for network in networks:
-                cmd.networkids += network.id
+                cmd.networkids.append(network.id)
+            allow_egress = False
         else:
             # When no networkids are passed, network
             # is created using the "defaultOfferingWithSourceNAT"
@@ -490,7 +492,8 @@ class VirtualMachine:
         elif "template" in services:
             cmd.templateid = services["template"]
         elif "templatename" in services:
-            cmd.templateid = services["templatename"]
+            template = common.get_template(api_client, template_name=services["templatename"])
+            cmd.templateid = template.id
 
         if diskofferingid:
             cmd.diskofferingid = diskofferingid

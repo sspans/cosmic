@@ -195,7 +195,7 @@ class TestScenario1(cloudstackTestCase):
                     name=nic['data']['networkname']
                 )
                 network_list.append(network)
-
+                print("!!!!!!!!!!!!!!! \n", network_list, "\n!!!!!!!!!!!!!!!!!")
             vm_obj = VirtualMachine.create(
                 self.api_client,
                 data=vm['data'],
