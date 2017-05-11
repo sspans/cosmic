@@ -97,6 +97,9 @@ class TestScenario1(cloudstackTestCase):
                 api_client=self.api_client,
                 name=domain['data']['name'] + "-" + random_string
             )
+            domain['data']['name'] = domain_obj.name
+            self.logger.debug("Deployed domain: " + domain['data']['name'])
+
 
         for account in domain['data']['accounts']:
             self.deploy_account(account, domain_obj)
@@ -108,6 +111,9 @@ class TestScenario1(cloudstackTestCase):
             services=account['data'],
             domainid=domain_obj.uuid
         )
+        account['data']['username'] = account_obj.username
+        self.logger.debug("Deployed account: " + account['data']['username'])
+
         self.class_cleanup.append(account_obj)
 
         for vpc in account['data']['vpcs']:
@@ -128,6 +134,8 @@ class TestScenario1(cloudstackTestCase):
             zone=self.zone,
             account=account_obj
         )
+        vpc['data']['name'] = vpc_obj.name
+        self.logger.debug("Deployed vpc: " + vpc['data']['name'])
 
         print(">>>>>>>>>>> VPC")
         print(vars(vpc_obj))
@@ -153,6 +161,9 @@ class TestScenario1(cloudstackTestCase):
             vpc=vpc_obj,
             zone=self.zone
         )
+        network['data']['name'] = network_obj.name
+        self.logger.debug("Deployed network: " + network['data']['name'])
+
         print(">>>>>>>>>>> NETWORK")
         print(vars(network_obj))
 
