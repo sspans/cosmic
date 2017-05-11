@@ -426,5 +426,5 @@ def get_virtual_machine(api_client, name, vpc=None):
 
 
 def get_vpc(api_client, name):
-    vpcs = list_vpcs(api_client, name=name)
+    vpcs = list_vpcs(api_client, name=name, listall=True)
     return next(iter(vpcs or []), None)
