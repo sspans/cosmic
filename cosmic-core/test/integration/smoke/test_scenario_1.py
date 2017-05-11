@@ -200,7 +200,7 @@ class TestScenario1(cloudstackTestCase):
                     rule_obj = NetworkACL.create(
                         api_client=self.api_client,
                         data=rule,
-                        aclid=acl,
+                        acl=acl,
 
                     )
                     print(">>>>>>>>>>>>>")
