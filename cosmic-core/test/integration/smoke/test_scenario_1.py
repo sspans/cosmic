@@ -2,8 +2,6 @@ import traceback
 
 from nose.plugins.attrib import attr
 
-from marvin.cloudstackAPI import replaceNetworkACLList
-
 from marvin.cloudstackTestCase import cloudstackTestCase
 from marvin.lib.base import (
     Domain,
@@ -24,7 +22,9 @@ from marvin.lib.utils import (
 from marvin.utils.MarvinLog import MarvinLog
 from marvin.lib.common import (
     get_zone,
-    get_network
+    get_network,
+    get_virtual_machine,
+    get_vpc
 )
 
 
@@ -111,12 +111,15 @@ class TestScenario1(cloudstackTestCase):
         self.class_cleanup.append(account_obj)
 
         for vpc in account['data']['vpcs']:
-            self.deploy_vpc(vpc, account['data']['virtualmachines'], account_obj)
+            self.deploy_vpc(vpc, account_obj)
 
         for vm in account['data']['virtualmachines']:
             self.deploy_vm(vm, account_obj)
 
-    def deploy_vpc(self, vpc, virtualmachines, account_obj):
+        for vpc in account['data']['vpcs']:
+            self.deploy_vpc_public_ips(vpc, account['data']['virtualmachines'])
+
+    def deploy_vpc(self, vpc, account_obj):
         self.logger.debug("Deploying vpc: " + vpc['data']['name'])
         # TODO -> A LOT!
         vpc_obj = VPC.create(
@@ -134,6 +137,11 @@ class TestScenario1(cloudstackTestCase):
 
         self.deploy_acls(vpc['data']['acls'], vpc_obj)
 
+    def deploy_vpc_public_ips(self, vpc, virtualmachines):
+        self.logger.debug("Deploying vpc: " + vpc['data']['name'])
+
+        vpc_obj = get_vpc(self.api_client, vpc['data']['name'])
+
         for publicipaddress in vpc['data']['publicipaddresses']:
             self.deploy_publicipaddress(publicipaddress, virtualmachines, vpc_obj)
 
@@ -150,24 +158,30 @@ class TestScenario1(cloudstackTestCase):
 
     def deploy_publicipaddress(self, publicipaddress, virtualmachines, vpc_obj):
         self.logger.debug("Deploying public IP address for vpc: " + vpc_obj.name)
-        network_name = ''
-        for vm in virtualmachines:
-            if vm['data']['name'] == publicipaddress['data']['virtualmachinename']:
-                for nic in vm['data']['nics']:
-                    if nic['data']['guestip'] == publicipaddress['data']['nic']:
-                        network_name = nic['networkname']
         publicipaddress_obj = PublicIPAddress.create(
             api_client=self.api_client,
             data=publicipaddress['data'],
             vpc=vpc_obj
         )
-        for nat in publicipaddress['data']['portforwards']:
-            nat_rule = NATRule.create(
-                api_client=self.api_client,
-                data=nat['data']
-            )
         print(">>>>>>>>> PUBLIC IP")
         print(vars(publicipaddress_obj))
+        for portforward in publicipaddress['data']['portforwards']:
+            network_name = None
+            for vm in virtualmachines:
+                if vm['data']['name'] == portforward['data']['virtualmachinename']:
+                    for nic in vm['data']['nics']:
+                        if nic['data']['guestip'] == portforward['data']['nic']:
+                            network_name = nic['data']['networkname']
+                            network_obj = get_network(self.api_client, name=network_name, vpc=vpc_obj)
+                            vm_obj = get_virtual_machine(self.api_client, name=vm['data']['name'], vpc=vpc_obj)
+                            nat_rule = NATRule.create(
+                                api_client=self.api_client,
+                                virtual_machine=vm_obj,
+                                data=portforward['data'],
+                                vpc=vpc_obj,
+                                network=network_obj,
+                                ipaddress=publicipaddress_obj
+                            )
 
     def deploy_vm(self, vm, account_obj):
         self.logger.debug("Deploying virtual machine: " + vm['data']['name'])

@@ -15,7 +15,8 @@ from marvin.cloudstackAPI import (
     listLoadBalancerRules,
     listServiceOfferings,
     listNetworkOfferings,
-    listVPCOfferings
+    listVPCOfferings,
+    listVPCs
 )
 from marvin.codes import (
     PASS,
@@ -144,6 +145,16 @@ def list_networks(api_client, **kwargs):
     if 'account' in kwargs.keys() and 'domainid' in kwargs.keys():
         cmd.listall = True
     return api_client.listNetworks(cmd)
+
+
+def list_vpcs(api_client, **kwargs):
+    """List all VPCs matching criteria"""
+
+    cmd = listVPCs.listVPCsCmd()
+    [setattr(cmd, k, v) for k, v in kwargs.items()]
+    if 'account' in kwargs.keys() and 'domainid' in kwargs.keys():
+        cmd.listall = True
+    return api_client.listVPCs(cmd)
 
 
 def list_ssvms(api_client, **kwargs):
@@ -400,6 +411,20 @@ def get_private_network_offering(api_client, name):
 
 
 def get_network(api_client, name, vpc=None):
-    networks = list_networks(api_client, vpcid=vpc.id)
+    if vpc:
+        networks = list_networks(api_client, vpcid=vpc.id)
+    else:
+        networks = list_networks(api_client)
     networks = [network for network in networks if network.name == name]
     return next(iter(networks or []), None)
+
+
+def get_virtual_machine(api_client, name, vpc=None):
+    virtual_machines = list_virtual_machines(api_client, listall=True)
+    virtual_machines = [virtual_machine for virtual_machine in virtual_machines if virtual_machine.name == name]
+    return next(iter(virtual_machines or []), None)
+
+
+def get_vpc(api_client, name):
+    vpcs = list_vpcs(api_client, name=name)
+    return next(iter(vpcs or []), None)
