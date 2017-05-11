@@ -106,6 +106,7 @@ class TestScenario1(cloudstackTestCase):
             services=account['data'],
             domainid=domain_obj.uuid
         )
+        self.class_cleanup.append(account_obj)
 
         for vpc in account['data']['vpcs']:
             self.deploy_vpc(vpc, account['data']['virtualmachines'], account_obj)
@@ -200,8 +201,7 @@ class TestScenario1(cloudstackTestCase):
                     rule_obj = NetworkACL.create(
                         api_client=self.api_client,
                         data=rule,
-                        acl=acl,
-
+                        acl=acls_list
                     )
                     print(">>>>>>>>>>>>>")
                     print(vars(rule_obj))
