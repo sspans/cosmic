@@ -111,7 +111,7 @@ class TestScenario1(cloudstackTestCase):
             services=account['data'],
             domainid=domain_obj.uuid
         )
-        account['data']['username'] = account_obj.username
+        account['data']['username'] = account_obj.name
         self.logger.debug("Deployed account: " + account['data']['username'])
 
         self.class_cleanup.append(account_obj)
