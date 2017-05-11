@@ -2870,7 +2870,7 @@ class NetworkACL:
     @classmethod
     def create(cls, api_client, data=None, services=None, networkid=None, protocol=None,
                number=None, aclid=None, action='Allow',
-               traffictype=None, cidrlist=None):
+               traffictype=None, cidrlist=None, acl=None):
         """Create network ACL rules(Ingress/Egress)"""
         if data:
             services = data
@@ -2920,6 +2920,8 @@ class NetworkACL:
             cmd.aclid = services["aclid"]
         elif aclid:
             cmd.aclid = aclid
+        elif acl:
+            cmd.aclid = acl.id
 
         # Defaulted to Ingress
         return NetworkACL(api_client.createNetworkACL(cmd).__dict__)

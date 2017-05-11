@@ -133,8 +133,8 @@ class TestScenario1(cloudstackTestCase):
         for network in vpc['data']['networks']:
             self.deploy_network(network, vpc_obj)
 
-        # self.deploy_acls(vpc['data']['acls'], vpc_obj)
-        #
+        self.deploy_acls(vpc['data']['acls'], vpc_obj)
+
         for publicipaddress in vpc['data']['publicipaddresses']:
             self.deploy_publicipaddress(publicipaddress, virtualmachines, vpc_obj)
 
@@ -155,7 +155,7 @@ class TestScenario1(cloudstackTestCase):
         print(vars(network_obj))
 
     def deploy_publicipaddress(self, publicipaddress, virtualmachines, vpc_obj):
-        self.logger.debug("Deploying public IP address: " + publicipaddress['data']['name'])
+        self.logger.debug("Deploying public IP address for vpc: " + vpc_obj.name)
         # for vm in virtualmachines:
         #     if vm['data']['name'] == publicipaddress['data']['name']:
 
@@ -185,4 +185,26 @@ class TestScenario1(cloudstackTestCase):
             )
         except:
             self.logger.debug(">>>>>>>>>>> " + traceback.format_exc())
+            raise
+
+    def deploy_acls(self, acls, vpc_obj):
+        self.logger.debug("Deploying acls ")
+        try:
+            for acl in acls:
+                acls_list = NetworkACLList.create(
+                    api_client=self.api_client,
+                    data=acl['data'],
+                    vpc=vpc_obj
+                )
+                for rule in acl['data']['rules']:
+                    rule_obj = NetworkACL.create(
+                        api_client=self.api_client,
+                        data=rule,
+                        aclid=acl,
+
+                    )
+                    print(">>>>>>>>>>>>>")
+                    print(vars(rule_obj))
+        except:
+            self.logger.debug(">>>>>>>>>>>> " + traceback.format_exc())
             raise
