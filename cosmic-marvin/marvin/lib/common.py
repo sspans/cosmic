@@ -1,5 +1,6 @@
 from marvin.cloudstackAPI import (
     listConfigurations,
+    listNetworkACLLists,
     listDomains,
     listZones,
     listTemplates,
