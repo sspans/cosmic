@@ -2955,7 +2955,7 @@ class NetworkACLList:
             cls, api_client, data=None, services=None, name=None, description=None, vpcid=None, vpc=None):
         """Create network ACL container list"""
         if data:
-            service = data
+            services = data
 
         cmd = createNetworkACLList.createNetworkACLListCmd()
         if "name" in services:
