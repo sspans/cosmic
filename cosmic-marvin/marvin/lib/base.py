@@ -2764,7 +2764,7 @@ class Network:
                networkofferingid=None, projectid=None,
                subdomainaccess=None, zoneid=None,
                gateway=None, netmask=None, cidr=None,
-               vpcid=None, aclid=None, vlan=None, ipexclusionlist=None, vpc=None, zone=None):
+               vpcid=None, aclid=None, vlan=None, ipexclusionlist=None, vpc=None, zone=None, acl=None):
         """Create Network for account"""
         if data:
             services = data
@@ -2833,6 +2833,8 @@ class Network:
             cmd.vpcid = vpc.id
         if aclid:
             cmd.aclid = aclid
+        elif acl:
+            cmd.aclid = acl.id
         return Network(api_client.createNetwork(cmd).__dict__)
 
     def delete(self, api_client):

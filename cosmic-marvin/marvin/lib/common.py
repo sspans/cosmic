@@ -428,3 +428,8 @@ def get_virtual_machine(api_client, name, vpc=None):
 def get_vpc(api_client, name):
     vpcs = list_vpcs(api_client, name=name, listall=True)
     return next(iter(vpcs or []), None)
+
+
+def get_network_acl(api_client, name):
+    acls = list_network_acl_lists(api_client, name=name, listall=True)
+    return next(iter(acls or []), None)

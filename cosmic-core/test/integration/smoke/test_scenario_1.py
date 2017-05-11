@@ -24,7 +24,8 @@ from marvin.lib.common import (
     get_zone,
     get_network,
     get_virtual_machine,
-    get_vpc
+    get_vpc,
+    get_network_acl
 )
 
 
@@ -140,10 +141,10 @@ class TestScenario1(cloudstackTestCase):
         print(">>>>>>>>>>> VPC")
         print(vars(vpc_obj))
 
+        self.deploy_acls(vpc['data']['acls'], vpc_obj)
+
         for network in vpc['data']['networks']:
             self.deploy_network(network, vpc_obj)
-
-        self.deploy_acls(vpc['data']['acls'], vpc_obj)
 
     def deploy_vpc_public_ips(self, vpc, virtualmachines):
         self.logger.debug("Deploying vpc: " + vpc['data']['name'])
@@ -155,11 +156,15 @@ class TestScenario1(cloudstackTestCase):
 
     def deploy_network(self, network, vpc_obj):
         self.logger.debug("Deploying network: " + network['data']['name'])
+
+        acl_obj = get_network_acl(self.api_client, name=network['data']['aclname'])
+
         network_obj = Network.create(
             self.api_client,
             data=network['data'],
             vpc=vpc_obj,
-            zone=self.zone
+            zone=self.zone,
+            acl=acl_obj
         )
         network['data']['name'] = network_obj.name
         self.logger.debug("Deployed network: " + network['data']['name'])
