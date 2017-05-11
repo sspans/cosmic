@@ -13,7 +13,9 @@ from marvin.lib.base import (
     Network,
     NetworkACL,
     PublicIPAddress,
-    NetworkACLList)
+    NetworkACLList,
+    NATRule
+)
 
 from marvin.lib.utils import (
     cleanup_resources,
@@ -66,7 +68,7 @@ class TestScenario1(cloudstackTestCase):
         try:
             self.setup_infra(self.services['scenario_1'])
         except:
-            self.logger.debug(">>>>>>>>>>>> " + traceback.format_exc())
+            self.logger.debug("!!!!!!!!!!!!!!!!!!! " + traceback.format_exc())
             raise
 
     def setup_infra(self, scenario):
@@ -116,19 +118,15 @@ class TestScenario1(cloudstackTestCase):
 
     def deploy_vpc(self, vpc, virtualmachines, account_obj):
         self.logger.debug("Deploying vpc: " + vpc['data']['name'])
-        try:
-            # TODO -> A LOT!
-            vpc_obj = VPC.create(
-                api_client=self.api_client,
-                data=vpc['data'],
-                zone=self.zone,
-                account=account_obj
-            )
-        except:
-            self.logger.debug(">>>>>>>>>>>> " + traceback.format_exc())
-            raise
+        # TODO -> A LOT!
+        vpc_obj = VPC.create(
+            api_client=self.api_client,
+            data=vpc['data'],
+            zone=self.zone,
+            account=account_obj
+        )
 
-        print(">>>>>>>>>>>")
+        print(">>>>>>>>>>> VPC")
         print(vars(vpc_obj))
 
         for network in vpc['data']['networks']:
@@ -141,70 +139,70 @@ class TestScenario1(cloudstackTestCase):
 
     def deploy_network(self, network, vpc_obj):
         self.logger.debug("Deploying network: " + network['data']['name'])
-        try:
-            network_obj = Network.create(
-                self.api_client,
-                data=network['data'],
-                vpc=vpc_obj,
-                zone=self.zone
-            )
-        except:
-            self.logger.debug(">>>>>>>>>>>> " + traceback.format_exc())
-            raise
-
-        print(">>>>>>>>>>>")
+        network_obj = Network.create(
+            self.api_client,
+            data=network['data'],
+            vpc=vpc_obj,
+            zone=self.zone
+        )
+        print(">>>>>>>>>>> NETWORK")
         print(vars(network_obj))
 
     def deploy_publicipaddress(self, publicipaddress, virtualmachines, vpc_obj):
         self.logger.debug("Deploying public IP address for vpc: " + vpc_obj.name)
-        # for vm in virtualmachines:
-        #     if vm['data']['name'] == publicipaddress['data']['name']:
-
+        network_name = ''
+        for vm in virtualmachines:
+            if vm['data']['name'] == publicipaddress['data']['virtualmachinename']:
+                for nic in vm['data']['nics']:
+                    if nic['data']['guestip'] == publicipaddress['data']['nic']:
+                        network_name = nic['networkname']
         publicipaddress_obj = PublicIPAddress.create(
             api_client=self.api_client,
             data=publicipaddress['data'],
             vpc=vpc_obj
         )
+        for nat in publicipaddress['data']['portforwards']:
+            nat_rule = NATRule.create(
+                api_client=self.api_client,
+                data=nat['data']
+            )
+        print(">>>>>>>>> PUBLIC IP")
+        print(vars(publicipaddress_obj))
 
     def deploy_vm(self, vm, account_obj):
         self.logger.debug("Deploying virtual machine: " + vm['data']['name'])
-        try:
-            network_list = []
-            for nic in vm['data']['nics']:
-                network = get_network(
-                    api_client=self.api_client,
-                    name=nic['data']['networkname']
-                )
-                network_list.append(network)
-                print("!!!!!!!!!!!!!!! \n", network_list, "\n!!!!!!!!!!!!!!!!!")
-            vm_obj = VirtualMachine.create(
-                self.api_client,
-                data=vm['data'],
-                zone=self.zone,
-                account=account_obj,
-                networks=network_list
+        network_list = []
+        for nic in vm['data']['nics']:
+            network = get_network(
+                api_client=self.api_client,
+                name=nic['data']['networkname']
             )
-        except:
-            self.logger.debug(">>>>>>>>>>> " + traceback.format_exc())
-            raise
+            network_list.append(network)
+            print(">>>>>>>>> NTWRK LIST")
+            print(network_list)
+        vm_obj = VirtualMachine.create(
+            self.api_client,
+            data=vm['data'],
+            zone=self.zone,
+            account=account_obj,
+            networks=network_list
+        )
+        print(">>>>>>>>> VIRTUAL MACHINE")
+        print(vars(vm_obj))
 
     def deploy_acls(self, acls, vpc_obj):
         self.logger.debug("Deploying acls ")
-        try:
-            for acl in acls:
-                acls_list = NetworkACLList.create(
+        for acl in acls:
+            acls_list = NetworkACLList.create(
+                api_client=self.api_client,
+                data=acl['data'],
+                vpc=vpc_obj
+            )
+            for rule in acl['data']['rules']:
+                rule_obj = NetworkACL.create(
                     api_client=self.api_client,
-                    data=acl['data'],
-                    vpc=vpc_obj
+                    data=rule,
+                    acl=acls_list
                 )
-                for rule in acl['data']['rules']:
-                    rule_obj = NetworkACL.create(
-                        api_client=self.api_client,
-                        data=rule,
-                        acl=acls_list
-                    )
-                    print(">>>>>>>>>>>>>")
-                    print(vars(rule_obj))
-        except:
-            self.logger.debug(">>>>>>>>>>>> " + traceback.format_exc())
-            raise
+                print(">>>>>>>>>>>>> ACL RULE")
+                print(vars(rule_obj))

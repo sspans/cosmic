@@ -1574,10 +1574,13 @@ class NATRule:
         self.__dict__.update(items)
 
     @classmethod
-    def create(cls, api_client, virtual_machine, services, ipaddressid=None,
+    def create(cls, api_client, virtual_machine, data=None, services=None, ipaddressid=None,
                projectid=None, openfirewall=False, networkid=None, vpcid=None,
                vmguestip=None):
         """Create Port forwarding rule"""
+        if data:
+            services = data
+            
         cmd = createPortForwardingRule.createPortForwardingRuleCmd()
 
         if ipaddressid:
