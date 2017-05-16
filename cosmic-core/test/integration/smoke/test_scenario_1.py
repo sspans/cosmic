@@ -1,3 +1,4 @@
+import sys
 import traceback
 
 from nose.plugins.attrib import attr
@@ -36,127 +37,104 @@ class TestScenario1(cloudstackTestCase):
 
         cls.test_client = super(TestScenario1, cls).getClsTestClient()
         cls.api_client = cls.test_client.getApiClient()
-
+        cls.test_data = cls.test_client.getParsedTestDataConfig()
         cls.zone = get_zone(cls.api_client, cls.test_client.getZoneForTests())
-
-        # Retrieve test data
-        cls.services = cls.test_client.getParsedTestDataConfig().copy()
 
         cls.class_cleanup = []
 
     @classmethod
     def tearDownClass(cls):
-
         try:
             cleanup_resources(cls.api_client, cls.class_cleanup, cls.logger)
-
         except:
-            raise
+            sys.exit(1)
 
     def setUp(self):
-
         self.method_cleanup = []
 
     def tearDown(self):
-
         try:
             cleanup_resources(self.api_client, self.method_cleanup, self.logger)
         except:
-            raise
+            sys.exit(1)
 
     @attr(tags=['advanced'])
     def test_01(self):
         try:
-            self.setup_infra(self.services['scenario_1'])
+            self.setup_infra(self.test_data['scenario_1']['data'])
         except:
-            self.logger.debug("!!!!!!!!!!!!!!!!!!! " + traceback.format_exc())
-            raise
+            self.logger.debug('>>>>> STACKTRACE >>>>>' + traceback.format_exc())
+            sys.exit(1)
 
-    def setup_infra(self, scenario):
-        self.logger.debug("Deploying scenario")
+    def setup_infra(self, scenario_data):
+        for domain in scenario_data['domains']:
+            self.deploy_domain(domain['data'])
 
-        for domain in scenario['data']['domains']:
-            self.deploy_domain(domain)
-
-    def deploy_domain(self, domain):
-        self.logger.debug("Deploying domain: " + domain['data']['name'])
-
-        random_string = random_gen()
-
-        if domain['data']['name'] == 'ROOT':
-            self.logger.debug("ROOT domain selected, not creating.")
+    def deploy_domain(self, domain_data):
+        if domain_data['name'] == 'ROOT':
             domain_list = Domain.list(
                 api_client=self.api_client,
-                name=domain['data']['name']
+                name=domain_data['name']
             )
-
-            # TODO: Error handling
-            domain_obj = domain_list[0]
+            domain = domain_list[0]
         else:
-            self.logger.debug("Creating domain: " + domain['data']['name'] + "-" + random_string)
-            domain_obj = Domain.create(
+            domain = Domain.create(
                 api_client=self.api_client,
-                name=domain['data']['name'] + "-" + random_string
+                name=domain_data['name'] + '-' + random_gen()
             )
-            domain['data']['name'] = domain_obj.name
-            self.logger.debug("Deployed domain: " + domain['data']['name'])
+            domain_data['name'] = domain.name
 
+        for account in domain_data['accounts']:
+            self.deploy_account(account['data'], domain)
 
-        for account in domain['data']['accounts']:
-            self.deploy_account(account, domain_obj)
-
-    def deploy_account(self, account, domain_obj):
-        self.logger.debug("Deploying account: " + account['data']['username'])
-        account_obj = Account.create(
+    def deploy_account(self, account_data, domain):
+        account = Account.create(
             api_client=self.api_client,
-            services=account['data'],
-            domainid=domain_obj.uuid
+            services=account_data,
+            domainid=domain.uuid
         )
-        account['data']['username'] = account_obj.name
-        self.logger.debug("Deployed account: " + account['data']['username'])
+        # self.class_cleanup.append(account)
+        account_data['username'] = account.name
 
-        self.class_cleanup.append(account_obj)
+        for vpc in account_data['vpcs']:
+            self.deploy_vpc(vpc['data'], account)
 
-        for vpc in account['data']['vpcs']:
-            self.deploy_vpc(vpc, account_obj)
+        for vm in account_data['virtualmachines']:
+            self.deploy_vm(vm['data'], account)
 
-        for vm in account['data']['virtualmachines']:
-            self.deploy_vm(vm, account_obj)
+        for vpc in account_data['vpcs']:
+            self.deploy_vpc_public_ips(vpc['data'], account_data['virtualmachines'])
 
-        for vpc in account['data']['vpcs']:
-            self.deploy_vpc_public_ips(vpc, account['data']['virtualmachines'])
-
-    def deploy_vpc(self, vpc, account_obj):
-        self.logger.debug("Deploying vpc: " + vpc['data']['name'])
-        # TODO -> A LOT!
-        vpc_obj = VPC.create(
+    def deploy_vpc(self, vpc_data, account):
+        vpc = VPC.create(
             api_client=self.api_client,
-            data=vpc['data'],
+            data=vpc_data,
             zone=self.zone,
-            account=account_obj
+            account=account
         )
-        vpc['data']['name'] = vpc_obj.name
-        self.logger.debug("Deployed vpc: " + vpc['data']['name'])
+        vpc_data['name'] = vpc.name
 
-        print(">>>>>>>>>>> VPC")
-        print(vars(vpc_obj))
+        self.deploy_acls(vpc_data['acls'], vpc)
 
-        self.deploy_acls(vpc['data']['acls'], vpc_obj)
+        for network in vpc_data['networks']:
+            self.deploy_network(network, vpc)
 
-        for network in vpc['data']['networks']:
-            self.deploy_network(network, vpc_obj)
+    def deploy_acls(self, acls, vpc_obj):
+        for acl in acls:
+            acls_list = NetworkACLList.create(
+                api_client=self.api_client,
+                data=acl['data'],
+                vpc=vpc_obj
+            )
 
-    def deploy_vpc_public_ips(self, vpc, virtualmachines):
-        self.logger.debug("Deploying vpc: " + vpc['data']['name'])
-
-        vpc_obj = get_vpc(self.api_client, vpc['data']['name'])
-
-        for publicipaddress in vpc['data']['publicipaddresses']:
-            self.deploy_publicipaddress(publicipaddress, virtualmachines, vpc_obj)
+            for rule in acl['data']['rules']:
+                NetworkACL.create(
+                    api_client=self.api_client,
+                    data=rule,
+                    acl=acls_list
+                )
 
     def deploy_network(self, network, vpc_obj):
-        self.logger.debug("Deploying network: " + network['data']['name'])
-
         acl_obj = get_network_acl(self.api_client, name=network['data']['aclname'])
 
         network_obj = Network.create(
@@ -167,72 +145,53 @@ class TestScenario1(cloudstackTestCase):
             acl=acl_obj
         )
         network['data']['name'] = network_obj.name
-        self.logger.debug("Deployed network: " + network['data']['name'])
 
-        print(">>>>>>>>>>> NETWORK")
-        print(vars(network_obj))
-
-    def deploy_publicipaddress(self, publicipaddress, virtualmachines, vpc_obj):
-        self.logger.debug("Deploying public IP address for vpc: " + vpc_obj.name)
-        publicipaddress_obj = PublicIPAddress.create(
-            api_client=self.api_client,
-            data=publicipaddress['data'],
-            vpc=vpc_obj
-        )
-        print(">>>>>>>>> PUBLIC IP")
-        print(vars(publicipaddress_obj))
-        for portforward in publicipaddress['data']['portforwards']:
-            network_name = None
-            for vm in virtualmachines:
-                if vm['data']['name'] == portforward['data']['virtualmachinename']:
-                    for nic in vm['data']['nics']:
-                        if nic['data']['guestip'] == portforward['data']['nic']:
-                            network_name = nic['data']['networkname']
-                            network_obj = get_network(self.api_client, name=network_name, vpc=vpc_obj)
-                            vm_obj = get_virtual_machine(self.api_client, name=vm['data']['name'], vpc=vpc_obj)
-                            nat_rule = NATRule.create(
-                                api_client=self.api_client,
-                                virtual_machine=vm_obj,
-                                data=portforward['data'],
-                                vpc=vpc_obj,
-                                network=network_obj,
-                                ipaddress=publicipaddress_obj
-                            )
-
-    def deploy_vm(self, vm, account_obj):
-        self.logger.debug("Deploying virtual machine: " + vm['data']['name'])
+    def deploy_vm(self, vm_data, account_obj):
         network_list = []
-        for nic in vm['data']['nics']:
+        for nic in vm_data['nics']:
             network = get_network(
                 api_client=self.api_client,
                 name=nic['data']['networkname']
             )
             network_list.append(network)
-            print(">>>>>>>>> NTWRK LIST")
-            print(network_list)
-        vm_obj = VirtualMachine.create(
+
+        VirtualMachine.create(
             self.api_client,
-            data=vm['data'],
+            data=vm_data,
             zone=self.zone,
             account=account_obj,
             networks=network_list
         )
-        print(">>>>>>>>> VIRTUAL MACHINE")
-        print(vars(vm_obj))
 
-    def deploy_acls(self, acls, vpc_obj):
-        self.logger.debug("Deploying acls ")
-        for acl in acls:
-            acls_list = NetworkACLList.create(
-                api_client=self.api_client,
-                data=acl['data'],
-                vpc=vpc_obj
-            )
-            for rule in acl['data']['rules']:
-                rule_obj = NetworkACL.create(
-                    api_client=self.api_client,
-                    data=rule,
-                    acl=acls_list
-                )
-                print(">>>>>>>>>>>>> ACL RULE")
-                print(vars(rule_obj))
+    def deploy_vpc_public_ips(self, vpc_data, virtualmachines):
+        vpc = get_vpc(self.api_client, vpc_data['name'])
+
+        for publicipaddress in vpc_data['publicipaddresses']:
+            self.deploy_publicipaddress(publicipaddress['data'], virtualmachines, vpc)
+
+    def deploy_publicipaddress(self, publicipaddress_data, virtualmachines, vpc):
+        publicipaddress = PublicIPAddress.create(
+            api_client=self.api_client,
+            data=publicipaddress_data,
+            vpc=vpc
+        )
+
+        for portforward_data in publicipaddress_data['portforwards']:
+            for virtualmachine_data in virtualmachines:
+                if virtualmachine_data['data']['name'] == portforward_data['virtualmachinename']:
+                    for nic_data in virtualmachine_data['data']['nics']:
+                        if nic_data['guestip'] == portforward_data['nic']:
+                            network = get_network(self.api_client, name=nic_data['networkname'], vpc=vpc)
+                            virtualmachine = get_virtual_machine(
+                                self.api_client,
+                                name=virtualmachine_data['data']['name'],
+                                vpc=vpc
+                            )
+                            NATRule.create(
+                                api_client=self.api_client,
+                                data=portforward_data,
+                                vpc=vpc,
+                                network=network,
+                                virtual_machine=virtualmachine,
+                                ipaddress=publicipaddress
+                            )
