@@ -50,11 +50,14 @@ test_data = {
                                                             "name": "acl",
                                                             "rules": [
                                                                 {
-                                                                    "protocol": "TCP",
-                                                                    "cidrlist": "0.0.0.0/0",
-                                                                    "startport": 22,
-                                                                    "endport": 22,
-                                                                    "traffictype": "Ingress"
+                                                                    "metadata": {},
+                                                                    "data": {
+                                                                        "protocol": "TCP",
+                                                                        "cidrlist": "0.0.0.0/0",
+                                                                        "startport": 22,
+                                                                        "endport": 22,
+                                                                        "traffictype": "Ingress"
+                                                                    }
                                                                 }
                                                             ]
                                                         }
@@ -99,6 +102,34 @@ test_data = {
                                                         }
                                                     }
                                                 ]
+                                            }
+                                        }
+                                    ],
+                                    "privatenetworks": [
+                                        {
+                                            "metadata": {},
+                                            "data": {
+                                                "name": "private_network1",
+                                                "displaytext": "private_network1",
+                                                "networkofferingname": "System Offering for DefaultPrivateGatewayNetworkOffering",
+                                                "ipexclusionlist": "",
+                                                "cidr": "10.0.0.0/24"
+                                            }
+                                        }
+                                    ],
+                                    "guestnetworks": [
+                                        {
+                                            "metadata": {},
+                                            "data": {
+
+                                            }
+                                        }
+                                    ],
+                                    "vpns": [
+                                        {
+                                            "metadata": {},
+                                            "data": {
+
                                             }
                                         }
                                     ]
