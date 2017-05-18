@@ -13,8 +13,8 @@ from marvin.lib.base import (
     NetworkACL,
     PublicIPAddress,
     NetworkACLList,
-    NATRule
-)
+    NATRule,
+    EgressFireWallRule, FireWallRule)
 
 from marvin.lib.utils import (
     cleanup_resources,
@@ -108,13 +108,14 @@ class TestScenario1(cloudstackTestCase):
         self.logger.debug(">>>>> ACCOUNT > %s", account.name)
 
         self.deploy_vpcs(account_data['vpcs'], account)
+        self.deploy_isolatednetworks(account_data['isolatednetworks'], account)
         self.deploy_vms(account_data['virtualmachines'], account)
 
         for vpc in account_data['vpcs']:
             self.deploy_vpc_public_ips(vpc['data'], account_data['virtualmachines'])
 
-        for privatenetwork in account_data['privatenetworks']:
-            self.deploy_privatenetwork(privatenetwork['data'])
+        for isolatednetwork in account_data['isolatednetworks']:
+            self.deploy_isolatednetwork_public_ips(isolatednetwork['data'], account_data['virtualmachines'])
 
     def deploy_vpcs(self, vpcs_data, account):
         for vpc in vpcs_data:
@@ -196,15 +197,16 @@ class TestScenario1(cloudstackTestCase):
         vpc = get_vpc(api_client=self.api_client, name=vpc_data['name'])
         self.deploy_publicipaddresses(vpc_data['publicipaddresses'], virtualmachines_data, vpc)
 
-    def deploy_publicipaddresses(self, publicipaddresses_data, virtualmachines_data, vpc):
+    def deploy_publicipaddresses(self, publicipaddresses_data, virtualmachines_data, vpc=None, network=None):
         for publicipaddress in publicipaddresses_data:
-            self.deploy_publicipaddress(publicipaddress['data'], virtualmachines_data, vpc)
+            self.deploy_publicipaddress(publicipaddress['data'], virtualmachines_data, vpc=vpc, network=network)
 
-    def deploy_publicipaddress(self, publicipaddress_data, virtualmachines_data, vpc):
+    def deploy_publicipaddress(self, publicipaddress_data, virtualmachines_data, vpc=None, network=None):
         publicipaddress = PublicIPAddress.create(
             api_client=self.api_client,
             data=publicipaddress_data,
-            vpc=vpc
+            vpc=vpc,
+            network=network
         )
 
         self.deploy_portforwards(publicipaddress_data['portforwards'], virtualmachines_data, vpc, publicipaddress)
@@ -233,3 +235,54 @@ class TestScenario1(cloudstackTestCase):
                                 virtual_machine=virtualmachine,
                                 ipaddress=publicipaddress
                             )
+
+    def deploy_isolatednetworks(self, isolatednetworks_data, account):
+        for isolatednetwork in isolatednetworks_data:
+            self.deploy_isolatednetwork(isolatednetwork['data'], account)
+
+    def deploy_isolatednetwork(self, isolatednetwork_data, account):
+        self.logger.debug("Deploy guest network: " + isolatednetwork_data['name'])
+        Network.create(
+            self.api_client,
+            data=isolatednetwork_data,
+            account=account,
+            zone=self.zone
+        )
+
+    def deploy_isolatednetwork_public_ips(self, isolatednetwork_data, virtual_machines):
+        network = get_network(self.api_client, isolatednetwork_data['name'])
+        self.deploy_egresses(isolatednetwork_data, network)
+
+        self.deploy_isolatednetwork_publicipaddresses(isolatednetwork_data, virtual_machines, network)
+
+    def deploy_egresses(self, isolatednetwork_data, network):
+        for egress in isolatednetwork_data['egressrules']:
+            EgressFireWallRule.create(
+                self.api_client,
+                network=network,
+                data=egress['data']
+            )
+
+    def deploy_isolatednetwork_publicipaddresses(self, isolatednetwork_data, virtual_machines, network):
+        for ipaddress in isolatednetwork_data['publicipaddresses']:
+            self.deploy_isolatednetwork_publicipaddress(ipaddress['data'], virtual_machines, network)
+
+    def deploy_isolatednetwork_publicipaddress(self, ipaddress_data, virtualmachines_data, network):
+        publicipaddress = PublicIPAddress.create(
+            api_client=self.api_client,
+            data=ipaddress_data,
+            network=network
+        )
+        self.deploy_firewallrules(ipaddress_data, publicipaddress)
+        self.deploy_portforwards(ipaddress_data['portforwards'], virtualmachines_data, None, publicipaddress)
+
+    def deploy_firewallrules(self, ipaddress_data, publicipaddress):
+        for firewallrule in ipaddress_data['firewallrules']:
+            self.deploy_firewallrule(firewallrule, publicipaddress)
+
+    def deploy_firewallrule(self, firewallrule, publicipaddress):
+        FireWallRule.create(
+            self.api_client,
+            data=firewallrule['data'],
+            ipaddress=publicipaddress
+        )
