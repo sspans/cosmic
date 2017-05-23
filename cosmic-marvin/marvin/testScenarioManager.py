@@ -377,12 +377,20 @@ class TestScenarioManager:
             self.deploy_isolatednetwork(isolatednetwork['data'], account)
 
     def deploy_isolatednetwork(self, isolatednetwork_data, account):
-        Network.create(
+        self.logger.debug('>>>  ISOLATED NETWORKS  =>  Creating...')
+        isolatednetwork = Network.create(
             self.api_client,
             data=isolatednetwork_data,
             account=account,
             zone=self.zone
         )
+        self.logger.debug('>>>  ISOLATED NETWORKS   =>  ID: %s  =>  Name: %s  =>  CIDR: %s  '
+                          '=>  Gateway: %s  =>  Type: %s  =>  Traffic Type: %s  =>  State: %s  '
+                          '=>  Offering: %s  =>  ACL: %s  =>  Physical Network: %s  =>  VPC: %s  =>  Domain: %s',
+                          isolatednetwork.id, isolatednetwork.name, isolatednetwork.cidr,
+                          isolatednetwork.gateway, isolatednetwork.type, isolatednetwork.traffictype,
+                          isolatednetwork.state, isolatednetwork.networkofferingid,
+                          isolatednetwork.physicalnetworkid, isolatednetwork.domainid)
 
     def deploy_isolatednetworks_publicipaddresses(self, isolatednetworks_data, virtualmachines_data):
         for isolatednetwork in isolatednetworks_data:
@@ -391,18 +399,21 @@ class TestScenarioManager:
             self.deploy_isolatednetwork_publicipaddresses(isolatednetwork['data'], virtualmachines_data, network)
 
     def deploy_isolatednetwork_egresses(self, isolatednetwork_data, network):
+        self.logger.debug('>>>  ISOLATED NETWORKS EGRESS RULES  =>  Creating...')
         for egress in isolatednetwork_data['egressrules']:
             EgressFireWallRule.create(
                 self.api_client,
                 network=network,
                 data=egress['data']
             )
+        self.logger.debug('>>>  ISOLATED NETWORKS EGRESS RULES  =>  Created.')
 
     def deploy_isolatednetwork_publicipaddresses(self, isolatednetwork_data, virtual_machines, network):
         for ipaddress in isolatednetwork_data['publicipaddresses']:
             self.deploy_isolatednetwork_publicipaddress(ipaddress['data'], virtual_machines, network)
 
     def deploy_isolatednetwork_publicipaddress(self, ipaddress_data, virtualmachines_data, network):
+        self.logger.debug('>>>  ISOLATED NETWORK PUBLIC IP ADDRESS  =>  Creating...')
         publicipaddress = PublicIPAddress.create(
             api_client=self.api_client,
             data=ipaddress_data,
@@ -412,8 +423,10 @@ class TestScenarioManager:
         self.deploy_portforwards(ipaddress_data['portforwards'], virtualmachines_data, None, publicipaddress)
 
     def deploy_firewallrules(self, ipaddress_data, publicipaddress):
+        self.logger.debug('>>>  ISOLATED NETWORK FIREWALL RULES  =>  Creating...')
         for firewallrule in ipaddress_data['firewallrules']:
             self.deploy_firewallrule(firewallrule, publicipaddress)
+        self.logger.debug('>>>  ISOLATED NETWORKS FIREWALL RULES  =>  Created.')
 
     def deploy_firewallrule(self, firewallrule, publicipaddress):
         FireWallRule.create(
