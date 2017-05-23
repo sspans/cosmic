@@ -85,9 +85,9 @@ class TestScenarioManager:
                           account.name, account.state, account.domainid)
 
         self.deploy_vpcs(account_data['vpcs'], account)
+        self.deploy_isolatednetworks(account_data['isolatednetworks'], account)
         self.deploy_vms(account_data['virtualmachines'], account)
         self.deploy_vpcs_publicipaddresses(account_data['vpcs'], account_data['virtualmachines'])
-        self.deploy_isolatednetworks(account_data['isolatednetworks'], account)
         self.deploy_isolatednetworks_publicipaddresses(account_data['isolatednetworks'], account_data['virtualmachines'])
         self.deploy_privatenetworks(account_data['privatenetworks'], account, domain)
         self.deploy_vpcs_privategateways(account_data['vpcs'])
