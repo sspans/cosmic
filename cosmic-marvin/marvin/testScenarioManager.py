@@ -386,7 +386,7 @@ class TestScenarioManager:
         )
         self.logger.debug('>>>  ISOLATED NETWORKS   =>  ID: %s  =>  Name: %s  =>  CIDR: %s  '
                           '=>  Gateway: %s  =>  Type: %s  =>  Traffic Type: %s  =>  State: %s  '
-                          '=>  Offering: %s  =>  ACL: %s  =>  Physical Network: %s  =>  VPC: %s  =>  Domain: %s',
+                          '=>  Offering: %s  =>  Physical Network: %s  =>  Domain: %s',
                           isolatednetwork.id, isolatednetwork.name, isolatednetwork.cidr,
                           isolatednetwork.gateway, isolatednetwork.type, isolatednetwork.traffictype,
                           isolatednetwork.state, isolatednetwork.networkofferingid,
@@ -400,13 +400,18 @@ class TestScenarioManager:
 
     def deploy_isolatednetwork_egresses(self, isolatednetwork_data, network):
         self.logger.debug('>>>  ISOLATED NETWORKS EGRESS RULES  =>  Creating...')
-        for egress in isolatednetwork_data['egressrules']:
-            EgressFireWallRule.create(
+        for egress_data in isolatednetwork_data['egressrules']:
+            egress = EgressFireWallRule.create(
                 self.api_client,
                 network=network,
-                data=egress['data']
+                data=egress_data['data']
             )
-        self.logger.debug('>>>  ISOLATED NETWORKS EGRESS RULES  =>  Created.')
+
+            self.logger.debug('>>>  ISOLATED NETWORKS EGRESS RULES  =>  ID: %s  =>  Startport: %s  '
+                              '=>  Endport: %s  =>  CIDR: %s  =>  Protocol: %s  =>  State: %s  '
+                              'Network ID: %s',
+                              egress.id, egress.startport, egress.endport, egress.cidrlist,
+                              egress.protocol, egress.state, egress.networkid)
 
     def deploy_isolatednetwork_publicipaddresses(self, isolatednetwork_data, virtual_machines, network):
         for ipaddress in isolatednetwork_data['publicipaddresses']:
@@ -426,14 +431,18 @@ class TestScenarioManager:
         self.logger.debug('>>>  ISOLATED NETWORK FIREWALL RULES  =>  Creating...')
         for firewallrule in ipaddress_data['firewallrules']:
             self.deploy_firewallrule(firewallrule, publicipaddress)
-        self.logger.debug('>>>  ISOLATED NETWORKS FIREWALL RULES  =>  Created.')
 
     def deploy_firewallrule(self, firewallrule, publicipaddress):
-        FireWallRule.create(
+        firewall = FireWallRule.create(
             self.api_client,
             data=firewallrule['data'],
             ipaddress=publicipaddress
         )
+        self.logger.debug('>>>  ISOLATED NETWORKS FIREWALL RULES  =>  ID: %s  =>  Startport: %s  '
+                          '=>  Endport: %s  =>  CIDR: %s  =>  Protocol: %s  =>  State: %s  '
+                          'Network ID: %s  =>  IP Address: %s',
+                          firewall.id, firewall.startport, firewall.endport, firewall.cidrlist,
+                          firewall.protocol, firewall.state, firewall.networkid, firewall.ipaddress)
 
     def finalize(self):
         try:
