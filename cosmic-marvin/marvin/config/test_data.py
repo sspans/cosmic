@@ -36,8 +36,8 @@ test_data = {
                                                     {
                                                         "metadata": {},
                                                         "data": {
-                                                            "displaytext": "tier001.vpc001",
-                                                            "name": "tier001.vpc001",
+                                                            "displaytext": "tier001-vpc001",
+                                                            "name": "tier001-vpc001",
                                                             "networkofferingname": "DefaultIsolatedNetworkOfferingForVpcNetworks",
                                                             "aclname": "default_allow",
                                                             "cidr": "10.1.1.0/24",
@@ -47,8 +47,8 @@ test_data = {
                                                     {
                                                         "metadata": {},
                                                         "data": {
-                                                            "displaytext": "tier002.vpc001",
-                                                            "name": "tier002.vpc001",
+                                                            "displaytext": "tier002-vpc001",
+                                                            "name": "tier002-vpc001",
                                                             "networkofferingname": "DefaultIsolatedNetworkOfferingForVpcNetworks",
                                                             "aclname": "default_allow",
                                                             "cidr": "10.1.2.0/24",
@@ -87,7 +87,7 @@ test_data = {
                                                                         "privateport": 22,
                                                                         "publicport": 22,
                                                                         "protocol": "TCP",
-                                                                        "virtualmachinename": "vm001.tier001.vpc001",
+                                                                        "virtualmachinename": "vm001-tier001-vpc001",
                                                                         "nic": "10.1.1.1"
                                                                     }
                                                                 }
@@ -128,8 +128,8 @@ test_data = {
                                                     {
                                                         "metadata": {},
                                                         "data": {
-                                                            "displaytext": "tier001.vpc002",
-                                                            "name": "tier001.vpc002",
+                                                            "displaytext": "tier001-vpc002",
+                                                            "name": "tier001-vpc002",
                                                             "networkofferingname": "DefaultIsolatedNetworkOfferingForVpcNetworks",
                                                             "aclname": "default_allow",
                                                             "cidr": "10.2.1.0/24",
@@ -149,7 +149,7 @@ test_data = {
                                                                         "privateport": 22,
                                                                         "publicport": 22,
                                                                         "protocol": "TCP",
-                                                                        "virtualmachinename": "vm001.t001.vpc002",
+                                                                        "virtualmachinename": "vm001-t001-vpc002",
                                                                         "nic": "10.2.1.1"
                                                                     }
                                                                 }
@@ -173,8 +173,8 @@ test_data = {
                                                     {
                                                         "metadata": {},
                                                         "data": {
-                                                            "displaytext": "tier001.vpc003",
-                                                            "name": "tier003",
+                                                            "displaytext": "tier001-vpc003",
+                                                            "name": "tier001-vpc003",
                                                             "networkofferingname": "DefaultIsolatedNetworkOfferingForVpcNetworks",
                                                             "aclname": "default_allow",
                                                             "cidr": "10.3.1.0/24",
@@ -213,7 +213,7 @@ test_data = {
                                                                         "privateport": 22,
                                                                         "publicport": 22,
                                                                         "protocol": "TCP",
-                                                                        "virtualmachinename": "vm001.t001.vpc003",
+                                                                        "virtualmachinename": "vm001-t001-vpc003",
                                                                         "nic": "10.3.1.1"
                                                                     }
                                                                 }
@@ -254,8 +254,8 @@ test_data = {
                                                     {
                                                         "metadata": {},
                                                         "data": {
-                                                            "displaytext": "tier001",
-                                                            "name": "tier001",
+                                                            "displaytext": "tier001-vpc004",
+                                                            "name": "tier001-vpc004",
                                                             "networkofferingname": "DefaultIsolatedNetworkOfferingForVpcNetworks",
                                                             "aclname": "default_allow",
                                                             "cidr": "10.4.1.0/24",
@@ -294,7 +294,7 @@ test_data = {
                                                                         "privateport": 22,
                                                                         "publicport": 22,
                                                                         "protocol": "TCP",
-                                                                        "virtualmachinename": "vm001.tier001.vpc004",
+                                                                        "virtualmachinename": "vm001-tier001-vpc004",
                                                                         "nic": "10.4.1.1"
                                                                     }
                                                                 }
@@ -311,8 +311,8 @@ test_data = {
                                         {
                                             "metadata": {},
                                             "data": {
-                                                "name": "vm001.t001.vpc001",
-                                                "displayname": "vm001.t001.vpc001",
+                                                "name": "vm001-t001-vpc001",
+                                                "displayname": "vm001-t001-vpc001",
                                                 "templatename": "tiny linux kvm",
                                                 "serviceofferingname": "Small Instance",
                                                 "nics": [
@@ -320,7 +320,7 @@ test_data = {
                                                         "metadata": {},
                                                         "data": {
                                                             "guestip": "10.1.1.1",
-                                                            "networkname": "tier001.vpc001"
+                                                            "networkname": "tier001-vpc001"
                                                         }
                                                     }
                                                 ]
@@ -330,8 +330,8 @@ test_data = {
                                         {
                                             "metadata": {},
                                             "data": {
-                                                "name": "vm001.t002.vpc001",
-                                                "displayname": "vm001.t002.vpc001",
+                                                "name": "vm001-t002-vpc001",
+                                                "displayname": "vm001-t002-vpc001",
                                                 "templatename": "tiny linux kvm",
                                                 "serviceofferingname": "Small Instance",
                                                 "nics": [
@@ -339,7 +339,7 @@ test_data = {
                                                         "metadata": {},
                                                         "data": {
                                                             "guestip": "10.1.2.1",
-                                                            "networkname": "tier002.vpc001"
+                                                            "networkname": "tier002-vpc001"
                                                         }
                                                     }
                                                 ]
@@ -349,8 +349,8 @@ test_data = {
                                         {
                                             "metadata": {},
                                             "data": {
-                                                "name": "vm002.t002.vpc001",
-                                                "displayname": "vm002.t002.vpc001",
+                                                "name": "vm002-t002-vpc001",
+                                                "displayname": "vm002-t002-vpc001",
                                                 "templatename": "tiny linux kvm",
                                                 "serviceofferingname": "Small Instance",
                                                 "nics": [
@@ -358,7 +358,7 @@ test_data = {
                                                         "metadata": {},
                                                         "data": {
                                                             "guestip": "10.1.2.2",
-                                                            "networkname": "tier002.vpc001"
+                                                            "networkname": "tier002-vpc001"
                                                         }
                                                     }
                                                 ]
@@ -368,8 +368,8 @@ test_data = {
                                         {
                                             "metadata": {},
                                             "data": {
-                                                "name": "vm001.t001.vpc002",
-                                                "displayname": "vm001.t001.vpc002",
+                                                "name": "vm001-t001-vpc002",
+                                                "displayname": "vm001-t001-vpc002",
                                                 "templatename": "tiny linux kvm",
                                                 "serviceofferingname": "Small Instance",
                                                 "nics": [
@@ -377,7 +377,7 @@ test_data = {
                                                         "metadata": {},
                                                         "data": {
                                                             "guestip": "10.2.1.1",
-                                                            "networkname": "tier001.vpc002"
+                                                            "networkname": "tier001-vpc002"
                                                         }
                                                     }
                                                 ]
@@ -387,8 +387,8 @@ test_data = {
                                         {
                                             "metadata": {},
                                             "data": {
-                                                "name": "vm001.t001.vpc003",
-                                                "displayname": "vm001.t001.vpc003",
+                                                "name": "vm001-t001-vpc003",
+                                                "displayname": "vm001-t001-vpc003",
                                                 "templatename": "tiny linux kvm",
                                                 "serviceofferingname": "Small Instance",
                                                 "nics": [
@@ -396,7 +396,7 @@ test_data = {
                                                         "metadata": {},
                                                         "data": {
                                                             "guestip": "10.3.1.1",
-                                                            "networkname": "tier001.vpc003"
+                                                            "networkname": "tier001-vpc003"
                                                         }
                                                     }
                                                 ]
@@ -406,8 +406,8 @@ test_data = {
                                         {
                                             "metadata": {},
                                             "data": {
-                                                "name": "vm001.t001.vpc004",
-                                                "displayname": "vm001.t001.vpc004",
+                                                "name": "vm001-t001-vpc004",
+                                                "displayname": "vm001-t001-vpc004",
                                                 "templatename": "tiny linux kvm",
                                                 "serviceofferingname": "Small Instance",
                                                 "nics": [
@@ -415,7 +415,7 @@ test_data = {
                                                         "metadata": {},
                                                         "data": {
                                                             "guestip": "10.4.1.1",
-                                                            "networkname": "tier001.vpc004"
+                                                            "networkname": "tier001-vpc004"
                                                         }
                                                     }
                                                 ]
@@ -437,57 +437,57 @@ test_data = {
 
                                     # TODO:
                                     "isolatednetworks": [
-                                        {
-                                            "metadata": {},
-                                            "data": {
-                                                "name": "guest_network1",
-                                                "displaytext": "guest_network1",
-                                                "networkofferingname": "DefaultIsolatedNetworkOfferingWithSourceNatService",
-                                                "guestgateway": "10.1.1.1",
-                                                "guestnetmask": "255.255.255.0",
-                                                "egressrules": [
-                                                    {
-                                                        "metadata": {},
-                                                        "data": {
-                                                            "protocol": "TCP",
-                                                            "cidrlist": "0.0.0.0/0",
-                                                            "startport": 22,
-                                                            "endport": 22
-                                                        }
-                                                    }
-                                                ],
-                                                "publicipaddresses": [
-                                                    {
-                                                        "metadata": {},
-                                                        "data": {
-                                                            "firewallrules": [
-                                                                {
-                                                                    "metadata": {},
-                                                                    "data": {
-                                                                        "cidrlist": "0.0.0.0/0",
-                                                                        "protocol": "TCP",
-                                                                        "startport": 22,
-                                                                        "endport": 22
-                                                                    }
-                                                                }
-                                                            ],
-                                                            "portforwards": [
-                                                                {
-                                                                    "metadata": {},
-                                                                    "data": {
-                                                                        "privateport": 22,
-                                                                        "publicport": 22,
-                                                                        "protocol": "TCP",
-                                                                        "virtualmachinename": "vm",
-                                                                        "nic": "10.1.1.2"
-                                                                    }
-                                                                }
-                                                            ]
-                                                        }
-                                                    }
-                                                ]
-                                            }
-                                        }
+                                        # {
+                                        #     "metadata": {},
+                                        #     "data": {
+                                        #         "name": "guest_network1",
+                                        #         "displaytext": "guest_network1",
+                                        #         "networkofferingname": "DefaultIsolatedNetworkOfferingWithSourceNatService",
+                                        #         "guestgateway": "10.5.1.1",
+                                        #         "guestnetmask": "255.255.255.0",
+                                        #         "egressrules": [
+                                        #             {
+                                        #                 "metadata": {},
+                                        #                 "data": {
+                                        #                     "protocol": "TCP",
+                                        #                     "cidrlist": "0.0.0.0/0",
+                                        #                     "startport": 22,
+                                        #                     "endport": 22
+                                        #                 }
+                                        #             }
+                                        #         ],
+                                        #         "publicipaddresses": [
+                                        #             {
+                                        #                 "metadata": {},
+                                        #                 "data": {
+                                        #                     "firewallrules": [
+                                        #                         {
+                                        #                             "metadata": {},
+                                        #                             "data": {
+                                        #                                 "cidrlist": "0.0.0.0/0",
+                                        #                                 "protocol": "TCP",
+                                        #                                 "startport": 22,
+                                        #                                 "endport": 22
+                                        #                             }
+                                        #                         }
+                                        #                     ],
+                                        #                     "portforwards": [
+                                        #                         {
+                                        #                             "metadata": {},
+                                        #                             "data": {
+                                        #                                 "privateport": 22,
+                                        #                                 "publicport": 22,
+                                        #                                 "protocol": "TCP",
+                                        #                                 "virtualmachinename": "vm",
+                                        #                                 "nic": "10.5.1.1"
+                                        #                             }
+                                        #                         }
+                                        #                     ]
+                                        #                 }
+                                        #             }
+                                        #         ]
+                                        #     }
+                                        # }
                                     ]
                                 }
                             }
