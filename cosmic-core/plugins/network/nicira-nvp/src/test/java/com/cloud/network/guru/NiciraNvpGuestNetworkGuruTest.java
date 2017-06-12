@@ -15,12 +15,10 @@ import com.cloud.agent.api.Command;
 import com.cloud.agent.api.CreateLogicalSwitchAnswer;
 import com.cloud.agent.api.DeleteLogicalSwitchAnswer;
 import com.cloud.db.model.Zone;
-import com.cloud.dc.DataCenterVO;
-import com.cloud.dc.dao.DataCenterDao;
+import com.cloud.db.repository.ZoneRepository;
 import com.cloud.deploy.DeployDestination;
 import com.cloud.deploy.DeploymentPlan;
 import com.cloud.domain.Domain;
-import com.cloud.engine.orchestration.service.NetworkOrchestrationService;
 import com.cloud.exception.InsufficientVirtualNetworkCapacityException;
 import com.cloud.host.HostVO;
 import com.cloud.host.dao.HostDao;
@@ -55,34 +53,34 @@ public class NiciraNvpGuestNetworkGuruTest {
     private static final long NETWORK_ID = 42L;
     PhysicalNetworkDao physnetdao = mock(PhysicalNetworkDao.class);
     NiciraNvpDao nvpdao = mock(NiciraNvpDao.class);
-    DataCenterDao dcdao = mock(DataCenterDao.class);
     NetworkOfferingServiceMapDao nosd = mock(NetworkOfferingServiceMapDao.class);
     AgentManager agentmgr = mock(AgentManager.class);
-    NetworkOrchestrationService netmgr = mock(NetworkOrchestrationService.class);
     NetworkModel netmodel = mock(NetworkModel.class);
 
     HostDao hostdao = mock(HostDao.class);
     NetworkDao netdao = mock(NetworkDao.class);
+    ZoneRepository zoneRepository = mock(ZoneRepository.class);
     NiciraNvpGuestNetworkGuru guru;
 
     @Before
     public void setUp() {
         guru = new NiciraNvpGuestNetworkGuru();
-        ((GuestNetworkGuru) guru)._physicalNetworkDao = physnetdao;
+        guru._physicalNetworkDao = physnetdao;
         guru.physicalNetworkDao = physnetdao;
         guru.niciraNvpDao = nvpdao;
-        guru._dcDao = dcdao;
         guru.ntwkOfferingSrvcDao = nosd;
         guru.networkModel = netmodel;
         guru.hostDao = hostdao;
         guru.agentMgr = agentmgr;
         guru.networkDao = netdao;
 
-        final DataCenterVO dc = mock(DataCenterVO.class);
-        when(dc.getNetworkType()).thenReturn(NetworkType.Advanced);
-        when(dc.getGuestNetworkCidr()).thenReturn("10.1.1.1/24");
+        guru.zoneRepository = zoneRepository;
 
-        when(dcdao.findById((Long) any())).thenReturn(dc);
+        final Zone zone = mock(Zone.class);
+        when(zone.getNetworkType()).thenReturn(NetworkType.Advanced);
+        when(zone.getGuestNetworkCidr()).thenReturn("10.1.1.1/24");
+
+        when(zoneRepository.findOne(anyLong())).thenReturn(zone);
     }
 
     @Test

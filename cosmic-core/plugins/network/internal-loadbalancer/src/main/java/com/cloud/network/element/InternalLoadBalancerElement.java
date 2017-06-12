@@ -4,10 +4,8 @@ import com.cloud.agent.api.to.LoadBalancerTO;
 import com.cloud.api.command.admin.internallb.ConfigureInternalLoadBalancerElementCmd;
 import com.cloud.api.command.admin.internallb.CreateInternalLoadBalancerElementCmd;
 import com.cloud.api.command.admin.internallb.ListInternalLoadBalancerElementsCmd;
-import com.cloud.configuration.ConfigurationManager;
-import com.cloud.dao.EntityManager;
+import com.cloud.db.model.Zone;
 import com.cloud.db.repository.ZoneRepository;
-import com.cloud.dc.DataCenter;
 import com.cloud.deploy.DeployDestination;
 import com.cloud.exception.ConcurrentOperationException;
 import com.cloud.exception.IllegalVirtualMachineException;
@@ -25,7 +23,6 @@ import com.cloud.network.PhysicalNetworkServiceProvider;
 import com.cloud.network.PublicIpAddress;
 import com.cloud.network.VirtualRouterProvider;
 import com.cloud.network.VirtualRouterProvider.Type;
-import com.cloud.network.dao.NetworkServiceMapDao;
 import com.cloud.network.dao.PhysicalNetworkServiceProviderDao;
 import com.cloud.network.dao.VirtualRouterProviderDao;
 import com.cloud.network.lb.InternalLoadBalancerVMManager;
@@ -70,8 +67,6 @@ public class InternalLoadBalancerElement extends AdapterBase implements LoadBala
     @Inject
     NetworkModel _ntwkModel;
     @Inject
-    NetworkServiceMapDao _ntwkSrvcDao;
-    @Inject
     DomainRouterDao _routerDao;
     @Inject
     VirtualRouterProviderDao _vrProviderDao;
@@ -80,13 +75,9 @@ public class InternalLoadBalancerElement extends AdapterBase implements LoadBala
     @Inject
     InternalLoadBalancerVMManager _internalLbMgr;
     @Inject
-    ConfigurationManager _configMgr;
-    @Inject
     AccountManager _accountMgr;
     @Inject
     ApplicationLoadBalancerRuleDao _appLbDao;
-    @Inject
-    EntityManager _entityMgr;
     @Inject
     ZoneRepository zoneRepository;
 
@@ -122,9 +113,9 @@ public class InternalLoadBalancerElement extends AdapterBase implements LoadBala
 
     private boolean canHandle(final Network config, final Scheme lbScheme) {
         //works in Advance zone only
-        final DataCenter dc = _entityMgr.findById(DataCenter.class, config.getDataCenterId());
-        if (dc.getNetworkType() != NetworkType.Advanced) {
-            s_logger.trace("Not hanling zone of network type " + dc.getNetworkType());
+        final Zone zone = zoneRepository.findOne(config.getDataCenterId());
+        if (zone.getNetworkType() != NetworkType.Advanced) {
+            s_logger.trace("Not hanling zone of network type " + zone.getNetworkType());
             return false;
         }
         if (config.getGuestType() != Network.GuestType.Isolated || config.getTrafficType() != TrafficType.Guest) {
@@ -186,7 +177,7 @@ public class InternalLoadBalancerElement extends AdapterBase implements LoadBala
                 }
 
                 if (internalLbVms == null || internalLbVms.isEmpty()) {
-                    throw new ResourceUnavailableException("Can't find/deploy internal lb vm to handle LB rules", DataCenter.class, network.getDataCenterId());
+                    throw new ResourceUnavailableException("Can't find/deploy internal lb vm to handle LB rules", Zone.class, network.getDataCenterId());
                 }
 
                 //2.3 Apply Internal LB rules on the VM
@@ -376,7 +367,7 @@ public class InternalLoadBalancerElement extends AdapterBase implements LoadBala
                 }
 
                 if (internalLbVms == null || internalLbVms.isEmpty()) {
-                    throw new ResourceUnavailableException("Can't deploy " + getName() + " to handle LB rules", DataCenter.class, network.getDataCenterId());
+                    throw new ResourceUnavailableException("Can't deploy " + getName() + " to handle LB rules", Zone.class, network.getDataCenterId());
                 }
             }
         }

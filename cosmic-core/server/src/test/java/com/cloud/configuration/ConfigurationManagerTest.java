@@ -12,6 +12,8 @@ import com.cloud.api.command.admin.vlan.DedicatePublicIpRangeCmd;
 import com.cloud.api.command.admin.vlan.ReleasePublicIpRangeCmd;
 import com.cloud.configuration.Resource.ResourceType;
 import com.cloud.context.CallContext;
+import com.cloud.db.model.Zone;
+import com.cloud.db.repository.ZoneRepository;
 import com.cloud.dc.AccountVlanMapVO;
 import com.cloud.dc.ClusterVO;
 import com.cloud.dc.DataCenterVO;
@@ -125,6 +127,8 @@ public class ConfigurationManagerTest {
     HostPodDao _podDao;
     @Mock
     PhysicalNetworkDao _physicalNetworkDao;
+    @Mock
+    ZoneRepository zoneRepository;
 
     VlanVO vlan = new VlanVO(Vlan.VlanType.VirtualNetwork, "vlantag", "vlangateway", "vlannetmask", 1L, "iprange", 1L, 1L, null, null, null);
 
@@ -156,6 +160,7 @@ public class ConfigurationManagerTest {
         configurationMgr._clusterDao = _clusterDao;
         configurationMgr._podDao = _podDao;
         configurationMgr._physicalNetworkDao = _physicalNetworkDao;
+        configurationMgr.zoneRepository = zoneRepository;
 
         final Account account = new AccountVO("testaccount", 1, "networkdomain", (short) 0, UUID.randomUUID().toString());
         when(configurationMgr._accountMgr.getAccount(anyLong())).thenReturn(account);
@@ -306,11 +311,9 @@ public class ConfigurationManagerTest {
 
         when(configurationMgr._accountVlanMapDao.listAccountVlanMapsByVlan(anyLong())).thenReturn(null);
 
-        // public ip range belongs to zone of type basic
-        final DataCenterVO dc =
-                new DataCenterVO(UUID.randomUUID().toString(), "test", "8.8.8.8", null, "10.0.0.1", null, "10.0.0.1/24", null, null, NetworkType.Basic, null, null, true,
-                        true, null, null);
-        when(configurationMgr._zoneDao.findById(anyLong())).thenReturn(dc);
+        final Zone zone = new Zone();
+        zone.setNetworkType(NetworkType.Basic);
+        when(configurationMgr.zoneRepository.findOne(anyLong())).thenReturn(zone);
 
         final List<IPAddressVO> ipAddressList = new ArrayList<>();
         final IPAddressVO ipAddress = new IPAddressVO(new Ip("75.75.75.75"), 1, 0xaabbccddeeffL, 10, false);
@@ -333,10 +336,9 @@ public class ConfigurationManagerTest {
 
         when(configurationMgr._accountVlanMapDao.listAccountVlanMapsByAccount(anyLong())).thenReturn(null);
 
-        final DataCenterVO dc =
-                new DataCenterVO(UUID.randomUUID().toString(), "test", "8.8.8.8", null, "10.0.0.1", null, "10.0.0.1/24", null, null, NetworkType.Advanced, null, null, true,
-                        true, null, null);
-        when(configurationMgr._zoneDao.findById(anyLong())).thenReturn(dc);
+        final Zone zone = new Zone();
+        zone.setNetworkType(NetworkType.Advanced);
+        when(configurationMgr.zoneRepository.findOne(anyLong())).thenReturn(zone);
 
         // one of the ip addresses of the range is allocated to different account
         final List<IPAddressVO> ipAddressList = new ArrayList<>();

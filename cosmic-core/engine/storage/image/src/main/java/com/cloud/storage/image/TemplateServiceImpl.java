@@ -5,9 +5,9 @@ import com.cloud.agent.api.storage.ListTemplateAnswer;
 import com.cloud.agent.api.storage.ListTemplateCommand;
 import com.cloud.alert.AlertManager;
 import com.cloud.configuration.Config;
-import com.cloud.dc.DataCenterVO;
+import com.cloud.db.model.Zone;
+import com.cloud.db.repository.ZoneRepository;
 import com.cloud.dc.dao.ClusterDao;
-import com.cloud.dc.dao.DataCenterDao;
 import com.cloud.engine.subsystem.api.storage.CopyCommandResult;
 import com.cloud.engine.subsystem.api.storage.CreateCmdResult;
 import com.cloud.engine.subsystem.api.storage.DataMotionService;
@@ -34,7 +34,6 @@ import com.cloud.framework.async.AsyncRpcContext;
 import com.cloud.framework.config.dao.ConfigurationDao;
 import com.cloud.hypervisor.Hypervisor.HypervisorType;
 import com.cloud.storage.DataStoreRole;
-import com.cloud.storage.Storage.TemplateType;
 import com.cloud.storage.StoragePool;
 import com.cloud.storage.VMTemplateStorageResourceAssoc;
 import com.cloud.storage.VMTemplateStorageResourceAssoc.Status;
@@ -43,10 +42,7 @@ import com.cloud.storage.VMTemplateZoneVO;
 import com.cloud.storage.command.CommandResult;
 import com.cloud.storage.command.DeleteCommand;
 import com.cloud.storage.dao.VMTemplateDao;
-import com.cloud.storage.dao.VMTemplatePoolDao;
 import com.cloud.storage.dao.VMTemplateZoneDao;
-import com.cloud.storage.datastore.DataObjectManager;
-import com.cloud.storage.datastore.ObjectInDataStoreManager;
 import com.cloud.storage.datastore.db.TemplateDataStoreDao;
 import com.cloud.storage.datastore.db.TemplateDataStoreVO;
 import com.cloud.storage.image.datastore.ImageStoreEntity;
@@ -82,10 +78,6 @@ public class TemplateServiceImpl implements TemplateService {
     private static final Logger s_logger = LoggerFactory.getLogger(TemplateServiceImpl.class);
 
     @Inject
-    ObjectInDataStoreManager _objectInDataStoreMgr;
-    @Inject
-    DataObjectManager _dataObjectMgr;
-    @Inject
     DataStoreManager _storeMgr;
     @Inject
     DataMotionService _motionSrv;
@@ -100,15 +92,11 @@ public class TemplateServiceImpl implements TemplateService {
     @Inject
     TemplateDataStoreDao _vmTemplateStoreDao;
     @Inject
-    DataCenterDao _dcDao = null;
-    @Inject
     VMTemplateZoneDao _vmTemplateZoneDao;
     @Inject
     ClusterDao _clusterDao;
     @Inject
     TemplateDataFactory _templateFactory;
-    @Inject
-    VMTemplatePoolDao _tmpltPoolDao;
     @Inject
     EndPointSelector _epSelector;
     @Inject
@@ -117,6 +105,8 @@ public class TemplateServiceImpl implements TemplateService {
     ConfigurationDao _configDao;
     @Inject
     StorageCacheManager _cacheMgr;
+    @Inject
+    ZoneRepository zoneRepository;
 
     class TemplateOpContext<T> extends AsyncRpcContext<T> {
         final TemplateObject template;
@@ -503,8 +493,8 @@ public class TemplateServiceImpl implements TemplateService {
         if (zoneId != null) {
             dcs.add(zoneId);
         } else {
-            final List<DataCenterVO> zones = _dcDao.listAll();
-            for (final DataCenterVO zone : zones) {
+            final List<Zone> zones = zoneRepository.findByRemovedIsNull();
+            for (final Zone zone : zones) {
                 dcs.add(zone.getId());
             }
         }

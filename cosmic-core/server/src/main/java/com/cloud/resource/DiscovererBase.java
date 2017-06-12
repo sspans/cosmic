@@ -1,9 +1,9 @@
 package com.cloud.resource;
 
 import com.cloud.configuration.Config;
+import com.cloud.db.repository.ZoneRepository;
 import com.cloud.dc.ClusterVO;
 import com.cloud.dc.dao.ClusterDao;
-import com.cloud.dc.dao.DataCenterDao;
 import com.cloud.framework.config.dao.ConfigurationDao;
 import com.cloud.host.HostVO;
 import com.cloud.host.dao.HostDao;
@@ -36,7 +36,7 @@ public abstract class DiscovererBase extends AdapterBase implements Discoverer {
     @Inject
     protected ResourceManager _resourceMgr;
     @Inject
-    protected DataCenterDao _dcDao;
+    protected ZoneRepository zoneRepository;
 
     @Override
     public boolean configure(final String name, final Map<String, Object> params) throws ConfigurationException {

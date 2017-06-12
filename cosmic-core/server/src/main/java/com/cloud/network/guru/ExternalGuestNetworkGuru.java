@@ -251,13 +251,13 @@ public class ExternalGuestNetworkGuru extends GuestNetworkGuru {
             throws InsufficientVirtualNetworkCapacityException, InsufficientAddressCapacityException {
         assert (nic.getReservationStrategy() == ReservationStrategy.Start) : "What can I do for nics that are not allocated at start? ";
 
-        final DataCenter dc = _dcDao.findById(config.getDataCenterId());
+        final Zone zone = zoneRepository.findOne(config.getDataCenterId());
 
         if (_networkModel.networkIsConfiguredForExternalNetworking(config.getDataCenterId(), config.getId())) {
             nic.setBroadcastUri(config.getBroadcastUri());
             nic.setIsolationUri(config.getBroadcastUri());
-            nic.setIPv4Dns1(dc.getDns1());
-            nic.setIPv4Dns2(dc.getDns2());
+            nic.setIPv4Dns1(zone.getDns1());
+            nic.setIPv4Dns2(zone.getDns2());
             nic.setIPv4Netmask(NetUtils.cidr2Netmask(config.getCidr()));
             final long cidrAddress = NetUtils.ip2Long(config.getCidr().split("/")[0]);
             final int cidrSize = getGloballyConfiguredCidrSize();
@@ -266,7 +266,7 @@ public class ExternalGuestNetworkGuru extends GuestNetworkGuru {
             if (nic.getIPv4Address() == null) {
                 final String guestIp = _ipAddrMgr.acquireGuestIpAddress(config, null);
                 if (guestIp == null) {
-                    throw new InsufficientVirtualNetworkCapacityException("Unable to acquire guest IP address for network " + config, DataCenter.class, dc.getId());
+                    throw new InsufficientVirtualNetworkCapacityException("Unable to acquire guest IP address for network " + config, DataCenter.class, zone.getId());
                 }
 
                 nic.setIPv4Address(guestIp);

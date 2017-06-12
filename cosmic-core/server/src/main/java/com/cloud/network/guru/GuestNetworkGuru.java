@@ -41,7 +41,6 @@ import com.cloud.network.dao.PhysicalNetworkVO;
 import com.cloud.network.vpc.Vpc;
 import com.cloud.network.vpc.dao.VpcDao;
 import com.cloud.offering.NetworkOffering;
-import com.cloud.server.ConfigurationServer;
 import com.cloud.user.Account;
 import com.cloud.utils.Pair;
 import com.cloud.utils.component.AdapterBase;
@@ -102,8 +101,6 @@ public abstract class GuestNetworkGuru extends AdapterBase implements NetworkGur
     @Inject
     IPAddressDao _ipAddressDao;
     @Inject
-    ConfigurationServer _configServer;
-    @Inject
     IpAddressManager _ipAddrMgr;
     @Inject
     ZoneRepository zoneRepository;
@@ -151,16 +148,12 @@ public abstract class GuestNetworkGuru extends AdapterBase implements NetworkGur
         s_logger.debug("Isolation methods '" + requiredIsolationMethods + "' are not supported by this guru (supported methods are " + supportedIsolationMethods + ")");
     }
 
-    public IsolationMethod[] getIsolationMethods() {
-        return _isolationMethods;
-    }
-
     @Override
     public Network design(final NetworkOffering offering, final DeploymentPlan plan, final Network userSpecified, final Account owner) {
-        final DataCenter dc = _dcDao.findById(plan.getDataCenterId());
+        final Zone zone = zoneRepository.findOne(plan.getDataCenterId());
         final PhysicalNetworkVO physnet = _physicalNetworkDao.findById(plan.getPhysicalNetworkId());
 
-        if (!canHandle(offering, dc.getNetworkType(), physnet)) {
+        if (!canHandle(offering, zone.getNetworkType(), physnet)) {
             return null;
         }
 
@@ -185,13 +178,13 @@ public abstract class GuestNetworkGuru extends AdapterBase implements NetworkGur
                 network.setCidr(userSpecified.getCidr());
                 network.setGateway(userSpecified.getGateway());
             } else {
-                final String guestNetworkCidr = dc.getGuestNetworkCidr();
+                final String guestNetworkCidr = zone.getGuestNetworkCidr();
                 if (guestNetworkCidr != null) {
                     final String[] cidrTuple = guestNetworkCidr.split("\\/");
                     network.setGateway(NetUtils.getIpRangeStartIpFromCidr(cidrTuple[0], Long.parseLong(cidrTuple[1])));
                     network.setCidr(guestNetworkCidr);
-                } else if (dc.getNetworkType() == NetworkType.Advanced) {
-                    throw new CloudRuntimeException("Can't design network " + network + "; guest CIDR is not configured per zone " + dc);
+                } else if (zone.getNetworkType() == NetworkType.Advanced) {
+                    throw new CloudRuntimeException("Can't design network " + network + "; guest CIDR is not configured per zone " + zone);
                 }
             }
 
@@ -200,9 +193,9 @@ public abstract class GuestNetworkGuru extends AdapterBase implements NetworkGur
                 network.setState(State.Setup);
             }
         } else {
-            final String guestNetworkCidr = dc.getGuestNetworkCidr();
-            if (guestNetworkCidr == null && dc.getNetworkType() == NetworkType.Advanced) {
-                throw new CloudRuntimeException("Can't design network " + network + "; guest CIDR is not configured per zone " + dc);
+            final String guestNetworkCidr = zone.getGuestNetworkCidr();
+            if (guestNetworkCidr == null && zone.getNetworkType() == NetworkType.Advanced) {
+                throw new CloudRuntimeException("Can't design network " + network + "; guest CIDR is not configured per zone " + zone);
             }
             final String[] cidrTuple = guestNetworkCidr.split("\\/");
             network.setGateway(NetUtils.getIpRangeStartIpFromCidr(cidrTuple[0], Long.parseLong(cidrTuple[1])));
@@ -388,10 +381,10 @@ public abstract class GuestNetworkGuru extends AdapterBase implements NetworkGur
 
     @Override
     public void updateNicProfile(final NicProfile profile, final Network network) {
-        final DataCenter dc = _dcDao.findById(network.getDataCenterId());
+        final Zone zone = zoneRepository.findOne(network.getDataCenterId());
         if (profile != null) {
-            profile.setIPv4Dns1(dc.getDns1());
-            profile.setIPv4Dns2(dc.getDns2());
+            profile.setIPv4Dns1(zone.getDns1());
+            profile.setIPv4Dns2(zone.getDns2());
         }
     }
 
@@ -419,12 +412,12 @@ public abstract class GuestNetworkGuru extends AdapterBase implements NetworkGur
 
     @Override
     public void updateNetworkProfile(final NetworkProfile networkProfile) {
-        final DataCenter dc = _dcDao.findById(networkProfile.getDataCenterId());
+        final Zone zone = zoneRepository.findOne(networkProfile.getDataCenterId());
         if (networkProfile.getDns1() != null && networkProfile.getDns1().equals("")) {
-            networkProfile.setDns1(dc.getDns1());
+            networkProfile.setDns1(zone.getDns1());
         }
         if (networkProfile.getDns2() != null && networkProfile.getDns2().equals("")) {
-            networkProfile.setDns2(dc.getDns2());
+            networkProfile.setDns2(zone.getDns2());
         }
     }
 

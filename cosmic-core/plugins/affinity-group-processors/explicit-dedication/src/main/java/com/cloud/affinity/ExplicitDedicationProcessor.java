@@ -1,20 +1,16 @@
 package com.cloud.affinity;
 
-import com.cloud.affinity.dao.AffinityGroupDao;
 import com.cloud.affinity.dao.AffinityGroupVMMapDao;
+import com.cloud.db.model.Zone;
+import com.cloud.db.repository.ZoneRepository;
 import com.cloud.dc.ClusterVO;
-import com.cloud.dc.DataCenter;
-import com.cloud.dc.DataCenterVO;
 import com.cloud.dc.DedicatedResourceVO;
 import com.cloud.dc.HostPodVO;
 import com.cloud.dc.dao.ClusterDao;
-import com.cloud.dc.dao.DataCenterDao;
 import com.cloud.dc.dao.DedicatedResourceDao;
 import com.cloud.dc.dao.HostPodDao;
 import com.cloud.deploy.DeploymentPlan;
 import com.cloud.deploy.DeploymentPlanner.ExcludeList;
-import com.cloud.domain.DomainVO;
-import com.cloud.domain.dao.DomainDao;
 import com.cloud.exception.AffinityConflictException;
 import com.cloud.host.HostVO;
 import com.cloud.host.dao.HostDao;
@@ -27,8 +23,6 @@ import com.cloud.utils.db.TransactionStatus;
 import com.cloud.utils.exception.CloudRuntimeException;
 import com.cloud.vm.VirtualMachine;
 import com.cloud.vm.VirtualMachineProfile;
-import com.cloud.vm.dao.UserVmDao;
-import com.cloud.vm.dao.VMInstanceDao;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -42,12 +36,6 @@ public class ExplicitDedicationProcessor extends AffinityProcessorBase implement
 
     private static final Logger s_logger = LoggerFactory.getLogger(ExplicitDedicationProcessor.class);
     @Inject
-    protected UserVmDao _vmDao;
-    @Inject
-    protected VMInstanceDao _vmInstanceDao;
-    @Inject
-    protected DataCenterDao _dcDao;
-    @Inject
     protected DedicatedResourceDao _dedicatedDao;
     @Inject
     protected HostPodDao _podDao;
@@ -56,11 +44,9 @@ public class ExplicitDedicationProcessor extends AffinityProcessorBase implement
     @Inject
     protected HostDao _hostDao;
     @Inject
-    protected DomainDao _domainDao;
-    @Inject
-    protected AffinityGroupDao _affinityGroupDao;
-    @Inject
     protected AffinityGroupVMMapDao _affinityGroupVMMapDao;
+    @Inject
+    protected ZoneRepository zoneRepository;
 
     /**
      * This method will process the affinity group of type 'Explicit Dedication' for a deployment of a VM that demands dedicated resources.
@@ -73,7 +59,6 @@ public class ExplicitDedicationProcessor extends AffinityProcessorBase implement
     public void process(final VirtualMachineProfile vmProfile, final DeploymentPlan plan, ExcludeList avoid) throws AffinityConflictException {
         final VirtualMachine vm = vmProfile.getVirtualMachine();
         final List<AffinityGroupVMMapVO> vmGroupMappings = _affinityGroupVMMapDao.findByVmIdType(vm.getId(), getType());
-        final DataCenter dc = _dcDao.findById(vm.getDataCenterId());
         final List<DedicatedResourceVO> resourceList = new ArrayList<>();
 
         if (vmGroupMappings != null && !vmGroupMappings.isEmpty()) {
@@ -97,13 +82,13 @@ public class ExplicitDedicationProcessor extends AffinityProcessorBase implement
                 final HostVO host = _hostDao.findById(plan.getHostId());
                 final ClusterVO clusterofHost = _clusterDao.findById(host.getClusterId());
                 final HostPodVO podOfHost = _podDao.findById(host.getPodId());
-                final DataCenterVO zoneOfHost = _dcDao.findById(host.getDataCenterId());
+                final Zone zone = zoneRepository.findOne(host.getDataCenterId());
                 if (resourceList != null && resourceList.size() != 0) {
                     for (final DedicatedResourceVO resource : resourceList) {
                         if ((resource.getHostId() != null && resource.getHostId().longValue() == plan.getHostId().longValue()) ||
                                 (resource.getClusterId() != null && resource.getClusterId().longValue() == clusterofHost.getId()) ||
                                 (resource.getPodId() != null && resource.getPodId().longValue() == podOfHost.getId()) ||
-                                (resource.getDataCenterId() != null && resource.getDataCenterId().longValue() == zoneOfHost.getId())) {
+                                (resource.getDataCenterId() != null && resource.getDataCenterId().longValue() == zone.getId())) {
                             canUse = true;
                         }
                     }
@@ -114,14 +99,14 @@ public class ExplicitDedicationProcessor extends AffinityProcessorBase implement
             } else if (plan.getClusterId() != null) {
                 final ClusterVO cluster = _clusterDao.findById(plan.getClusterId());
                 final HostPodVO podOfCluster = _podDao.findById(cluster.getPodId());
-                final DataCenterVO zoneOfCluster = _dcDao.findById(cluster.getDataCenterId());
+                final Zone zone = zoneRepository.findOne(cluster.getDataCenterId());
                 final List<HostVO> hostToUse = new ArrayList<>();
                 // check whether this cluster or its pod is dedicated
                 if (resourceList != null && resourceList.size() != 0) {
                     for (final DedicatedResourceVO resource : resourceList) {
                         if ((resource.getClusterId() != null && resource.getClusterId() == cluster.getId()) ||
                                 (resource.getPodId() != null && resource.getPodId() == podOfCluster.getId()) ||
-                                (resource.getDataCenterId() != null && resource.getDataCenterId() == zoneOfCluster.getId())) {
+                                (resource.getDataCenterId() != null && resource.getDataCenterId() == zone.getId())) {
                             canUse = true;
                         }
 
@@ -153,14 +138,14 @@ public class ExplicitDedicationProcessor extends AffinityProcessorBase implement
                 }
             } else if (plan.getPodId() != null) {
                 final HostPodVO pod = _podDao.findById(plan.getPodId());
-                final DataCenterVO zoneOfPod = _dcDao.findById(pod.getDataCenterId());
+                final Zone zone = zoneRepository.findOne(pod.getDataCenterId());
                 final List<ClusterVO> clustersToUse = new ArrayList<>();
                 final List<HostVO> hostsToUse = new ArrayList<>();
                 // check whether this cluster or its pod is dedicated
                 if (resourceList != null && resourceList.size() != 0) {
                     for (final DedicatedResourceVO resource : resourceList) {
                         if ((resource.getPodId() != null && resource.getPodId() == pod.getId()) ||
-                                (resource.getDataCenterId() != null && resource.getDataCenterId() == zoneOfPod.getId())) {
+                                (resource.getDataCenterId() != null && resource.getDataCenterId() == zone.getId())) {
                             canUse = true;
                         }
 
@@ -208,11 +193,13 @@ public class ExplicitDedicationProcessor extends AffinityProcessorBase implement
                     }
                 }
             } else {
+                final Zone zone = zoneRepository.findOne(vm.getDataCenterId());
+
                 // check all resources under this zone
                 if (resourceList != null && resourceList.size() != 0) {
-                    avoid = updateAvoidList(resourceList, avoid, dc);
+                    avoid = updateAvoidList(resourceList, avoid, zone);
                 } else {
-                    avoid.addZone(dc.getId());
+                    avoid.addZone(zone.getId());
                     if (s_logger.isDebugEnabled()) {
                         s_logger.debug("No dedicated resources available for this domain or account under this group");
                     }
@@ -223,7 +210,7 @@ public class ExplicitDedicationProcessor extends AffinityProcessorBase implement
         }
     }
 
-    private ExcludeList updateAvoidList(final List<DedicatedResourceVO> dedicatedResources, final ExcludeList avoidList, final DataCenter dc) {
+    private ExcludeList updateAvoidList(final List<DedicatedResourceVO> dedicatedResources, final ExcludeList avoidList, final Zone zone) {
         final ExcludeList includeList = new ExcludeList();
         for (final DedicatedResourceVO dr : dedicatedResources) {
             if (dr.getHostId() != null) {
@@ -309,9 +296,9 @@ public class ExplicitDedicationProcessor extends AffinityProcessorBase implement
         //Update avoid list using includeList.
         //add resources in avoid list which are not in include list.
 
-        final List<HostPodVO> pods = _podDao.listByDataCenterId(dc.getId());
-        final List<ClusterVO> clusters = _clusterDao.listClustersByDcId(dc.getId());
-        final List<HostVO> hosts = _hostDao.listByDataCenterId(dc.getId());
+        final List<HostPodVO> pods = _podDao.listByDataCenterId(zone.getId());
+        final List<ClusterVO> clusters = _clusterDao.listClustersByDcId(zone.getId());
+        final List<HostVO> hosts = _hostDao.listByDataCenterId(zone.getId());
         final Set<Long> podsInIncludeList = includeList.getPodsToAvoid();
         final Set<Long> clustersInIncludeList = includeList.getClustersToAvoid();
         final Set<Long> hostsInIncludeList = includeList.getHostsToAvoid();
@@ -382,35 +369,5 @@ public class ExplicitDedicationProcessor extends AffinityProcessorBase implement
                 }
             }
         }
-
-        return;
-    }
-
-    private List<DedicatedResourceVO> searchInParentDomainResources(final long domainId) {
-        final List<Long> domainIds = getDomainParentIds(domainId);
-        final List<DedicatedResourceVO> dr = new ArrayList<>();
-        for (final Long id : domainIds) {
-            final List<DedicatedResourceVO> resource = _dedicatedDao.listByDomainId(id);
-            if (resource != null) {
-                dr.addAll(resource);
-            }
-        }
-        return dr;
-    }
-
-    private List<Long> getDomainParentIds(final long domainId) {
-        DomainVO domainRecord = _domainDao.findById(domainId);
-        final List<Long> domainIds = new ArrayList<>();
-        domainIds.add(domainRecord.getId());
-        while (domainRecord.getParent() != null) {
-            domainRecord = _domainDao.findById(domainRecord.getParent());
-            domainIds.add(domainRecord.getId());
-        }
-        return domainIds;
-    }
-
-    private List<DedicatedResourceVO> searchInDomainResources(final long domainId) {
-        final List<DedicatedResourceVO> dr = _dedicatedDao.listByDomainId(domainId);
-        return dr;
     }
 }

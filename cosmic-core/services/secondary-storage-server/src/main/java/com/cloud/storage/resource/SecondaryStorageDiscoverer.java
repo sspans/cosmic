@@ -38,8 +38,6 @@ import org.slf4j.LoggerFactory;
 public class SecondaryStorageDiscoverer extends DiscovererBase implements Discoverer {
     private static final Logger s_logger = LoggerFactory.getLogger(SecondaryStorageDiscoverer.class);
     @Inject
-    protected VMTemplateDao _tmpltDao = null;
-    @Inject
     protected VMTemplateZoneDao _vmTemplateZoneDao = null;
     @Inject
     protected VMTemplateDao _vmTemplateDao = null;

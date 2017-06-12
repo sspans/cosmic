@@ -7,8 +7,7 @@ import com.cloud.agent.api.CreateLogicalSwitchCommand;
 import com.cloud.agent.api.DeleteLogicalSwitchAnswer;
 import com.cloud.agent.api.DeleteLogicalSwitchCommand;
 import com.cloud.agent.api.FindLogicalSwitchCommand;
-import com.cloud.dc.DataCenter;
-import com.cloud.dc.dao.DataCenterDao;
+import com.cloud.db.model.Zone;
 import com.cloud.deploy.DeployDestination;
 import com.cloud.deploy.DeploymentPlan;
 import com.cloud.exception.AgentUnavailableException;
@@ -17,7 +16,6 @@ import com.cloud.exception.InsufficientVirtualNetworkCapacityException;
 import com.cloud.exception.OperationTimedoutException;
 import com.cloud.host.HostVO;
 import com.cloud.host.dao.HostDao;
-import com.cloud.host.dao.HostDetailsDao;
 import com.cloud.model.enumeration.NetworkType;
 import com.cloud.network.Network;
 import com.cloud.network.NetworkModel;
@@ -33,9 +31,7 @@ import com.cloud.network.dao.PhysicalNetworkDao;
 import com.cloud.network.dao.PhysicalNetworkVO;
 import com.cloud.offering.NetworkOffering;
 import com.cloud.offerings.dao.NetworkOfferingServiceMapDao;
-import com.cloud.resource.ResourceManager;
 import com.cloud.user.Account;
-import com.cloud.user.dao.AccountDao;
 import com.cloud.utils.exception.CloudRuntimeException;
 import com.cloud.vm.NicProfile;
 import com.cloud.vm.ReservationContext;
@@ -59,21 +55,13 @@ public class NiciraNvpGuestNetworkGuru extends GuestNetworkGuru {
     @Inject
     protected NetworkDao networkDao;
     @Inject
-    protected DataCenterDao zoneDao;
-    @Inject
     protected PhysicalNetworkDao physicalNetworkDao;
-    @Inject
-    protected AccountDao accountDao;
     @Inject
     protected NiciraNvpDao niciraNvpDao;
     @Inject
     protected HostDao hostDao;
     @Inject
-    protected ResourceManager resourceMgr;
-    @Inject
     protected AgentManager agentMgr;
-    @Inject
-    protected HostDetailsDao hostDetailsDao;
     @Inject
     protected NetworkOfferingServiceMapDao ntwkOfferingSrvcDao;
 
@@ -100,8 +88,8 @@ public class NiciraNvpGuestNetworkGuru extends GuestNetworkGuru {
     public Network design(final NetworkOffering offering, final DeploymentPlan plan, final Network userSpecified, final Account owner) {
         // Check if the isolation type of the related physical network is supported
         final PhysicalNetworkVO physnet = physicalNetworkDao.findById(plan.getPhysicalNetworkId());
-        final DataCenter dc = _dcDao.findById(plan.getDataCenterId());
-        if (!canHandle(offering, dc.getNetworkType(), physnet)) {
+        final Zone zone = zoneRepository.findOne(plan.getDataCenterId());
+        if (!canHandle(offering, zone.getNetworkType(), physnet)) {
             s_logger.debug("Refusing to design this network");
             return null;
         }

@@ -6,10 +6,8 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import com.cloud.agent.api.to.LoadBalancerTO;
-import com.cloud.configuration.ConfigurationManager;
-import com.cloud.dao.EntityManager;
-import com.cloud.dc.DataCenter;
-import com.cloud.dc.DataCenterVO;
+import com.cloud.db.model.Zone;
+import com.cloud.db.repository.ZoneRepository;
 import com.cloud.exception.ResourceUnavailableException;
 import com.cloud.lb.ApplicationLoadBalancerRuleVO;
 import com.cloud.model.enumeration.NetworkType;
@@ -22,11 +20,9 @@ import com.cloud.network.dao.PhysicalNetworkServiceProviderVO;
 import com.cloud.network.dao.VirtualRouterProviderDao;
 import com.cloud.network.element.InternalLoadBalancerElement;
 import com.cloud.network.element.VirtualRouterProviderVO;
-import com.cloud.network.lb.InternalLoadBalancerVMManager;
 import com.cloud.network.lb.LoadBalancingRule;
 import com.cloud.network.rules.FirewallRule;
 import com.cloud.network.rules.LoadBalancerContainer.Scheme;
-import com.cloud.user.AccountManager;
 import com.cloud.utils.component.ComponentContext;
 import com.cloud.utils.net.Ip;
 
@@ -53,17 +49,11 @@ public class InternalLbElementTest {
 
     //Mocked interfaces
     @Inject
-    AccountManager _accountMgr;
-    @Inject
     VirtualRouterProviderDao _vrProviderDao;
     @Inject
     PhysicalNetworkServiceProviderDao _pNtwkProviderDao;
     @Inject
-    InternalLoadBalancerVMManager _internalLbMgr;
-    @Inject
-    ConfigurationManager _configMgr;
-    @Inject
-    EntityManager _entityMgr;
+    ZoneRepository zoneRepository;
 
     long validElId = 1L;
     long nonExistingElId = 2L;
@@ -99,8 +89,10 @@ public class InternalLbElementTest {
 
         Mockito.when(_vrProviderDao.persist(Matchers.any(VirtualRouterProviderVO.class))).thenReturn(validElement);
 
-        final DataCenterVO dc = new DataCenterVO(1L, null, null, null, null, null, null, null, null, null, NetworkType.Advanced, null, null);
-        Mockito.when(_entityMgr.findById(Matchers.eq(DataCenter.class), Matchers.anyLong())).thenReturn(dc);
+        final Zone zone = new Zone();
+        zone.setId(1L);
+        zone.setNetworkType(NetworkType.Advanced);
+        Mockito.when(zoneRepository.findOne(Matchers.anyLong())).thenReturn(zone);
     }
 
     //TEST FOR getProvider() method
@@ -122,19 +114,16 @@ public class InternalLbElementTest {
     }
 
     private static PhysicalNetworkServiceProviderVO setId(final PhysicalNetworkServiceProviderVO vo, final long id) {
-        final PhysicalNetworkServiceProviderVO voToReturn = vo;
-        final Class<?> c = voToReturn.getClass();
+        final Class<?> c = vo.getClass();
         try {
             final Field f = c.getDeclaredField("id");
             f.setAccessible(true);
-            f.setLong(voToReturn, id);
-        } catch (final NoSuchFieldException ex) {
-            return null;
-        } catch (final IllegalAccessException ex) {
+            f.setLong(vo, id);
+        } catch (final NoSuchFieldException | IllegalAccessException ex) {
             return null;
         }
 
-        return voToReturn;
+        return vo;
     }
 
     @Test

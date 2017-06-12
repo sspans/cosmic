@@ -35,6 +35,8 @@ import com.cloud.config.Configuration;
 import com.cloud.configuration.Resource.ResourceType;
 import com.cloud.context.CallContext;
 import com.cloud.dao.EntityManager;
+import com.cloud.db.model.Zone;
+import com.cloud.db.repository.ZoneRepository;
 import com.cloud.dc.AccountVlanMapVO;
 import com.cloud.dc.ClusterDetailsDao;
 import com.cloud.dc.ClusterDetailsVO;
@@ -68,7 +70,6 @@ import com.cloud.domain.Domain;
 import com.cloud.domain.DomainVO;
 import com.cloud.domain.dao.DomainDao;
 import com.cloud.engine.orchestration.service.NetworkOrchestrationService;
-import com.cloud.engine.subsystem.api.storage.DataStoreManager;
 import com.cloud.event.ActionEvent;
 import com.cloud.event.EventTypes;
 import com.cloud.event.UsageEventUtils;
@@ -130,7 +131,6 @@ import com.cloud.region.PortableIpVO;
 import com.cloud.region.Region;
 import com.cloud.region.RegionVO;
 import com.cloud.region.dao.RegionDao;
-import com.cloud.server.ConfigurationServer;
 import com.cloud.server.ManagementService;
 import com.cloud.service.ServiceOfferingDetailsVO;
 import com.cloud.service.ServiceOfferingVO;
@@ -176,7 +176,6 @@ import com.cloud.vm.VirtualMachine;
 import com.cloud.vm.dao.NicDao;
 import com.cloud.vm.dao.NicIpAliasDao;
 import com.cloud.vm.dao.NicIpAliasVO;
-import com.cloud.vm.dao.NicSecondaryIpDao;
 import com.cloud.vm.dao.VMInstanceDao;
 
 import javax.inject.Inject;
@@ -273,8 +272,6 @@ public class ConfigurationManagerImpl extends ManagerBase implements Configurati
     @Inject
     ProjectManager _projectMgr;
     @Inject
-    DataStoreManager _dataStoreMgr;
-    @Inject
     NetworkOfferingServiceMapDao _ntwkOffServiceMapDao;
     @Inject
     PhysicalNetworkDao _physicalNetworkDao;
@@ -295,8 +292,6 @@ public class ConfigurationManagerImpl extends ManagerBase implements Configurati
     @Inject
     PortableIpDao _portableIpDao;
     @Inject
-    ConfigurationServer _configServer;
-    @Inject
     DataCenterDetailsDao _dcDetailsDao;
     @Inject
     ClusterDetailsDao _clusterDetailsDao;
@@ -306,8 +301,6 @@ public class ConfigurationManagerImpl extends ManagerBase implements Configurati
     AccountDetailsDao _accountDetailsDao;
     @Inject
     PrimaryDataStoreDao _storagePoolDao;
-    @Inject
-    NicSecondaryIpDao _nicSecondaryIpDao;
     @Inject
     NicIpAliasDao _nicIpAliasDao;
     @Inject
@@ -320,6 +313,8 @@ public class ConfigurationManagerImpl extends ManagerBase implements Configurati
     AffinityGroupService _affinityGroupService;
     @Inject
     StorageManager _storageManager;
+    @Inject
+    ZoneRepository zoneRepository;
     private int _maxVolumeSizeInGb = Integer.parseInt(Config.MaxVolumeSize.getDefaultValue());
     private long _defaultPageSize = Long.parseLong(Config.DefaultPageSize.getDefaultValue());
     private Set<String> weightBasedParametersForValidation;
@@ -1762,7 +1757,7 @@ public class ConfigurationManagerImpl extends ManagerBase implements Configurati
         }
 
         // Verify that zone exists
-        final DataCenterVO zone = _zoneDao.findById(zoneId);
+        final Zone zone = zoneRepository.findOne(zoneId);
         if (zone == null) {
             throw new InvalidParameterValueException("Unable to find zone by id " + zoneId);
         }
@@ -2122,7 +2117,7 @@ public class ConfigurationManagerImpl extends ManagerBase implements Configurati
     private VlanVO commitVlanAndIpRange(final long zoneId, final long networkId, final long physicalNetworkId, final Long podId, final String startIP, final String endIP,
                                         final String vlanGateway, final String vlanNetmask, final String vlanId, final Domain domain, final Account vlanOwner, final String
                                                 vlanIp6Gateway, final String vlanIp6Cidr,
-                                        final boolean ipv4, final DataCenterVO zone, final VlanType vlanType, final String ipv6Range, final String ipRange) {
+                                        final boolean ipv4, final Zone zone, final VlanType vlanType, final String ipv6Range, final String ipRange) {
         return Transaction.execute(new TransactionCallback<VlanVO>() {
             @Override
             public VlanVO doInTransaction(final TransactionStatus status) {
@@ -2311,7 +2306,7 @@ public class ConfigurationManagerImpl extends ManagerBase implements Configurati
 
         // Verify that zone exists and is advanced
         final Long zoneId = vlan.getDataCenterId();
-        final DataCenterVO zone = _zoneDao.findById(zoneId);
+        final Zone zone = zoneRepository.findOne(zoneId);
         if (zone == null) {
             throw new InvalidParameterValueException("Unable to find zone by id " + zoneId);
         }
@@ -3452,7 +3447,7 @@ public class ConfigurationManagerImpl extends ManagerBase implements Configurati
         }
 
         // Check if zone is disabled
-        final DataCenterVO zone = _zoneDao.findById(zoneId);
+        final Zone zone = zoneRepository.findOne(zoneId);
         final Account account = CallContext.current().getCallingAccount();
         if (AllocationState.Disabled == zone.getAllocationState()
                 && !_accountMgr.isRootAdmin(account.getId())) {
@@ -3667,7 +3662,7 @@ public class ConfigurationManagerImpl extends ManagerBase implements Configurati
     }
 
     @Override
-    public void checkZoneAccess(final Account caller, final DataCenter zone) {
+    public void checkZoneAccess(final Account caller, final Zone zone) {
         for (final SecurityChecker checker : _secChecker) {
             if (checker.checkAccess(caller, zone)) {
                 if (s_logger.isDebugEnabled()) {
@@ -3929,7 +3924,7 @@ public class ConfigurationManagerImpl extends ManagerBase implements Configurati
         }
 
         // Validate the zone
-        final DataCenterVO zone = _zoneDao.findById(zoneId);
+        final Zone zone = zoneRepository.findOne(zoneId);
         if (zone == null) {
             throw new InvalidParameterValueException("Please specify a valid zone.");
         }
@@ -4151,7 +4146,7 @@ public class ConfigurationManagerImpl extends ManagerBase implements Configurati
 
     @Override
     public void createDefaultSystemNetworks(final long zoneId) throws ConcurrentOperationException {
-        final DataCenterVO zone = _zoneDao.findById(zoneId);
+        final Zone zone = zoneRepository.findOne(zoneId);
         final String networkDomain = null;
         // Create public, management, control and storage networks as a part of
         // the zone creation
