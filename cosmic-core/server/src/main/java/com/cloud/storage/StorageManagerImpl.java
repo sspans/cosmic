@@ -27,8 +27,9 @@ import com.cloud.configuration.ConfigurationManager;
 import com.cloud.configuration.ConfigurationManagerImpl;
 import com.cloud.configuration.Resource.ResourceType;
 import com.cloud.context.CallContext;
+import com.cloud.db.model.Zone;
+import com.cloud.db.repository.ZoneRepository;
 import com.cloud.dc.ClusterVO;
-import com.cloud.dc.DataCenterVO;
 import com.cloud.dc.dao.ClusterDao;
 import com.cloud.dc.dao.DataCenterDao;
 import com.cloud.engine.subsystem.api.storage.ClusterScope;
@@ -271,6 +272,9 @@ public class StorageManagerImpl extends ManagerBase implements StorageManager, C
     private TemplateService _imageSrv;
     @Inject
     private DiskOfferingDao _diskOfferingDao;
+    @Inject
+    private ZoneRepository zoneRepository;
+
     // protected BigDecimal _overProvisioningFactor = new BigDecimal(1);
     private long _serverId;
 
@@ -503,7 +507,7 @@ public class StorageManagerImpl extends ManagerBase implements StorageManager, C
                     final List<VolumeVO> vols = _volsDao.listNonRootVolumesToBeDestroyed(new Date(System.currentTimeMillis() - ((long) StorageCleanupDelay.value() << 10)));
                     for (final VolumeVO vol : vols) {
                         try {
-                            VolumeInfo volumeInfo = volFactory.getVolume(vol.getId());
+                            final VolumeInfo volumeInfo = volFactory.getVolume(vol.getId());
                             if (volumeInfo != null) {
                                 volService.expungeVolumeAsync(volumeInfo);
                             } else {
@@ -668,8 +672,8 @@ public class StorageManagerImpl extends ManagerBase implements StorageManager, C
         s_logger.debug("Total over provisioned capacity of the pool " + storagePool.getName() + " id: " + storagePool.getId() + " is " + totalOverProvCapacity);
         CapacityState capacityState = CapacityState.Enabled;
         if (storagePool.getScope() == ScopeType.ZONE) {
-            final DataCenterVO dc = ApiDBUtils.findZoneById(storagePool.getDataCenterId());
-            final AllocationState allocationState = dc.getAllocationState();
+            final Zone zone = zoneRepository.findOne(storagePool.getDataCenterId());
+            final AllocationState allocationState = zone.getAllocationState();
             capacityState = allocationState == AllocationState.Disabled ? CapacityState.Disabled : CapacityState.Enabled;
         } else {
             if (storagePool.getClusterId() != null) {
@@ -1155,16 +1159,16 @@ public class StorageManagerImpl extends ManagerBase implements StorageManager, C
     @DB
     @Override
     public DataStore createLocalStorage(final Host host, final StoragePoolInfo pInfo) throws ConnectionException {
-        final DataCenterVO dc = _dcDao.findById(host.getDataCenterId());
-        if (dc == null) {
+        final Zone zone = zoneRepository.findOne(host.getDataCenterId());
+        if (zone == null) {
             return null;
         }
         boolean useLocalStorageForSystemVM = false;
-        final Boolean isLocal = ConfigurationManagerImpl.SystemVMUseLocalStorage.valueIn(dc.getId());
+        final Boolean isLocal = ConfigurationManagerImpl.SystemVMUseLocalStorage.valueIn(zone.getId());
         if (isLocal != null) {
             useLocalStorageForSystemVM = isLocal.booleanValue();
         }
-        if (!(dc.isLocalStorageEnabled() || useLocalStorageForSystemVM)) {
+        if (!(zone.isLocalStorageEnabled() || useLocalStorageForSystemVM)) {
             return null;
         }
         final DataStore store;
@@ -1383,7 +1387,7 @@ public class StorageManagerImpl extends ManagerBase implements StorageManager, C
         }
 
         final Map<String, String> details = extractApiParamAsMap(cmd.getDetails());
-        final DataCenterVO zone = _dcDao.findById(cmd.getZoneId());
+        final Zone zone = zoneRepository.findOne(cmd.getZoneId());
         if (zone == null) {
             throw new InvalidParameterValueException("unable to find zone by id " + zoneId);
         }
@@ -1463,7 +1467,7 @@ public class StorageManagerImpl extends ManagerBase implements StorageManager, C
             }
         }
 
-        final Long dcId = cmd.getZoneId();
+        final Long zoneId = cmd.getZoneId();
 
         ScopeType scopeType = null;
         final String scope = cmd.getScope();
@@ -1479,14 +1483,14 @@ public class StorageManagerImpl extends ManagerBase implements StorageManager, C
             }
         }
 
-        if (scopeType == ScopeType.ZONE && dcId == null) {
+        if (scopeType == ScopeType.ZONE && zoneId == null) {
             throw new InvalidParameterValueException("zone id can't be null, if scope is zone");
         }
 
         // Check if the zone exists in the system
-        final DataCenterVO zone = _dcDao.findById(dcId);
+        final Zone zone = zoneRepository.findOne(zoneId);
         if (zone == null) {
-            throw new InvalidParameterValueException("Can't find zone by id " + dcId);
+            throw new InvalidParameterValueException("Can't find zone by id " + zoneId);
         }
 
         final Account account = CallContext.current().getCallingAccount();
@@ -1498,7 +1502,7 @@ public class StorageManagerImpl extends ManagerBase implements StorageManager, C
         }
 
         final Map<String, Object> params = new HashMap<>();
-        params.put("zoneId", dcId);
+        params.put("zoneId", zoneId);
         params.put("url", cmd.getUrl());
         params.put("name", cmd.getUrl());
         params.put("details", cmd.getDetails());
@@ -1908,7 +1912,7 @@ public class StorageManagerImpl extends ManagerBase implements StorageManager, C
 
         if (zoneId != null) {
             // Check if the zone exists in the system
-            final DataCenterVO zone = _dcDao.findById(zoneId);
+            final Zone zone = zoneRepository.findOne(zoneId);
             if (zone == null) {
                 throw new InvalidParameterValueException("Can't find zone by id " + zoneId);
             }
@@ -1971,10 +1975,10 @@ public class StorageManagerImpl extends ManagerBase implements StorageManager, C
         if (zoneId != null) {
             dcIds.add(zoneId);
         } else {
-            final List<DataCenterVO> dcs = _dcDao.listAll();
-            if (dcs != null) {
-                for (final DataCenterVO dc : dcs) {
-                    dcIds.add(dc.getId());
+            final List<Zone> zones = zoneRepository.findByRemovedIsNull();
+            if (zones != null) {
+                for (final Zone zone : zones) {
+                    dcIds.add(zone.getId());
                 }
             }
         }
