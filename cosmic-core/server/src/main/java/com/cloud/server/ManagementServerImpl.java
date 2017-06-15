@@ -474,6 +474,8 @@ import com.cloud.configuration.Config;
 import com.cloud.consoleproxy.ConsoleProxyManagementState;
 import com.cloud.consoleproxy.ConsoleProxyManager;
 import com.cloud.context.CallContext;
+import com.cloud.db.model.Zone;
+import com.cloud.db.repository.ZoneRepository;
 import com.cloud.dc.AccountVlanMapVO;
 import com.cloud.dc.ClusterVO;
 import com.cloud.dc.DataCenterVO;
@@ -781,6 +783,9 @@ public class ManagementServerImpl extends ManagerBase implements ManagementServe
     private LockMasterListener _lockMasterListener;
     @Inject
     private KeystoreManager _ksMgr;
+    @Inject
+    private ZoneRepository zoneRepository;
+
     private Map<String, String> _configs;
     private Map<String, Boolean> _availableIdsMap;
     private List<UserAuthenticator> _userAuthenticators;
@@ -2112,11 +2117,11 @@ public class ManagementServerImpl extends ManagerBase implements ManagementServe
         // op_host_Capacity contains only allocated stats and the real time
         // stats are stored "in memory".
         // Show Sec. Storage only when the api is invoked for the zone layer.
-        List<DataCenterVO> dcList = new ArrayList<>();
+        List<Zone> zones = new ArrayList<>();
         if (zoneId == null && podId == null && clusterId == null) {
-            dcList = ApiDBUtils.listZones();
+            zones = zoneRepository.findByRemovedIsNull();
         } else if (zoneId != null) {
-            dcList.add(ApiDBUtils.findZoneById(zoneId));
+            zones.add(zoneRepository.findOne(zoneId));
         } else {
             if (clusterId != null) {
                 zoneId = ApiDBUtils.findClusterById(clusterId).getDataCenterId();
@@ -2128,7 +2133,7 @@ public class ManagementServerImpl extends ManagerBase implements ManagementServe
             }
         }
 
-        for (final DataCenterVO zone : dcList) {
+        for (final Zone zone : zones) {
             zoneId = zone.getId();
             if ((capacityType == null || capacityType == Capacity.CAPACITY_TYPE_SECONDARY_STORAGE) && podId == null && clusterId == null) {
                 capacities.add(_storageMgr.getSecondaryStorageUsedStats(null, zoneId));
@@ -2427,11 +2432,11 @@ public class ManagementServerImpl extends ManagerBase implements ManagementServe
 
         if (zoneId != null) {
             if (zoneId.longValue() == -1L) {
-                final List<DataCenterVO> zones = _dcDao.listAll();
+                final List<Zone> zones = zoneRepository.findByRemovedIsNull();
 
                 for (final String hypervisor : hypervisors) {
                     int hyperCount = 0;
-                    for (final DataCenterVO zone : zones) {
+                    for (final Zone zone : zones) {
                         final List<ClusterVO> clusters = _clusterDao.listByDcHyType(zone.getId(), hypervisor);
                         if (!clusters.isEmpty()) {
                             hyperCount++;
@@ -2899,7 +2904,8 @@ public class ManagementServerImpl extends ManagerBase implements ManagementServe
             if (dedicatedResourceVO != null && dedicatedResourceVO.getDomainId() != account.getDomainId()) {
                 final Domain domain = _domainDao.findById(dedicatedResourceVO.getDomainId());
                 if (domain != null) {
-                    s_logger.debug("Host " + host.getName() + " is dedicated to domain " + domain.getName() + " so not suitable for migration for VM " + vmProfile.getInstanceName());
+                    s_logger.debug("Host " + host.getName() + " is dedicated to domain " + domain.getName() + " so not suitable for migration for VM " + vmProfile
+                            .getInstanceName());
                 }
                 excludes.addHost(host.getId());
             }
@@ -3213,7 +3219,7 @@ public class ManagementServerImpl extends ManagerBase implements ManagementServe
         if (capacityType == null || capacityType == Capacity.CAPACITY_TYPE_SECONDARY_STORAGE) {
             final List<SummedCapacity> list = new ArrayList<>();
             if (zoneId != null) {
-                final DataCenterVO zone = ApiDBUtils.findZoneById(zoneId);
+                final Zone zone = zoneRepository.findOne(zoneId);
                 if (zone == null || zone.getAllocationState() == AllocationState.Disabled) {
                     return null;
                 }
