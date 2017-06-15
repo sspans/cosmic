@@ -430,14 +430,14 @@ public class SecondaryStorageManagerImpl extends SystemVmManagerBase implements 
             buf.append(" bootproto=dhcp");
         }
 
-        final DataCenterVO dc = _dcDao.findById(profile.getVirtualMachine().getDataCenterId());
-        buf.append(" internaldns1=").append(dc.getInternalDns1());
-        if (dc.getInternalDns2() != null) {
-            buf.append(" internaldns2=").append(dc.getInternalDns2());
+        final Zone zone = zoneRepository.findOne(profile.getVirtualMachine().getDataCenterId());
+        buf.append(" internaldns1=").append(zone.getInternalDns1());
+        if (zone.getInternalDns2() != null) {
+            buf.append(" internaldns2=").append(zone.getInternalDns2());
         }
-        buf.append(" dns1=").append(dc.getDns1());
-        if (dc.getDns2() != null) {
-            buf.append(" dns2=").append(dc.getDns2());
+        buf.append(" dns1=").append(zone.getDns1());
+        if (zone.getDns2() != null) {
+            buf.append(" dns2=").append(zone.getDns2());
         }
 
         final String bootArgs = buf.toString();
@@ -724,8 +724,8 @@ public class SecondaryStorageManagerImpl extends SystemVmManagerBase implements 
         }
     }
 
-    protected boolean isSecondaryStorageVmRequired(final long dcId) {
-        final DataCenterVO dc = _dcDao.findById(dcId);
+    protected boolean isSecondaryStorageVmRequired(final long zoneId) {
+        final DataCenterVO dc = _dcDao.findById(zoneId);
         _dcDao.loadDetails(dc);
         final String ssvmReq = dc.getDetail(ZoneConfig.EnableSecStorageVm.key());
         if (ssvmReq != null) {
