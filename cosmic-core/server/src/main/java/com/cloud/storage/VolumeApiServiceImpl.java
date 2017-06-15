@@ -20,11 +20,10 @@ import com.cloud.configuration.Resource.ResourceType;
 import com.cloud.context.CallContext;
 import com.cloud.dao.EntityManager;
 import com.cloud.dao.UUIDManager;
+import com.cloud.db.model.Zone;
+import com.cloud.db.repository.ZoneRepository;
 import com.cloud.dc.ClusterDetailsDao;
 import com.cloud.dc.ClusterVO;
-import com.cloud.dc.DataCenter;
-import com.cloud.dc.DataCenterVO;
-import com.cloud.dc.dao.DataCenterDao;
 import com.cloud.domain.Domain;
 import com.cloud.engine.orchestration.service.VolumeOrchestrationService;
 import com.cloud.engine.subsystem.api.storage.ChapInfo;
@@ -158,8 +157,6 @@ public class VolumeApiServiceImpl extends ManagerBase implements VolumeApiServic
     static final ConfigKey<Long> VmJobCheckInterval = new ConfigKey<>("Advanced", Long.class, "vm.job.check.interval", "3000",
             "Interval in milliseconds to check if the job is complete", false);
     private final static Logger s_logger = LoggerFactory.getLogger(VolumeApiServiceImpl.class);
-    @Inject
-    DataCenterDao _dcDao = null;
     private final StateMachine2<Volume.State, Volume.Event, Volume> _volStateMachine;
     @Inject
     VolumeOrchestrationService _volumeMgr;
@@ -225,6 +222,10 @@ public class VolumeApiServiceImpl extends ManagerBase implements VolumeApiServic
     VmWorkJobDao _workJobDao;
     @Inject
     ClusterDetailsDao _clusterDetailsDao;
+
+    @Inject
+    ZoneRepository zoneRepository;
+
     VmWorkJobHandlerProxy _jobHandlerProxy = new VmWorkJobHandlerProxy(this);
     private List<StoragePoolAllocator> _storagePoolAllocators;
     private long _maxVolumeSizeInGb;
@@ -412,7 +413,7 @@ public class VolumeApiServiceImpl extends ManagerBase implements VolumeApiServic
         _resourceLimitMgr.checkResourceLimit(owner, ResourceType.primary_storage, displayVolume, new Long(size));
 
         // Verify that zone exists
-        final DataCenterVO zone = _dcDao.findById(zoneId);
+        final Zone zone = zoneRepository.findOne(zoneId);
         if (zone == null) {
             throw new InvalidParameterValueException("Unable to find zone by id " + zoneId);
         }
@@ -648,8 +649,8 @@ public class VolumeApiServiceImpl extends ManagerBase implements VolumeApiServic
 
         // If local storage is disabled then attaching a volume with local disk
         // offering not allowed
-        final DataCenterVO dataCenter = _dcDao.findById(volumeToAttach.getDataCenterId());
-        if (!dataCenter.isLocalStorageEnabled()) {
+        final Zone zone = zoneRepository.findOne(volumeToAttach.getDataCenterId());
+        if (!zone.isLocalStorageEnabled()) {
             final DiskOfferingVO diskOffering = _diskOfferingDao.findById(volumeToAttach.getDiskOfferingId());
             if (diskOffering.getUseLocalStorage()) {
                 throw new InvalidParameterValueException("Zone is not configured to use local storage but volume's disk offering " + diskOffering.getName() + " uses it");
@@ -2205,7 +2206,7 @@ public class VolumeApiServiceImpl extends ManagerBase implements VolumeApiServic
         if (volume == null) {
             throw new InvalidParameterValueException("Creating snapshot failed due to volume:" + volumeId + " doesn't exist");
         }
-        final DataCenter zone = _dcDao.findById(volume.getDataCenterId());
+        final Zone zone = zoneRepository.findOne(volume.getDataCenterId());
         if (zone == null) {
             throw new InvalidParameterValueException("Can't find zone by id " + volume.getDataCenterId());
         }
@@ -2344,7 +2345,7 @@ public class VolumeApiServiceImpl extends ManagerBase implements VolumeApiServic
         // perform permission check
         _accountMgr.checkAccess(account, null, true, volume);
 
-        if (_dcDao.findById(zoneId) == null) {
+        if (zoneRepository.findOne(zoneId) == null) {
             throw new InvalidParameterValueException("Please specify a valid zone.");
         }
         if (volume.getPoolId() == null) {
@@ -2547,7 +2548,7 @@ public class VolumeApiServiceImpl extends ManagerBase implements VolumeApiServic
         _resourceLimitMgr.checkResourceLimit(volumeOwner, ResourceType.volume);
 
         // Verify that zone exists
-        final DataCenterVO zone = _dcDao.findById(zoneId);
+        final Zone zone = zoneRepository.findOne(zoneId);
         if (zone == null) {
             throw new InvalidParameterValueException("Unable to find zone by id " + zoneId);
         }
