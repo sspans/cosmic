@@ -791,10 +791,12 @@ public class KvmStorageProcessor implements StorageProcessor {
 
             if (attach) {
                 logger.debug("Attaching device: " + xml);
-                dm.attachDevice(xml);
+                // 1 - VIR_DOMAIN_DEVICE_MODIFY_LIVE
+                dm.attachDeviceFlags(xml, 1);
             } else {
                 logger.debug("Detaching device: " + xml);
-                dm.detachDevice(xml);
+                // 1 - VIR_DOMAIN_DEVICE_MODIFY_LIVE
+                dm.detachDeviceFlags(xml, 1);
             }
         } catch (final LibvirtException e) {
             if (attach) {
