@@ -103,15 +103,25 @@ enable_pcihotplug() {
 }
 
 enable_serial_console() {
-   sed -i -e "/^serial.*/d" /boot/grub/grub.conf
-   sed -i -e "/^terminal.*/d" /boot/grub/grub.conf
-   sed -i -e "/^default.*/a\serial --unit=0 --speed=115200 --parity=no --stop=1" /boot/grub/grub.conf
-   sed -i -e "/^serial.*/a\terminal --timeout=0 serial console" /boot/grub/grub.conf
-   sed -i -e "s/\(^kernel.* ro\) \(console.*\)/\1 console=tty0 console=ttyS0,115200n8/" /boot/grub/grub.conf
+   #sed -i -e "/^serial.*/d" /boot/grub/grub.conf
+   #sed -i -e "/^terminal.*/d" /boot/grub/grub.conf
+   #sed -i -e "/^default.*/a\serial --unit=0 --speed=115200 --parity=no --stop=1" /boot/grub/grub.conf
+   #sed -i -e "/^serial.*/a\terminal --timeout=0 serial console" /boot/grub/grub.conf
+   #sed -i -e "s/\(^kernel.* ro\) \(console.*\)/\1 console=tty0 console=ttyS0,115200n8/" /boot/grub/grub.conf
    sed -i -e "/^s0:2345:respawn.*/d" /etc/inittab
    sed -i -e "/6:23:respawn/a\s0:2345:respawn:/sbin/getty -L 115200 ttyS0 vt102" /etc/inittab
 }
 
+# check for systemd or sysv system
+# TODO: Need to be changed in the future if we ditch Debian7
+if [ -L "/sbin/init" ]; then
+    function chkconfig {
+        case $2 in
+            off)  systemctl disable --now $1 ;;
+            on)   systemctl enable --now $1 ;;
+        esac
+    }
+fi
 
 CMDLINE=$(cat /var/cache/cloud/cmdline)
 TYPE="router"
@@ -194,3 +204,4 @@ then
 fi
 
 exit $?
+

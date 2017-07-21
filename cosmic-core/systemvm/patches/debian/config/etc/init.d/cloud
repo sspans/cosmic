@@ -5,9 +5,9 @@
 # Required-Stop:     $local_fs
 # Should-Start:
 # Should-Stop:
-# Default-Start:
+# Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Short-Description: 	Start up the Cosmic Agent
+# Short-Description:     Start up the Cosmic Agent
 ### END INIT INFO
 
 
@@ -122,17 +122,18 @@ status() {
 
 case "$1" in
    start) start
-	  ;;
+      ;;
     stop) stop
- 	  ;;
+       ;;
     status) status
- 	  ;;
+       ;;
  restart) stop
           start
- 	  ;;
+       ;;
        *) echo "Usage: $0 {start|stop|status|restart}"
-	  exit 1
-	  ;;
+      exit 1
+      ;;
 esac
 
 exit $RETVAL
+

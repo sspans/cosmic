@@ -27,6 +27,17 @@ rm -f /var/cache/cloud/boot_up_done
 
 . /lib/lsb/init-functions
 
+# check for systemd or sysv system
+# TODO: Need to be changed in the future if we ditch Debian7
+if [ -L "/sbin/init" ]; then
+    function chkconfig {
+        case $2 in
+            off)  systemctl disable --now $1 ;;
+            on)   systemctl enable --now $1 ;;
+        esac
+    }
+fi
+
 log_it() {
   echo "$(date) $@" >> /var/log/cloud.log
   log_action_msg "$@"
@@ -272,7 +283,7 @@ setup_interface() {
           log_it "checking that $intf has IP "
           while true
           do
-              ip=$(ifconfig $intf | grep "inet addr:" | awk '{print $2}' | awk -F: '{print $2}')
+              ip=$(ifconfig $intf | grep "inet" | awk '{print $2}')
               if [ -z $ip ]
               then
                   sleep 1;
@@ -464,12 +475,12 @@ setup_common() {
   fi
   if [ -n "$ETH0_IP6" ]
   then
-	  setup_interface_ipv6 "0" $ETH0_IP6 $ETH0_IP6_PRELEN
+      setup_interface_ipv6 "0" $ETH0_IP6 $ETH0_IP6_PRELEN
   fi
   setup_interface "1" $ETH1_IP $ETH1_MASK $GW
   if [ -n "$ETH2_IP" ]
   then
-  	setup_interface "2" $ETH2_IP $ETH2_MASK $GW
+      setup_interface "2" $ETH2_IP $ETH2_MASK $GW
   fi
 
   echo $NAME > /etc/hostname
@@ -798,7 +809,7 @@ setup_router() {
         done
       fi
   else
-  	setup_common eth0 eth1
+      setup_common eth0 eth1
       if [ -n "$EXTRA_PUBNICS" ]
       then
         for((i = 2; i < 2 + $EXTRA_PUBNICS; i++))
@@ -1001,19 +1012,19 @@ setup_dhcpsrvr() {
 }
 
 setup_storage_network() {
-	if [ x"$STORAGE_IP" == "x" -o x"$STORAGE_NETMASK" == "x" ]
-	then
-		log_it "Incompleted parameters STORAGE_IP:$STORAGE_IP, STORAGE_NETMASK:$STORAGE_NETMASK, STORAGE_CIDR:$STORAGE_CIDR. Cannot setup storage network"
-		return
-	fi
+    if [ x"$STORAGE_IP" == "x" -o x"$STORAGE_NETMASK" == "x" ]
+    then
+        log_it "Incompleted parameters STORAGE_IP:$STORAGE_IP, STORAGE_NETMASK:$STORAGE_NETMASK, STORAGE_CIDR:$STORAGE_CIDR. Cannot setup storage network"
+        return
+    fi
 
-	echo "" >> /etc/network/interfaces
-	echo "auto eth3" >> /etc/network/interfaces
+    echo "" >> /etc/network/interfaces
+    echo "auto eth3" >> /etc/network/interfaces
 
-	setup_interface "3" "$STORAGE_IP" "$STORAGE_NETMASK"
+    setup_interface "3" "$STORAGE_IP" "$STORAGE_NETMASK"
     [ -n "$MTU" ] && ifconfig eth3 mtu $MTU && echo "  mtu $MTU" >> /etc/network/interfaces
-	#ip route add "$STORAGE_CIDR" via "$STORAGE_IP"
-	log_it "Successfully setup storage network with STORAGE_IP:$STORAGE_IP, STORAGE_NETMASK:$STORAGE_NETMASK, STORAGE_CIDR:$STORAGE_CIDR"
+    #ip route add "$STORAGE_CIDR" via "$STORAGE_IP"
+    log_it "Successfully setup storage network with STORAGE_IP:$STORAGE_IP, STORAGE_NETMASK:$STORAGE_NETMASK, STORAGE_CIDR:$STORAGE_CIDR"
 }
 
 setup_system_rfc1918_internal() {
@@ -1179,10 +1190,10 @@ EOF
 }
 
 change_password() {
-	if [ x"$VM_PASSWORD" != x"" ]
-	then
-		echo "root:$VM_PASSWORD" | chpasswd
-	fi
+    if [ x"$VM_PASSWORD" != x"" ]
+    then
+        echo "root:$VM_PASSWORD" | chpasswd
+    fi
 }
 
 start() {
@@ -1202,41 +1213,41 @@ start() {
          setup_router
          if [ -x /opt/cloud/bin/update_config.py ]
          then
-	         /opt/cloud/bin/update_config.py cmd_line.json
+             /opt/cloud/bin/update_config.py cmd_line.json
          fi
-	  ;;
+      ;;
      vpcrouter)
          [ "$NAME" == "" ] && NAME=vpcrouter
          setup_vpcrouter
          if [ -x /opt/cloud/bin/update_config.py ]
          then
-	         /opt/cloud/bin/update_config.py cmd_line.json
+             /opt/cloud/bin/update_config.py cmd_line.json
          fi
-	  ;;
+      ;;
      dhcpsrvr)
          [ "$NAME" == "" ] && NAME=dhcpsrvr
          setup_dhcpsrvr
          if [ -x /opt/cloud/bin/update_config.py ]
          then
-	         /opt/cloud/bin/update_config.py cmd_line.json
+             /opt/cloud/bin/update_config.py cmd_line.json
          fi
-	  ;;
+      ;;
      secstorage)
          [ "$NAME" == "" ] && NAME=secstorage
          setup_secstorage $hyp;
-	  ;;
+      ;;
      consoleproxy)
          [ "$NAME" == "" ] && NAME=consoleproxy
          setup_console_proxy $hyp;
-	  ;;
+      ;;
      elbvm)
          [ "$NAME" == "" ] && NAME=elb
          setup_elbvm
-	  ;;
+      ;;
      ilbvm)
          [ "$NAME" == "" ] && NAME=ilb
          setup_ilbvm
-	  ;;
+      ;;
      unknown)
          [ "$NAME" == "" ] && NAME=systemvm
          setup_default;
@@ -1343,25 +1354,25 @@ for i in $CMDLINE
           ;;
       template)
         TEMPLATE=$VALUE
-      	;;
+          ;;
       sshonguest)
         SSHONGUEST=$VALUE
         ;;
       name)
-	    NAME=$VALUE
-	    ;;
+        NAME=$VALUE
+        ;;
       dhcprange)
         DHCP_RANGE=$(echo $VALUE | tr ':' ',')
-      	;;
+          ;;
       bootproto)
         BOOTPROTO=$VALUE
-      	;;
+          ;;
       type)
         TYPE=$VALUE
-	    ;;
+        ;;
       defaultroute)
         DEFAULTROUTE=$VALUE
-	;;
+    ;;
       redundant_router)
         RROUTER=$VALUE
         ;;
@@ -1413,7 +1424,7 @@ echo -e "\n\t}\n}" >> ${CHEF_TMP_FILE}
 if [ "$TYPE" != "unknown" ]
 then
     log_it "Moving ${CHEF_TMP_FILE} to /var/cache/cloud/cmd_line.json"
-	mv ${CHEF_TMP_FILE} /var/cache/cloud/cmd_line.json
+    mv ${CHEF_TMP_FILE} /var/cache/cloud/cmd_line.json
 fi
 
 [ $ETH0_IP ] && LOCAL_ADDRS=$ETH0_IP
@@ -1424,37 +1435,38 @@ fi
 case "$1" in
 start)
 
-	log_action_begin_msg "Executing cloud-early-config"
+    log_action_begin_msg "Executing cloud-early-config"
         log_it "Executing cloud-early-config"
-	if start; then
-	    log_action_end_msg $?
-	else
-	    log_action_end_msg $?
-	fi
-	;;
+    if start; then
+        log_action_end_msg $?
+    else
+        log_action_end_msg $?
+    fi
+    ;;
 
 stop)
-	log_action_begin_msg "Stopping cloud-early-config"
+    log_action_begin_msg "Stopping cloud-early-config"
         #Override old system's interface setting
         setup_default;
-	log_action_end_msg 0
-	;;
+    log_action_end_msg 0
+    ;;
 
 force-reload|restart)
 
-	log_warning_msg "Running $0  is deprecated because it may not enable again some interfaces"
-	log_action_begin_msg "Executing cloud-early-config"
-	if start; then
-	    log_action_end_msg $?
-	else
-	    log_action_end_msg $?
-	fi
-	;;
+    log_warning_msg "Running $0  is deprecated because it may not enable again some interfaces"
+    log_action_begin_msg "Executing cloud-early-config"
+    if start; then
+        log_action_end_msg $?
+    else
+        log_action_end_msg $?
+    fi
+    ;;
 
 *)
-	echo "Usage: /etc/init.d/cloud-early-config {start|stop}"
-	exit 1
-	;;
+    echo "Usage: /etc/init.d/cloud-early-config {start|stop}"
+    exit 1
+    ;;
 esac
 
 exit 0
+
