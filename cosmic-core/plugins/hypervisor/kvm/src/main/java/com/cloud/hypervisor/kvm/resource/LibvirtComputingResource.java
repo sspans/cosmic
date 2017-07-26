@@ -1602,6 +1602,12 @@ public class LibvirtComputingResource extends ServerResourceBase implements Serv
         vm.setDomDescription(vmTo.getOs());
         vm.setPlatformEmulator(vmTo.getPlatformEmulator());
 
+        final StringBuilder builder = new StringBuilder();
+        builder.append("<cosmic:something xmlns:cosmic=\"http://cosmic.org/something/\">");
+        builder.append(vmTo.getMetadata().get("domainUuid"));
+        builder.append("</cosmic:something>");
+        vm.getMetaData().customNodes.put("metadata", builder.toString());
+
         final GuestDef guest = new GuestDef();
 
         guest.setGuestType(GuestDef.GuestType.KVM);

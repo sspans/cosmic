@@ -48,6 +48,7 @@ public class VirtualMachineTO {
     private long id;
     private String name;
     private BootloaderType bootloader;
+    private Map<String, Object> metadata;
 
     public VirtualMachineTO(final long id, final String instanceName, final VirtualMachine.Type type, final int cpus, final Integer speed, final long minRam, final long maxRam,
                             final BootloaderType bootloader,
@@ -310,5 +311,13 @@ public class VirtualMachineTO {
 
     public void setManufacturer(final String manufacturer) {
         this.manufacturer = manufacturer;
+    }
+
+    public Map<String, Object> getMetadata() {
+        return metadata;
+    }
+
+    public void setMetadata(final Map<String, Object> metadata) {
+        this.metadata = metadata;
     }
 }
