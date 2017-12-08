@@ -334,20 +334,7 @@ public class RouterDeploymentDefinition {
      * @return if the deployment can proceed
      */
     protected boolean prepareDeployment() {
-        setupAccountOwner();
-
-        // Check if public network has to be set on VR
-        isPublicNetwork = networkModel.isProviderSupportServiceInNetwork(guestNetwork.getId(), Service.SourceNat, Provider.VirtualRouter);
-
-        boolean canProceed = true;
-        if (isRedundant() && !isPublicNetwork) {
-            // TODO Shouldn't be this throw an exception instead of log error and empty list of routers
-            logger.error("Didn't support redundant virtual router without public network!");
-            routers = new ArrayList<>();
-            canProceed = false;
-        }
-
-        return canProceed;
+        return true;
     }
 
     /**
