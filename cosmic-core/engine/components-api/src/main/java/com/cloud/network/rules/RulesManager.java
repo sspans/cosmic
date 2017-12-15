@@ -35,7 +35,7 @@ public interface RulesManager extends RulesService {
 
     void getSystemIpAndEnableStaticNatForVm(VirtualMachine vm, boolean getNewIp) throws InsufficientAddressCapacityException;
 
-    boolean disableStaticNat(long ipAddressId, Account caller, long callerUserId, boolean releaseIpIfElastic) throws ResourceUnavailableException;
+    boolean disableStaticNat(long ipAddressId, Account caller, long callerUserId) throws ResourceUnavailableException;
 
     /**
      * @param networkId

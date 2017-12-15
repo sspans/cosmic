@@ -2337,20 +2337,10 @@ public class ManagementServerImpl extends ManagerBase implements ManagementServe
 
         final Account caller = getCaller();
         boolean securityGroupsEnabled = false;
-        final boolean elasticLoadBalancerEnabled;
         final boolean KVMSnapshotEnabled;
-        String supportELB = "false";
         final List<NetworkVO> networks = _networkDao.listSecurityGroupEnabledNetworks();
         if (networks != null && !networks.isEmpty()) {
             securityGroupsEnabled = true;
-            final String elbEnabled = _configDao.getValue(Config.ElasticLoadBalancerEnabled.key());
-            elasticLoadBalancerEnabled = elbEnabled == null ? false : Boolean.parseBoolean(elbEnabled);
-            if (elasticLoadBalancerEnabled) {
-                final String networkType = _configDao.getValue(Config.ElasticLoadBalancerNetwork.key());
-                if (networkType != null) {
-                    supportELB = networkType;
-                }
-            }
         }
 
         final long diskOffMinSize = VolumeOrchestrationService.CustomDiskOfferingMinSize.value();
@@ -2380,7 +2370,6 @@ public class ManagementServerImpl extends ManagerBase implements ManagementServe
         capabilities.put("securityGroupsEnabled", securityGroupsEnabled);
         capabilities.put("userPublicTemplateEnabled", userPublicTemplateEnabled);
         capabilities.put("cloudStackVersion", getVersion());
-        capabilities.put("supportELB", supportELB);
         capabilities.put("projectInviteRequired", _projectMgr.projectInviteRequired());
         capabilities.put("allowusercreateprojects", _projectMgr.allowUserToCreateProject());
         capabilities.put("customDiskOffMinSize", diskOffMinSize);

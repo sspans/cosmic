@@ -1816,11 +1816,6 @@ public class NetworkOrchestrator extends ManagerBase implements NetworkOrchestra
                     throw new InvalidParameterValueException("network must have SecurityGroup provider in security group enabled zone");
                 }
             }
-
-            //don't allow eip/elb networks in Advance zone
-            if (ntwkOff.getElasticIp() || ntwkOff.getElasticLb()) {
-                throw new InvalidParameterValueException("Elastic IP and Elastic LB services are supported in zone of type " + NetworkType.Basic);
-            }
         }
 
         //TODO(VXLAN): Support VNI specified

@@ -50,7 +50,6 @@ import com.cloud.user.UserVO;
 import com.cloud.user.dao.AccountDao;
 import com.cloud.utils.db.TransactionLegacy;
 import com.cloud.utils.exception.CloudRuntimeException;
-import com.cloud.utils.exception.InvalidParameterValueException;
 import com.cloud.utils.net.Ip;
 import com.cloud.vm.VMInstanceVO;
 import com.cloud.vm.dao.VMInstanceDao;
@@ -214,13 +213,13 @@ public class ConfigurationManagerTest {
          */
         runDedicatePublicIpRangeInvalidRange();
         /*
-        * TEST 3: given public IP range that is already dedicated to a different account DedicatePublicIpRange should fail
-        */
+         * TEST 3: given public IP range that is already dedicated to a different account DedicatePublicIpRange should fail
+         */
         runDedicatePublicIpRangeDedicatedRange();
 
         /*
-        * TEST 4: given zone is of type Basic DedicatePublicIpRange should fail
-        */
+         * TEST 4: given zone is of type Basic DedicatePublicIpRange should fail
+         */
         runDedicatePublicIpRangeInvalidZone();
 
         /*
@@ -470,67 +469,6 @@ public class ConfigurationManagerTest {
     @Test
     public void validateEmptyStaticNatServiceCapablitiesTest() {
         final Map<Capability, String> staticNatServiceCapabilityMap = new HashMap<>();
-
-        configurationMgr.validateStaticNatServiceCapablities(staticNatServiceCapabilityMap);
-    }
-
-    @Test
-    public void validateInvalidStaticNatServiceCapablitiesTest() {
-        final Map<Capability, String> staticNatServiceCapabilityMap = new HashMap<>();
-        staticNatServiceCapabilityMap.put(Capability.AssociatePublicIP, "Frue and Talse");
-
-        boolean caught = false;
-        try {
-            configurationMgr.validateStaticNatServiceCapablities(staticNatServiceCapabilityMap);
-        } catch (final InvalidParameterValueException e) {
-            Assert.assertTrue(e.getMessage(), e.getMessage().contains("(frue and talse)"));
-            caught = true;
-        }
-        Assert.assertTrue("should not be accepted", caught);
-    }
-
-    @Test
-    public void validateTTStaticNatServiceCapablitiesTest() {
-        final Map<Capability, String> staticNatServiceCapabilityMap = new HashMap<>();
-        staticNatServiceCapabilityMap.put(Capability.AssociatePublicIP, "true and Talse");
-        staticNatServiceCapabilityMap.put(Capability.ElasticIp, "True");
-
-        configurationMgr.validateStaticNatServiceCapablities(staticNatServiceCapabilityMap);
-    }
-
-    @Test
-    public void validateFTStaticNatServiceCapablitiesTest() {
-        final Map<Capability, String> staticNatServiceCapabilityMap = new HashMap<>();
-        staticNatServiceCapabilityMap.put(Capability.AssociatePublicIP, "false");
-        staticNatServiceCapabilityMap.put(Capability.ElasticIp, "True");
-
-        configurationMgr.validateStaticNatServiceCapablities(staticNatServiceCapabilityMap);
-    }
-
-    @Test
-    public void validateTFStaticNatServiceCapablitiesTest() {
-        final Map<Capability, String> staticNatServiceCapabilityMap = new HashMap<>();
-        staticNatServiceCapabilityMap.put(Capability.AssociatePublicIP, "true and Talse");
-        staticNatServiceCapabilityMap.put(Capability.ElasticIp, "false");
-
-        boolean caught = false;
-        try {
-            configurationMgr.validateStaticNatServiceCapablities(staticNatServiceCapabilityMap);
-        } catch (final InvalidParameterValueException e) {
-            Assert.assertTrue(
-                    e.getMessage(),
-                    e.getMessage().contains(
-                            "Capability " + Capability.AssociatePublicIP.getName() + " can only be set when capability " + Capability.ElasticIp.getName() + " is true"));
-            caught = true;
-        }
-        Assert.assertTrue("should not be accepted", caught);
-    }
-
-    @Test
-    public void validateFFStaticNatServiceCapablitiesTest() {
-        final Map<Capability, String> staticNatServiceCapabilityMap = new HashMap<>();
-        staticNatServiceCapabilityMap.put(Capability.AssociatePublicIP, "false");
-        staticNatServiceCapabilityMap.put(Capability.ElasticIp, "False");
 
         configurationMgr.validateStaticNatServiceCapablities(staticNatServiceCapabilityMap);
     }

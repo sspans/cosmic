@@ -330,12 +330,6 @@ public class LoadBalancingRulesManagerImpl<Type> extends ManagerBase implements 
         if (result == null) {
             IpAddress systemIp = null;
             final NetworkOffering off = _entityMgr.findById(NetworkOffering.class, network.getNetworkOfferingId());
-            if (off.getElasticLb() && ipVO == null && network.getVpcId() == null) {
-                systemIp = _ipAddrMgr.assignSystemIp(networkId, lbOwner, true, false);
-                if (systemIp != null) {
-                    ipVO = _ipAddressDao.findById(systemIp.getId());
-                }
-            }
 
             // Validate ip address
             if (ipVO == null) {
@@ -907,15 +901,12 @@ public class LoadBalancingRulesManagerImpl<Type> extends ManagerBase implements 
 
         if (updateRulesInDB) {
             for (final LoadBalancerVO lb : lbs) {
-                final boolean checkForReleaseElasticIp = Transaction.execute(new TransactionCallback<Boolean>() {
+                Transaction.execute(new TransactionCallback<Boolean>() {
                     @Override
                     public Boolean doInTransaction(final TransactionStatus status) {
-                        boolean checkForReleaseElasticIp = false;
-
                         if (lb.getState() == FirewallRule.State.Revoke) {
                             removeLBRule(lb);
                             s_logger.debug("LB " + lb.getId() + " is successfully removed");
-                            checkForReleaseElasticIp = true;
                         } else if (lb.getState() == FirewallRule.State.Add) {
                             lb.setState(FirewallRule.State.Active);
                             s_logger.debug("LB rule " + lb.getId() + " state is set to Active");
@@ -959,27 +950,10 @@ public class LoadBalancingRulesManagerImpl<Type> extends ManagerBase implements 
                             _lbCertMapDao.remove(lbCertMap.getId());
                             s_logger.debug("Load balancer rule id " + lb.getId() + " removed certificate mapping");
                         }
-
-                        return checkForReleaseElasticIp;
+                        return null;
                     }
                 });
 
-                if (checkForReleaseElasticIp && lb.getSourceIpAddressId() != null) {
-                    boolean success = true;
-                    final long count = _firewallDao.countRulesByIpId(lb.getSourceIpAddressId());
-                    if (count == 0) {
-                        try {
-                            success = handleSystemLBIpRelease(lb);
-                        } catch (final Exception ex) {
-                            s_logger.warn("Failed to release system ip as a part of lb rule " + lb + " deletion due to exception ", ex);
-                            success = false;
-                        } finally {
-                            if (!success) {
-                                s_logger.warn("Failed to release system ip as a part of lb rule " + lb + " deletion");
-                            }
-                        }
-                    }
-                }
                 // if the rule is the last one for the ip address assigned to
                 // VPC, unassign it from the network
                 if (lb.getSourceIpAddressId() != null) {

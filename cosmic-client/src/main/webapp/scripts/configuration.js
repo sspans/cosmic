@@ -2931,20 +2931,10 @@
                                             inputData['servicecapabilitylist[' + serviceCapabilityIndex + '].capabilitytype'] = 'SupportedSourceNatTypes';
                                             inputData['servicecapabilitylist[' + serviceCapabilityIndex + '].capabilityvalue'] = value;
                                             serviceCapabilityIndex++;
-                                        } else if ((key == 'service.Lb.elasticLbCheckbox') && ("Lb" in serviceProviderMap)) { //if checkbox is unchecked, it won't be included in formData in the first place. i.e. it won't fall into this section
-                                            inputData['servicecapabilitylist[' + serviceCapabilityIndex + '].service'] = 'lb';
-                                            inputData['servicecapabilitylist[' + serviceCapabilityIndex + '].capabilitytype'] = 'ElasticLb';
-                                            inputData['servicecapabilitylist[' + serviceCapabilityIndex + '].capabilityvalue'] = true; //because this checkbox's value == "on"
-                                            serviceCapabilityIndex++;
                                         } else if ((key == 'service.Lb.lbIsolationDropdown') && ("Lb" in serviceProviderMap)) {
                                             inputData['servicecapabilitylist[' + serviceCapabilityIndex + '].service'] = 'lb';
                                             inputData['servicecapabilitylist[' + serviceCapabilityIndex + '].capabilitytype'] = 'SupportedLbIsolation';
                                             inputData['servicecapabilitylist[' + serviceCapabilityIndex + '].capabilityvalue'] = value;
-                                            serviceCapabilityIndex++;
-                                        } else if ((key == 'service.StaticNat.elasticIpCheckbox') && ("StaticNat" in serviceProviderMap)) { //if checkbox is unchecked, it won't be included in formData in the first place. i.e. it won't fall into this section
-                                            inputData['servicecapabilitylist[' + serviceCapabilityIndex + '].service'] = 'StaticNat';
-                                            inputData['servicecapabilitylist[' + serviceCapabilityIndex + '].capabilitytype'] = 'ElasticIp';
-                                            inputData['servicecapabilitylist[' + serviceCapabilityIndex + '].capabilityvalue'] = true; //because this checkbox's value == "on"
                                             serviceCapabilityIndex++;
                                         } else if ((key == 'service.StaticNat.associatePublicIP') && ("StaticNat" in serviceProviderMap)) { //if checkbox is unchecked, it won't be included in formData in the first place. i.e. it won't fall into this section
                                             inputData['servicecapabilitylist[' + serviceCapabilityIndex + '].service'] = 'StaticNat';
@@ -2958,28 +2948,6 @@
                                         }
                                     }
                                 });
-
-                                for (var key1 in inputData) {
-                                    /* When capability ElasticIp=true is passed to API, if capability associatePublicIP is not passed to API, cloudStack API will assume associatePublicIP=true.
-                                     So, UI has to explicitly pass associatePublicIP=false to API if its checkbox is unchecked. */
-                                    if (inputData[key1] == 'ElasticIp') { //ElasticIp checkbox is checked
-                                        var associatePublicIPExists = false;
-                                        for (var key2 in inputData) {
-                                            if (inputData[key2] == 'associatePublicIP') {
-                                                associatePublicIPExists = true;
-                                                break; //break key2 for loop
-                                            }
-                                        }
-                                        if (associatePublicIPExists == false) { //but associatePublicIP checkbox is unchecked
-                                            //UI explicitly passes associatePublicIP=false to API
-                                            inputData['servicecapabilitylist[' + serviceCapabilityIndex + '].service'] = 'StaticNat';
-                                            inputData['servicecapabilitylist[' + serviceCapabilityIndex + '].capabilitytype'] = 'associatePublicIP';
-                                            inputData['servicecapabilitylist[' + serviceCapabilityIndex + '].capabilityvalue'] = false; //associatePublicIP checkbox is unchecked
-                                            serviceCapabilityIndex++;
-                                        }
-                                        break; //break key1 for loop
-                                    }
-                                }
 
                                 //passing supportsstrechedl2subnet's value as capability
                                 for (var k in inputData) {

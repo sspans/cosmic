@@ -13,17 +13,13 @@ import com.cloud.api.response.DomainResponse;
 import com.cloud.api.response.IPAddressResponse;
 import com.cloud.api.response.LoadBalancerResponse;
 import com.cloud.api.response.NetworkResponse;
-import com.cloud.api.response.ZoneResponse;
 import com.cloud.context.CallContext;
-import com.cloud.dc.DataCenter;
 import com.cloud.event.EventTypes;
 import com.cloud.exception.InsufficientAddressCapacityException;
 import com.cloud.exception.NetworkRuleConflictException;
 import com.cloud.exception.ResourceAllocationException;
 import com.cloud.exception.ResourceUnavailableException;
-import com.cloud.model.enumeration.NetworkType;
 import com.cloud.network.IpAddress;
-import com.cloud.network.Network;
 import com.cloud.network.rules.LoadBalancer;
 import com.cloud.user.Account;
 import com.cloud.utils.exception.InvalidParameterValueException;
@@ -65,13 +61,6 @@ public class CreateLoadBalancerRuleCmd extends BaseAsyncCreateCmd /*implements L
             entityType = IPAddressResponse.class,
             description = "public IP address ID from where the network traffic will be load balanced from")
     private Long publicIpId;
-
-    @Parameter(name = ApiConstants.ZONE_ID,
-            type = CommandType.UUID,
-            entityType = ZoneResponse.class,
-            required = false,
-            description = "zone where the load balancer is going to be created. This parameter is required when LB service provider is ElasticLoadBalancerVm")
-    private Long zoneId;
 
     @Parameter(name = ApiConstants.PUBLIC_PORT,
             type = CommandType.INTEGER,
@@ -359,55 +348,7 @@ public class CreateLoadBalancerRuleCmd extends BaseAsyncCreateCmd /*implements L
     }
 
     public long getNetworkId() {
-        if (networkId != null) {
-            return networkId;
-        }
-        final Long zoneId = getZoneId();
-
-        if (zoneId == null) {
-            final Long ipId = getSourceIpAddressId();
-            if (ipId == null) {
-                throw new InvalidParameterValueException("Either networkId or zoneId or publicIpId has to be specified");
-            }
-        }
-
-        if (zoneId != null) {
-            final DataCenter zone = _entityMgr.findById(DataCenter.class, zoneId);
-            if (zone.getNetworkType() == NetworkType.Advanced) {
-                final List<? extends Network> networks = _networkService.getIsolatedNetworksOwnedByAccountInZone(getZoneId(), _accountService.getAccount(getEntityOwnerId()));
-                if (networks.size() == 0) {
-                    final String domain = _domainService.getDomain(getDomainId()).getName();
-                    throw new InvalidParameterValueException("Account name=" + getAccountName() + " domain=" + domain + " doesn't have virtual networks in zone=" +
-                            zone.getName());
-                }
-
-                if (networks.size() < 1) {
-                    throw new InvalidParameterValueException("Account doesn't have any isolated networks in the zone");
-                } else if (networks.size() > 1) {
-                    throw new InvalidParameterValueException("Account has more than one isolated network in the zone");
-                }
-
-                return networks.get(0).getId();
-            } else {
-                final Network defaultGuestNetwork = _networkService.getExclusiveGuestNetwork(zoneId);
-                if (defaultGuestNetwork == null) {
-                    throw new InvalidParameterValueException("Unable to find a default guest network for account " + getAccountName() + " in domain ID=" + getDomainId());
-                } else {
-                    return defaultGuestNetwork.getId();
-                }
-            }
-        } else {
-            final IpAddress ipAddr = _networkService.getIp(publicIpId);
-            if (ipAddr.getAssociatedWithNetworkId() != null) {
-                return ipAddr.getAssociatedWithNetworkId();
-            } else {
-                throw new InvalidParameterValueException("IP address ID=" + publicIpId + " is not associated with any network");
-            }
-        }
-    }
-
-    public Long getZoneId() {
-        return zoneId;
+        return networkId;
     }
 
     public long getDomainId() {

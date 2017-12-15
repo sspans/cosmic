@@ -132,7 +132,6 @@ public class DataCenterVO implements DataCenter {
             dhcpProvider = Provider.VirtualRouter.getName();
             dnsProvider = Provider.VirtualRouter.getName();
             userDataProvider = Provider.VirtualRouter.getName();
-            loadBalancerProvider = Provider.ElasticLoadBalancerVm.getName();
         }
 
         this.zoneToken = zoneToken;

@@ -84,8 +84,6 @@ public interface IpAddressManager {
 
     boolean applyStaticNats(List<? extends StaticNat> staticNats, boolean continueOnError, boolean forRevoke) throws ResourceUnavailableException;
 
-    IpAddress assignSystemIp(long networkId, Account owner, boolean forElasticLb, boolean forElasticIp) throws InsufficientAddressCapacityException;
-
     boolean handleSystemIpRelease(IpAddress ip);
 
     void allocateDirectIp(NicProfile nic, Zone zone, VirtualMachineProfile vm, Network network, String requestedIpv4, String requestedIpv6)

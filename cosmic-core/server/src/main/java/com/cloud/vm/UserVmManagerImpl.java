@@ -1394,13 +1394,11 @@ public class UserVmManagerImpl extends ManagerBase implements UserVmManager, Vir
             s_logger.warn("Fail to remove vm id=" + vmId + " from load balancers as a part of expunge process");
         }
 
-        // If vm is assigned to static nat, disable static nat for the ip
-        // address and disassociate ip if elasticIP is enabled
         final List<IPAddressVO> ips = _ipAddressDao.findAllByAssociatedVmId(vmId);
 
         for (final IPAddressVO ip : ips) {
             try {
-                if (_rulesMgr.disableStaticNat(ip.getId(), _accountMgr.getAccount(Account.ACCOUNT_ID_SYSTEM), User.UID_SYSTEM, true)) {
+                if (_rulesMgr.disableStaticNat(ip.getId(), _accountMgr.getAccount(Account.ACCOUNT_ID_SYSTEM), User.UID_SYSTEM)) {
                     s_logger.debug("Disabled 1-1 nat for ip address " + ip + " as a part of vm id=" + vmId + " expunge");
                 } else {
                     s_logger.warn("Failed to disable static nat for ip address " + ip + " as a part of vm id=" + vmId + " expunge");
@@ -5129,7 +5127,7 @@ public class UserVmManagerImpl extends ManagerBase implements UserVmManager, Vir
     @Override
     public void finalizeStop(final VirtualMachineProfile profile, final Answer answer) {
         final VirtualMachine vm = profile.getVirtualMachine();
-        // release elastic IP here
+
         final IPAddressVO ip = _ipAddressDao.findByAssociatedVmId(profile.getId());
         if (ip != null && ip.getSystem()) {
             final CallContext ctx = CallContext.current();
@@ -5139,7 +5137,7 @@ public class UserVmManagerImpl extends ManagerBase implements UserVmManager, Vir
                 final NetworkOffering offering = _entityMgr.findById(NetworkOffering.class, guestNetwork.getNetworkOfferingId());
                 assert offering.getAssociatePublicIP() : "User VM should not have system owned public IP associated with it when offering configured not to associate " +
                         "public IP.";
-                _rulesMgr.disableStaticNat(ip.getId(), ctx.getCallingAccount(), ctx.getCallingUserId(), true);
+                _rulesMgr.disableStaticNat(ip.getId(), ctx.getCallingAccount(), ctx.getCallingUserId());
             } catch (final Exception ex) {
                 s_logger.warn("Failed to disable static nat and release system ip " + ip + " as a part of vm " + profile.getVirtualMachine() + " stop due to exception ", ex);
             }

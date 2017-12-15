@@ -6,21 +6,14 @@ var g_account = null;
 var g_domainid = null;
 var g_hostid = null;
 var g_loginCmdText = null;
-var g_enableLogging = false;
 var g_timezoneoffset = null;
 var g_timezone = null;
-var g_supportELB = null;
 var g_kvmsnapshotenabled = null;
 var g_regionsecondaryenabled = null;
 var g_userPublicTemplateEnabled = "true";
 var g_allowUserExpungeRecoverVm = "false";
 var g_cloudstackversion = null;
 var g_queryAsyncJobResultInterval = 3000;
-var g_idpList = null;
-var g_appendIdpDomain = false;
-
-//keyboard keycode
-var keycode_Enter = 13;
 
 //XMLHttpResponse.status
 var ERROR_ACCESS_DENIED_DUE_TO_UNAUTHORIZED = 401;

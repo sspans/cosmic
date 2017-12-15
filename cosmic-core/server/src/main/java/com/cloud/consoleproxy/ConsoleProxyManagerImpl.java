@@ -712,7 +712,6 @@ public class ConsoleProxyManagerImpl extends SystemVmManagerBase implements Cons
 
     @Override
     public void finalizeStop(final VirtualMachineProfile profile, final Answer answer) {
-        //release elastic IP here if assigned
         finalizeStop(profile, _ipAddressDao.findByAssociatedVmId(profile.getId()), _rulesMgr);
     }
 

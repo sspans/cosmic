@@ -1,7 +1,6 @@
 package com.cloud.network.firewall;
 
 import com.cloud.api.command.user.firewall.IListFirewallRulesCmd;
-import com.cloud.configuration.Config;
 import com.cloud.context.CallContext;
 import com.cloud.domain.dao.DomainDao;
 import com.cloud.engine.orchestration.service.NetworkOrchestrationService;
@@ -125,13 +124,9 @@ public class FirewallManagerImpl extends ManagerBase implements FirewallService,
     @Inject
     IpAddressManager _ipAddrMgr;
 
-    private boolean _elbEnabled = false;
-
     @Override
     public boolean configure(final String name, final Map<String, Object> params) throws ConfigurationException {
         _name = name;
-        final String elbEnabledString = _configDao.getValue(Config.ElasticLoadBalancerEnabled.key());
-        _elbEnabled = Boolean.parseBoolean(elbEnabledString);
         return true;
     }
 
@@ -474,7 +469,8 @@ public class FirewallManagerImpl extends ManagerBase implements FirewallService,
 
             final boolean oneOfRulesIsFirewall =
                     ((rule.getPurpose() == Purpose.Firewall || newRule.getPurpose() == Purpose.Firewall) && ((newRule.getPurpose() != rule.getPurpose()) || (!newRule.getProtocol()
-                                                                                                                                                                     .equalsIgnoreCase(rule.getProtocol()))));
+                                                                                                                                                                     .equalsIgnoreCase(rule
+                                                                                                                                                                             .getProtocol()))));
 
             // if both rules are firewall and their cidrs are different, we can skip port ranges verification
             final boolean bothRulesFirewall = (rule.getPurpose() == newRule.getPurpose() && rule.getPurpose() == Purpose.Firewall);
@@ -616,9 +612,7 @@ public class FirewallManagerImpl extends ManagerBase implements FirewallService,
         Map<Network.Capability, String> caps = null;
 
         if (purpose == Purpose.LoadBalancing) {
-            if (!_elbEnabled) {
-                caps = _networkModel.getNetworkServiceCapabilities(network.getId(), Service.Lb);
-            }
+            caps = _networkModel.getNetworkServiceCapabilities(network.getId(), Service.Lb);
         } else if (purpose == Purpose.PortForwarding) {
             caps = _networkModel.getNetworkServiceCapabilities(network.getId(), Service.PortForwarding);
         } else if (purpose == Purpose.Firewall) {
@@ -941,7 +935,7 @@ public class FirewallManagerImpl extends ManagerBase implements FirewallService,
     public boolean applyRules(final Network network, final Purpose purpose, final List<? extends FirewallRule> rules) throws ResourceUnavailableException {
         boolean handled = false;
         switch (purpose) {
-        /* StaticNatRule would be applied by Firewall provider, since the incompatible of two object */
+            /* StaticNatRule would be applied by Firewall provider, since the incompatible of two object */
             case StaticNat:
             case Firewall:
                 for (final FirewallServiceProvider fwElement : _firewallElements) {

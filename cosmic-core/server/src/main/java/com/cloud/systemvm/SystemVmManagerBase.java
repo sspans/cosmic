@@ -59,7 +59,7 @@ public abstract class SystemVmManagerBase extends ManagerBase implements SystemV
         if (ip != null && ip.getSystem()) {
             final CallContext ctx = CallContext.current();
             try {
-                _rulesMgr.disableStaticNat(ip.getId(), ctx.getCallingAccount(), ctx.getCallingUserId(), true);
+                _rulesMgr.disableStaticNat(ip.getId(), ctx.getCallingAccount(), ctx.getCallingUserId());
             } catch (final Exception e) {
                 logger.warn("Failed to disable static nat and release system ip " + ip + " as a part of vm " + profile.getVirtualMachine() + " stop due to exception ", e);
             }

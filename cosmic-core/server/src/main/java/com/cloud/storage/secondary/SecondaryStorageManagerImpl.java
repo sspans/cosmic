@@ -516,7 +516,6 @@ public class SecondaryStorageManagerImpl extends SystemVmManagerBase implements 
 
     @Override
     public void finalizeStop(final VirtualMachineProfile profile, final Answer answer) {
-        //release elastic IP here
         finalizeStop(profile, _ipAddressDao.findByAssociatedVmId(profile.getId()), _rulesMgr);
     }
 

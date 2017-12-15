@@ -1,9 +1,6 @@
 (function (cloudStack, $) {
     var selectedNetworkOfferingHavingSG = false;
-    var selectedNetworkOfferingHavingEIP = false;
-    var selectedNetworkOfferingHavingELB = false;
     var returnedPublicVlanIpRanges = []; //public VlanIpRanges returned by API
-    var configurationUseLocalStorage = false;
     var skipGuestTrafficStep = false;
     var selectedNetworkOfferingObj = {};
 
@@ -259,52 +256,32 @@
             addPublicNetwork: function (args) {
                 var isShown;
                 var $publicTrafficDesc = $('.zone-wizard:visible').find('#add_zone_public_traffic_desc');
-                if (args.data['network-model'] == 'Basic') {
-                    if (selectedNetworkOfferingHavingSG == true && selectedNetworkOfferingHavingEIP == true && selectedNetworkOfferingHavingELB == true) {
-                        isShown = true;
-                    } else {
-                        isShown = false;
-                    }
 
-                    $publicTrafficDesc.find('#for_basic_zone').css('display', 'inline');
-                    $publicTrafficDesc.find('#for_advanced_zone').hide();
-                } else { //args.data['network-model'] == 'Advanced'
-                    if (args.data["zone-advanced-sg-enabled"] != "on")
-                        isShown = true;
-                    else
-                        isShown = false;
+                if (args.data["zone-advanced-sg-enabled"] != "on")
+                    isShown = true;
+                else
+                    isShown = false;
 
-                    $publicTrafficDesc.find('#for_advanced_zone').css('display', 'inline');
-                    $publicTrafficDesc.find('#for_basic_zone').hide();
-                }
+                $publicTrafficDesc.find('#for_advanced_zone').css('display', 'inline');
+                $publicTrafficDesc.find('#for_basic_zone').hide();
+
                 return isShown;
             },
 
             setupPhysicalNetwork: function (args) {
-                if (args.data['network-model'] == 'Basic' && !(selectedNetworkOfferingHavingELB && selectedNetworkOfferingHavingEIP)) {
-                    $('.setup-physical-network .info-desc.conditional.basic').show();
-                    $('.setup-physical-network .info-desc.conditional.advanced').hide();
-                    $('.subnav li.public-network').hide();
-                } else {
-                    $('.setup-physical-network .info-desc.conditional.basic').hide();
-                    $('.setup-physical-network .info-desc.conditional.advanced').show();
-                    $('.subnav li.public-network').show();
-                }
+                $('.setup-physical-network .info-desc.conditional.basic').hide();
+                $('.setup-physical-network .info-desc.conditional.advanced').show();
+                $('.subnav li.public-network').show();
+
                 return true; // Both basic & advanced zones show physical network UI
             },
 
             configureGuestTraffic: function (args) {
-                if ((args.data['network-model'] == 'Basic') || (args.data['network-model'] == 'Advanced' && args.data["zone-advanced-sg-enabled"] == "on")) {
-                    $('.setup-guest-traffic').addClass('basic');
-                    $('.setup-guest-traffic').removeClass('advanced');
-                    skipGuestTrafficStep = false; //set value
-                } else { //args.data['network-model'] == 'Advanced' && args.data["zone-advanced-sg-enabled"] !=    "on"
-                    $('.setup-guest-traffic').removeClass('basic');
-                    $('.setup-guest-traffic').addClass('advanced');
+                $('.setup-guest-traffic').removeClass('basic');
+                $('.setup-guest-traffic').addClass('advanced');
 
-                    skipGuestTrafficStep = false; //set value
+                skipGuestTrafficStep = false; //set value
 
-                }
                 return !skipGuestTrafficStep;
             },
 
@@ -463,8 +440,6 @@
                             args.$select.unbind("change").bind("change", function () {
                                 //reset when different network offering is selected
                                 selectedNetworkOfferingHavingSG = false;
-                                selectedNetworkOfferingHavingEIP = false;
-                                selectedNetworkOfferingHavingELB = false;
 
                                 var selectedNetworkOfferingId = $(this).val();
                                 $(networkOfferingObjs).each(function () {
@@ -476,10 +451,6 @@
 
                                 if (selectedNetworkOfferingObj.havingSG == true)
                                     selectedNetworkOfferingHavingSG = true;
-                                if (selectedNetworkOfferingObj.havingEIP == true)
-                                    selectedNetworkOfferingHavingEIP = true;
-                                if (selectedNetworkOfferingObj.havingELB == true)
-                                    selectedNetworkOfferingHavingELB = true;
                             });
 
 
@@ -497,28 +468,8 @@
 
                                             if (thisService.name == "SecurityGroup") {
                                                 thisNetworkOffering.havingSG = true;
-                                            } else if (thisService.name == "StaticNat") {
-                                                $(thisService.capability).each(function () {
-                                                    if (this.name == "ElasticIp" && this.value == "true") {
-                                                        thisNetworkOffering.havingEIP = true;
-                                                        return false; //break $.each() loop
-                                                    }
-                                                });
-                                            } else if (thisService.name == "Lb") {
-                                                $(thisService.capability).each(function () {
-                                                    if (this.name == "ElasticLb" && this.value == "true") {
-                                                        thisNetworkOffering.havingELB = true;
-                                                        return false; //break $.each() loop
-                                                    }
-                                                });
                                             }
                                         });
-
-                                        if (thisNetworkOffering.havingEIP == true && thisNetworkOffering.havingELB == true) { //EIP ELB
-                                            if (args.context.zones[0]["network-model"] == "Advanced" && args.context.zones[0]["zone-advanced-sg-enabled"] == "on") { // Advanced SG-enabled zone doesn't support EIP ELB
-                                                return true; //move to next item in $.each() loop
-                                            }
-                                        }
 
                                         if (args.context.zones[0]["network-model"] == "Advanced" && args.context.zones[0]["zone-advanced-sg-enabled"] == "on") { // Advanced SG-enabled zone
                                             if (thisNetworkOffering.havingSG != true) {
@@ -656,11 +607,8 @@
 
             basicPhysicalNetwork: {
                 preFilter: function (args) {
-                    if (args.data['network-model'] == 'Basic' && (selectedNetworkOfferingHavingELB || selectedNetworkOfferingHavingEIP)) {
-                        args.$form.find('[rel=dedicated]').hide();
-                    } else {
-                        args.$form.find('[rel=dedicated]').show();
-                    }
+                    args.$form.find('[rel=dedicated]').show();
+
                     ;
                     cloudStack.preFilter.addLoadBalancerDevice
                 },
@@ -1605,232 +1553,7 @@
 
                     var returnedPhysicalNetworks = [];
 
-                    if (args.data.zone.networkType == "Basic") { //Basic zone ***
-                        var requestedTrafficTypeCount = 2; //request guest traffic type, management traffic type
-                        if (selectedNetworkOfferingHavingSG == true && selectedNetworkOfferingHavingEIP == true && selectedNetworkOfferingHavingELB == true)
-                            requestedTrafficTypeCount++; //request public traffic type
-
-                        //Basic zone has only one physical network
-                        var array1 = [];
-                        if ("physicalNetworks" in args.data) { //from add-zone-wizard
-                            array1.push("&name=" + todb(args.data.physicalNetworks[0].name));
-                        } else { //from quick-install-wizard
-                            array1.push("&name=PhysicalNetworkInBasicZone");
-                        }
-
-                        $.ajax({
-                            url: createURL("createPhysicalNetwork&zoneid=" + args.data.returnedZone.id + array1.join("")),
-                            dataType: "json",
-                            success: function (json) {
-                                var jobId = json.createphysicalnetworkresponse.jobid;
-                                var createPhysicalNetworkIntervalID = setInterval(function () {
-                                    $.ajax({
-                                        url: createURL("queryAsyncJobResult&jobid=" + jobId),
-                                        dataType: "json",
-                                        success: function (json) {
-                                            var result = json.queryasyncjobresultresponse;
-                                            if (result.jobstatus == 0) {
-                                                return; //Job has not completed
-                                            } else {
-                                                clearInterval(createPhysicalNetworkIntervalID);
-
-                                                if (result.jobstatus == 1) {
-                                                    var returnedBasicPhysicalNetwork = result.jobresult.physicalnetwork;
-                                                    var label = returnedBasicPhysicalNetwork.id + trafficLabelParam('guest', data);
-                                                    var returnedTrafficTypes = [];
-
-                                                    $.ajax({
-                                                        url: createURL("addTrafficType&trafficType=Guest&physicalnetworkid=" + label),
-                                                        dataType: "json",
-                                                        success: function (json) {
-                                                            var jobId = json.addtraffictyperesponse.jobid;
-                                                            var addGuestTrafficTypeIntervalID = setInterval(function () {
-                                                                $.ajax({
-                                                                    url: createURL("queryAsyncJobResult&jobid=" + jobId),
-                                                                    dataType: "json",
-                                                                    success: function (json) {
-                                                                        var result = json.queryasyncjobresultresponse;
-                                                                        if (result.jobstatus == 0) {
-                                                                            return; //Job has not completed
-                                                                        } else {
-                                                                            clearInterval(addGuestTrafficTypeIntervalID);
-
-                                                                            if (result.jobstatus == 1) {
-                                                                                returnedTrafficTypes.push(result.jobresult.traffictype);
-
-                                                                                if (returnedTrafficTypes.length == requestedTrafficTypeCount) { //all requested traffic types have been added
-                                                                                    returnedBasicPhysicalNetwork.returnedTrafficTypes = returnedTrafficTypes;
-
-                                                                                    stepFns.configurePhysicalNetwork({
-                                                                                        data: $.extend(args.data, {
-                                                                                            returnedBasicPhysicalNetwork: returnedBasicPhysicalNetwork
-                                                                                        })
-                                                                                    });
-                                                                                }
-                                                                            } else if (result.jobstatus == 2) {
-                                                                                alert("Failed to add Guest traffic type to basic zone. Error: " + _s(result.jobresult.errortext));
-                                                                            }
-                                                                        }
-                                                                    },
-                                                                    error: function (XMLHttpResponse) {
-                                                                        var errorMsg = parseXMLHttpResponse(XMLHttpResponse);
-                                                                        alert("Failed to add Guest traffic type to basic zone. Error: " + errorMsg);
-                                                                    }
-                                                                });
-                                                            }, g_queryAsyncJobResultInterval);
-                                                        }
-                                                    });
-
-                                                    label = trafficLabelParam('management', data);
-
-                                                    $.ajax({
-                                                        url: createURL("addTrafficType&trafficType=Management&physicalnetworkid=" + returnedBasicPhysicalNetwork.id + label),
-                                                        dataType: "json",
-                                                        success: function (json) {
-                                                            var jobId = json.addtraffictyperesponse.jobid;
-                                                            var addManagementTrafficTypeIntervalID = setInterval(function () {
-                                                                $.ajax({
-                                                                    url: createURL("queryAsyncJobResult&jobid=" + jobId),
-                                                                    dataType: "json",
-                                                                    success: function (json) {
-                                                                        var result = json.queryasyncjobresultresponse;
-                                                                        if (result.jobstatus == 0) {
-                                                                            return; //Job has not completed
-                                                                        } else {
-                                                                            clearInterval(addManagementTrafficTypeIntervalID);
-
-                                                                            if (result.jobstatus == 1) {
-                                                                                returnedTrafficTypes.push(result.jobresult.traffictype);
-
-                                                                                if (returnedTrafficTypes.length == requestedTrafficTypeCount) { //all requested traffic types have been added
-                                                                                    returnedBasicPhysicalNetwork.returnedTrafficTypes = returnedTrafficTypes;
-
-                                                                                    stepFns.configurePhysicalNetwork({
-                                                                                        data: $.extend(args.data, {
-                                                                                            returnedBasicPhysicalNetwork: returnedBasicPhysicalNetwork
-                                                                                        })
-                                                                                    });
-                                                                                }
-                                                                            } else if (result.jobstatus == 2) {
-                                                                                alert("Failed to add Management traffic type to basic zone. Error: " + _s(result.jobresult.errortext));
-                                                                            }
-                                                                        }
-                                                                    },
-                                                                    error: function (XMLHttpResponse) {
-                                                                        var errorMsg = parseXMLHttpResponse(XMLHttpResponse);
-                                                                        alert("Failed to add Management traffic type to basic zone. Error: " + errorMsg);
-                                                                    }
-                                                                });
-                                                            }, g_queryAsyncJobResultInterval);
-                                                        }
-                                                    });
-
-                                                    // Storage traffic
-                                                    if (data.physicalNetworks &&
-                                                        $.inArray('storage', data.physicalNetworks[0].trafficTypes) > -1) {
-                                                        label = trafficLabelParam('storage', data);
-                                                        $.ajax({
-                                                            url: createURL('addTrafficType&physicalnetworkid=' + returnedBasicPhysicalNetwork.id + '&trafficType=Storage' + label),
-                                                            dataType: "json",
-                                                            success: function (json) {
-                                                                var jobId = json.addtraffictyperesponse.jobid;
-                                                                var addStorageTrafficTypeIntervalID = setInterval(function () {
-                                                                    $.ajax({
-                                                                        url: createURL("queryAsyncJobResult&jobid=" + jobId),
-                                                                        dataType: "json",
-                                                                        success: function (json) {
-                                                                            var result = json.queryasyncjobresultresponse;
-                                                                            if (result.jobstatus == 0) {
-                                                                                return; //Job has not completed
-                                                                            } else {
-                                                                                clearInterval(addStorageTrafficTypeIntervalID);
-
-                                                                                if (result.jobstatus == 1) {
-                                                                                    returnedTrafficTypes.push(result.jobresult.traffictype);
-
-                                                                                    if (returnedTrafficTypes.length == requestedTrafficTypeCount) { //all requested traffic types have been added
-                                                                                        returnedBasicPhysicalNetwork.returnedTrafficTypes = returnedTrafficTypes;
-
-                                                                                        stepFns.configurePhysicalNetwork({
-                                                                                            data: $.extend(args.data, {
-                                                                                                returnedBasicPhysicalNetwork: returnedBasicPhysicalNetwork
-                                                                                            })
-                                                                                        });
-                                                                                    }
-                                                                                } else if (result.jobstatus == 2) {
-                                                                                    alert("Failed to add Management traffic type to basic zone. Error: " + _s(result.jobresult.errortext));
-                                                                                }
-                                                                            }
-                                                                        },
-                                                                        error: function (XMLHttpResponse) {
-                                                                            var errorMsg = parseXMLHttpResponse(XMLHttpResponse);
-                                                                            alert("Failed to add Management traffic type to basic zone. Error: " + errorMsg);
-                                                                        }
-                                                                    });
-                                                                }, g_queryAsyncJobResultInterval);
-                                                            }
-                                                        });
-                                                    }
-
-                                                    if (selectedNetworkOfferingHavingSG == true && selectedNetworkOfferingHavingEIP == true && selectedNetworkOfferingHavingELB == true) {
-                                                        label = trafficLabelParam('public', data);
-                                                        $.ajax({
-                                                            url: createURL("addTrafficType&trafficType=Public&physicalnetworkid=" + returnedBasicPhysicalNetwork.id + label),
-                                                            dataType: "json",
-                                                            success: function (json) {
-                                                                var jobId = json.addtraffictyperesponse.jobid;
-                                                                var addPublicTrafficTypeIntervalID = setInterval(function () {
-                                                                    $.ajax({
-                                                                        url: createURL("queryAsyncJobResult&jobid=" + jobId),
-                                                                        dataType: "json",
-                                                                        success: function (json) {
-                                                                            var result = json.queryasyncjobresultresponse;
-                                                                            if (result.jobstatus == 0) {
-                                                                                return; //Job has not completed
-                                                                            } else {
-                                                                                clearInterval(addPublicTrafficTypeIntervalID);
-
-                                                                                if (result.jobstatus == 1) {
-                                                                                    returnedTrafficTypes.push(result.jobresult.traffictype);
-
-                                                                                    if (returnedTrafficTypes.length == requestedTrafficTypeCount) { //all requested traffic types have been added
-                                                                                        returnedBasicPhysicalNetwork.returnedTrafficTypes = returnedTrafficTypes;
-
-                                                                                        stepFns.configurePhysicalNetwork({
-                                                                                            data: $.extend(args.data, {
-                                                                                                returnedBasicPhysicalNetwork: returnedBasicPhysicalNetwork
-                                                                                            })
-                                                                                        });
-                                                                                    }
-                                                                                } else if (result.jobstatus == 2) {
-                                                                                    alert("Failed to add Public traffic type to basic zone. Error: " + _s(result.jobresult.errortext));
-                                                                                }
-                                                                            }
-                                                                        },
-                                                                        error: function (XMLHttpResponse) {
-                                                                            var errorMsg = parseXMLHttpResponse(XMLHttpResponse);
-                                                                            alert("Failed to add Public traffic type to basic zone. Error: " + errorMsg);
-                                                                        }
-                                                                    });
-                                                                }, g_queryAsyncJobResultInterval);
-                                                            }
-                                                        });
-                                                    }
-                                                } else if (result.jobstatus == 2) {
-                                                    alert("createPhysicalNetwork failed. Error: " + _s(result.jobresult.errortext));
-                                                }
-                                            }
-                                        },
-                                        error: function (XMLHttpResponse) {
-                                            var errorMsg = parseXMLHttpResponse(XMLHttpResponse);
-                                            alert("createPhysicalNetwork failed. Error: " + errorMsg);
-                                        }
-                                    });
-                                }, g_queryAsyncJobResultInterval);
-
-                            }
-                        });
-                    } else if (args.data.zone.networkType == "Advanced") {
+                    if (args.data.zone.networkType == "Advanced") {
                         $(args.data.physicalNetworks).each(function (index) {
                             var thisPhysicalNetwork = this;
                             var array1 = [];
@@ -2519,7 +2242,7 @@
                 },
 
                 configurePublicTraffic: function (args) {
-                    if ((args.data.zone.networkType == "Basic" && (selectedNetworkOfferingHavingSG == true && selectedNetworkOfferingHavingEIP == true && selectedNetworkOfferingHavingELB == true)) || (args.data.zone.networkType == "Advanced" && args.data.zone.sgEnabled != true)) {
+                    if (args.data.zone.networkType == "Advanced" && args.data.zone.sgEnabled != true) {
 
                         message(_l('message.configuring.public.traffic'));
 

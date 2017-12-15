@@ -75,12 +75,6 @@ public class NetworkOfferingVO implements NetworkOffering {
     private boolean redundantRouter;
     @Column(name = "conserve_mode")
     private boolean conserveMode;
-    @Column(name = "elastic_ip_service")
-    private boolean elasticIp;
-    @Column(name = "eip_associate_public_ip")
-    private boolean eipAssociatePublicIp;
-    @Column(name = "elastic_lb_service")
-    private boolean elasticLb;
     @Column(name = "inline")
     private boolean inline;
     @Column(name = "is_persistent")
@@ -101,9 +95,8 @@ public class NetworkOfferingVO implements NetworkOffering {
     public NetworkOfferingVO(final String name, final String displayText, final TrafficType trafficType, final boolean systemOnly, final boolean specifyVlan,
                              final Integer rateMbps, final Integer multicastRateMbps, final boolean isDefault, final Availability availability, final String tags,
                              final Network.GuestType guestType, final boolean conserveMode, final boolean dedicatedLb, final boolean sharedSourceNat, final boolean redundantRouter,
-                             final boolean elasticIp, final boolean elasticLb, final boolean specifyIpRanges, final boolean inline, final boolean isPersistent,
-                             final boolean associatePublicIP, final boolean publicLb, final boolean egressdefaultpolicy,
-                             final boolean supportsStrechedL2) {
+                             final boolean specifyIpRanges, final boolean inline, final boolean isPersistent, final boolean publicLb, final boolean egressdefaultpolicy, final boolean
+                                     supportsStrechedL2) {
         this(
                 name,
                 displayText,
@@ -124,10 +117,7 @@ public class NetworkOfferingVO implements NetworkOffering {
         this.dedicatedLB = dedicatedLb;
         this.sharedSourceNat = sharedSourceNat;
         this.redundantRouter = redundantRouter;
-        this.elasticIp = elasticIp;
-        this.elasticLb = elasticLb;
         this.inline = inline;
-        this.eipAssociatePublicIp = associatePublicIP;
         this.egressdefaultpolicy = egressdefaultpolicy;
         this.supportsStrechedL2 = supportsStrechedL2;
     }
@@ -153,9 +143,6 @@ public class NetworkOfferingVO implements NetworkOffering {
         this.dedicatedLB = true;
         this.sharedSourceNat = false;
         this.redundantRouter = false;
-        this.elasticIp = false;
-        this.eipAssociatePublicIp = true;
-        this.elasticLb = false;
         this.inline = false;
         this.specifyIpRanges = specifyIpRanges;
         this.isPersistent = isPersistent;
@@ -316,21 +303,6 @@ public class NetworkOfferingVO implements NetworkOffering {
     @Override
     public boolean isConserveMode() {
         return conserveMode;
-    }
-
-    @Override
-    public boolean getElasticIp() {
-        return elasticIp;
-    }
-
-    @Override
-    public boolean getAssociatePublicIP() {
-        return eipAssociatePublicIp;
-    }
-
-    @Override
-    public boolean getElasticLb() {
-        return elasticLb;
     }
 
     @Override

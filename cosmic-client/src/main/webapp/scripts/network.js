@@ -1297,14 +1297,12 @@
                                             guestvmcidr: args.data.cidr
                                         });
                                     }
-                                },
-                            },
+                                }
+                            }
                         },
 
                         tabFilter: function (args) {
-                            var networkHavingELB = false;
                             var hasNetworkACL = false;
-                            var hasSRXFirewall = false;
                             var isVPC = false;
                             var isPrivateNet = false;
                             var isAdvancedSGZone = false;
@@ -1327,22 +1325,10 @@
 
                                 if (thisService.name == 'NetworkACL') {
                                     hasNetworkACL = true;
-                                } else if (thisService.name == "Lb") {
-                                    $(thisService.capability).each(function () {
-                                        if (this.name == "ElasticLb" && this.value == "true") {
-                                            networkHavingELB = true;
-                                        }
-                                    });
                                 }
 
                                 if (thisService.name == 'Firewall') {
                                     $(thisService.provider).each(function () {
-                                        if (this.name == 'JuniperSRX') {
-                                            hasSRXFirewall = true;
-
-                                            return false;
-                                        }
-
                                         return true;
                                     });
                                 }
@@ -2294,9 +2280,7 @@
                         },
 
                         tabFilter: function (args) {
-                            var networkHavingELB = false;
                             var hasNetworkACL = false;
-                            var hasSRXFirewall = false;
                             var isVPC = false;
                             var isPrivateNet = false;
                             var isAdvancedSGZone = false;
@@ -2319,22 +2303,10 @@
 
                                 if (thisService.name == 'NetworkACL') {
                                     hasNetworkACL = true;
-                                } else if (thisService.name == "Lb") {
-                                    $(thisService.capability).each(function () {
-                                        if (this.name == "ElasticLb" && this.value == "true") {
-                                            networkHavingELB = true;
-                                        }
-                                    });
                                 }
 
                                 if (thisService.name == 'Firewall') {
                                     $(thisService.provider).each(function () {
-                                        if (this.name == 'JuniperSRX') {
-                                            hasSRXFirewall = true;
-
-                                            return false;
-                                        }
-
                                         return true;
                                     });
                                 }
@@ -3087,42 +3059,6 @@
                                     return false;
                                 }
 
-                                if (zoneObj.networktype == 'Basic') {
-                                    var havingEIP = false,
-                                        havingELB = false;
-
-                                    var services = args.context.networks[0].service;
-                                    if (services != null) {
-                                        for (var i = 0; i < services.length; i++) {
-                                            var thisService = services[i];
-                                            var capabilities = thisService.capability;
-                                            if (thisService.name == "StaticNat") {
-                                                if (capabilities != null) {
-                                                    for (var k = 0; k < capabilities.length; k++) {
-                                                        if (capabilities[k].name == "ElasticIp" && capabilities[k].value == "true") {
-                                                            havingEIP = true;
-                                                            break;
-                                                        }
-                                                    }
-                                                }
-                                            } else if (thisService.name == "Lb") {
-                                                if (capabilities != null) {
-                                                    for (var k = 0; k < capabilities.length; k++) {
-                                                        if (capabilities[k].name == "ElasticLb" && capabilities[k].value == "true") {
-                                                            havingELB = true;
-                                                            break;
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-
-                                    if (havingEIP != true || havingELB != true) { //not EIP-ELB
-                                        return false; //acquire new IP is not allowed in non-EIP-ELB basic zone
-                                    }
-                                }
-
                                 //*** from Guest Network section ***
                                 if ('networks' in args.context) {
                                     if (args.context.networks[0].vpcid == null) { //Guest Network section > non-VPC network, show Acquire IP button
@@ -3245,27 +3181,6 @@
                                 }
                             }
                         });
-
-                        if (g_supportELB == "guest") {
-                            $.ajax({
-                                url: createURL('listPublicIpAddresses'),
-                                data: $.extend({}, data, {
-                                    forvirtualnetwork: false, // ELB IPs are allocated on guest network
-                                    forloadbalancing: true
-                                }),
-                                dataType: "json",
-                                async: false,
-                                success: function (json) {
-                                    var ips = json.listpublicipaddressesresponse.publicipaddress;
-                                    if (ips != null) {
-                                        for (var i = 0; i < ips.length; i++) {
-                                            getExtaPropertiesForIpObj(ips[i], args);
-                                            items.push(ips[i]);
-                                        }
-                                    }
-                                }
-                            });
-                        }
 
                         args.response.success({
                             actionFilter: actionFilters.ipAddress,

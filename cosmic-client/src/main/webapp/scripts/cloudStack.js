@@ -125,7 +125,6 @@
                     async: false,
                     success: function (json) {
                         g_capabilities = json.listcapabilitiesresponse.capability;
-                        g_supportELB = json.listcapabilitiesresponse.capability.supportELB.toString(); //convert boolean to string if it's boolean
                         g_kvmsnapshotenabled = json.listcapabilitiesresponse.capability.kvmsnapshotenabled; //boolean
                         g_regionsecondaryenabled = json.listcapabilitiesresponse.capability.regionsecondaryenabled; //boolean
                         if (json.listcapabilitiesresponse.capability.userpublictemplateenabled != null) {
@@ -257,7 +256,6 @@
                             async: false,
                             success: function (json) {
                                 g_capabilities = json.listcapabilitiesresponse.capability;
-                                g_supportELB = json.listcapabilitiesresponse.capability.supportELB.toString(); //convert boolean to string if it's boolean
                                 g_kvmsnapshotenabled = json.listcapabilitiesresponse.capability.kvmsnapshotenabled; //boolean
                                 g_regionsecondaryenabled = json.listcapabilitiesresponse.capability.regionsecondaryenabled; //boolean
                                 if (json.listcapabilitiesresponse.capability.userpublictemplateenabled != null) {
@@ -319,7 +317,6 @@
                         g_domainid = null;
                         g_timezoneoffset = null;
                         g_timezone = null;
-                        g_supportELB = null;
                         g_kvmsnapshotenabled = null;
                         g_regionsecondaryenabled = null;
                         g_loginCmdText = null;
@@ -421,9 +418,9 @@
         cloudStack.uiCustom.login(loginArgs);
 
         var host = document.location.hostname.split('.');
-        if (host.length > 2) 
-            document.title = host[0].toUpperCase()+" "+_l('label.app.name');
-        else 
+        if (host.length > 2)
+            document.title = host[0].toUpperCase() + " " + _l('label.app.name');
+        else
             document.title = _l('label.app.name');
     });
 })(cloudStack, jQuery);

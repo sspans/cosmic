@@ -2352,34 +2352,15 @@
                             }
                         } else if (args.context.networks[0].type == "Shared") {
                             var havingSecurityGroupService = false;
-                            var havingElasticIpCapability = false;
-                            var havingElasticLbCapability = false;
 
                             for (var i = 0; i < services.length; i++) {
                                 var service = services[i];
                                 if (service.name == "SecurityGroup") {
                                     havingSecurityGroupService = true;
-                                } else if (service.name == "StaticNat") {
-                                    $(service.capability).each(function () {
-                                        if (this.name == "ElasticIp" && this.value == "true") {
-                                            havingElasticIpCapability = true;
-                                            return false; //break $.each() loop
-                                        }
-                                    });
-                                } else if (service.name == "Lb") {
-                                    $(service.capability).each(function () {
-                                        if (this.name == "ElasticLb" && this.value == "true") {
-                                            havingElasticLbCapability = true;
-                                            return false; //break $.each() loop
-                                        }
-                                    });
                                 }
                             }
 
-                            if (havingSecurityGroupService == true && havingElasticIpCapability == true && havingElasticLbCapability == true)
-                                return true;
-                            else
-                                return false;
+                            return false;
                         }
 
                         return false;
@@ -2665,31 +2646,8 @@
                 },
 
                 tabFilter: function (args) {
-                    var hiddenTabs = ['ipAddresses', 'acl']; // Disable IP address tab; it is redundant with 'view all' button
-
-                    var networkOfferingHavingELB = false;
-                    var services = args.context.networks[0].service;
-                    if (services != null) {
-                        for (var i = 0; i < services.length; i++) {
-                            if (services[i].name == "Lb") {
-                                var capabilities = services[i].capability;
-                                if (capabilities != null) {
-                                    for (var k = 0; k < capabilities.length; k++) {
-                                        if (capabilities[k].name == "ElasticLb") {
-                                            networkOfferingHavingELB = true;
-                                            break;
-                                        }
-                                    }
-                                }
-                                break;
-                            }
-                        }
-                    }
-                    if (networkOfferingHavingELB == false) {
-                        hiddenTabs.push("addloadBalancer");
-                    }
-
-                    return hiddenTabs;
+                    // Disable IP address tab; it is redundant with 'view all' button
+                    return ['ipAddresses', 'acl'];
                 },
 
                 isMaximized: true,

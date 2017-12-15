@@ -570,20 +570,10 @@ public class NetworkServiceImpl extends ManagerBase implements NetworkService {
 
         final boolean success = _ipAddrMgr.disassociatePublicIpAddress(ipAddressId, userId, caller);
 
-        if (success) {
-            final Long networkId = ipVO.getAssociatedWithNetworkId();
-            if (networkId != null) {
-                final Network guestNetwork = getNetwork(networkId);
-                final NetworkOffering offering = _entityMgr.findById(NetworkOffering.class, guestNetwork.getNetworkOfferingId());
-                final Long vmId = ipVO.getAssociatedWithVmId();
-                if (offering.getElasticIp() && vmId != null) {
-                    _rulesMgr.getSystemIpAndEnableStaticNatForVm(_userVmDao.findById(vmId), true);
-                    return true;
-                }
-            }
-        } else {
+        if (!success) {
             s_logger.warn("Failed to release public ip address id=" + ipAddressId);
         }
+
         return success;
     }
 

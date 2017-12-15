@@ -607,20 +607,10 @@ public class ApiResponseHelper implements ResponseGenerator {
                          * IP allocated for EIP. So return the guest/public IP accordingly.
                          * */
                         final NetworkOffering networkOffering = ApiDBUtils.findNetworkOfferingById(network.getNetworkOfferingId());
-                        if (networkOffering.getElasticIp()) {
-                            final IpAddress ip = ApiDBUtils.findIpByAssociatedVmId(vm.getId());
-                            if (ip != null) {
-                                final Vlan vlan = ApiDBUtils.findVlanById(ip.getVlanId());
-                                vmResponse.setPublicIp(ip.getAddress().addr());
-                                vmResponse.setPublicNetmask(vlan.getVlanNetmask());
-                                vmResponse.setGateway(vlan.getVlanGateway());
-                            }
-                        } else {
-                            vmResponse.setPublicIp(singleNicProfile.getIPv4Address());
-                            vmResponse.setPublicMacAddress(singleNicProfile.getMacAddress());
-                            vmResponse.setPublicNetmask(singleNicProfile.getIPv4Netmask());
-                            vmResponse.setGateway(singleNicProfile.getIPv4Gateway());
-                        }
+                        vmResponse.setPublicIp(singleNicProfile.getIPv4Address());
+                        vmResponse.setPublicMacAddress(singleNicProfile.getMacAddress());
+                        vmResponse.setPublicNetmask(singleNicProfile.getIPv4Netmask());
+                        vmResponse.setGateway(singleNicProfile.getIPv4Gateway());
                     }
                 }
             }
@@ -1786,11 +1776,6 @@ public class ApiResponseHelper implements ResponseGenerator {
                 lbIsoaltion.setValue(offering.getDedicatedLB() ? "dedicated" : "shared");
                 lbCapResponse.add(lbIsoaltion);
 
-                final CapabilityResponse eLb = new CapabilityResponse();
-                eLb.setName(Capability.ElasticLb.getName());
-                eLb.setValue(offering.getElasticLb() ? "true" : "false");
-                lbCapResponse.add(eLb);
-
                 final CapabilityResponse inline = new CapabilityResponse();
                 inline.setName(Capability.InlineMode.getName());
                 inline.setValue(offering.isInline() ? "true" : "false");
@@ -1812,17 +1797,6 @@ public class ApiResponseHelper implements ResponseGenerator {
                 svcRsp.setCapabilities(capabilities);
             } else if (service == Service.StaticNat) {
                 final List<CapabilityResponse> staticNatCapResponse = new ArrayList<>();
-
-                final CapabilityResponse eIp = new CapabilityResponse();
-                eIp.setName(Capability.ElasticIp.getName());
-                eIp.setValue(offering.getElasticIp() ? "true" : "false");
-                staticNatCapResponse.add(eIp);
-
-                final CapabilityResponse associatePublicIp = new CapabilityResponse();
-                associatePublicIp.setName(Capability.AssociatePublicIP.getName());
-                associatePublicIp.setValue(offering.getAssociatePublicIP() ? "true" : "false");
-                staticNatCapResponse.add(associatePublicIp);
-
                 svcRsp.setCapabilities(staticNatCapResponse);
             }
 

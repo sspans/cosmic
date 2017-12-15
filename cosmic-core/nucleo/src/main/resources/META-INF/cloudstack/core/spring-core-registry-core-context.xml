@@ -155,7 +155,6 @@
     <bean id="networkElementsRegistry"
           class="com.cloud.spring.lifecycle.registry.ExtensionRegistry">
         <property name="excludeKey" value="network.elements.registry.exclude" />
-        <property name="excludeDefault" value="ElasticLoadBalancerElement" />
         <property name="preRegistered">
             <list>
                 <ref bean="VpcVirtualRouter" />

@@ -25,7 +25,6 @@ public class ListCapabilitiesCmd extends BaseCmd {
         response.setCloudStackVersion((String) capabilities.get("cloudStackVersion"));
         response.setCosmic((Boolean) true);
         response.setUserPublicTemplateEnabled((Boolean) capabilities.get("userPublicTemplateEnabled"));
-        response.setSupportELB((String) capabilities.get("supportELB"));
         response.setProjectInviteRequired((Boolean) capabilities.get("projectInviteRequired"));
         response.setAllowUsersCreateProjects((Boolean) capabilities.get("allowusercreateprojects"));
         response.setDiskOffMinSize((Long) capabilities.get("customDiskOffMinSize"));

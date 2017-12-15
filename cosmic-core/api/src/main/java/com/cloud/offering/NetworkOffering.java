@@ -70,11 +70,7 @@ public interface NetworkOffering extends InfrastructureEntity, InternalIdentity,
 
     boolean isConserveMode();
 
-    boolean getElasticIp();
-
     boolean getAssociatePublicIP();
-
-    boolean getElasticLb();
 
     boolean getSpecifyIpRanges();
 

@@ -29,7 +29,6 @@ import com.cloud.model.enumeration.NetworkType;
 import com.cloud.network.IpAddress;
 import com.cloud.network.Network;
 import com.cloud.network.vpc.Vpc;
-import com.cloud.offering.NetworkOffering;
 import com.cloud.projects.Project;
 import com.cloud.user.Account;
 import com.cloud.utils.exception.InvalidParameterValueException;
@@ -267,16 +266,6 @@ public class AssociateIPAddrCmd extends BaseAsyncCreateCmd {
             final Network network = _networkService.getNetwork(networkId);
             if (network == null) {
                 throw new InvalidParameterValueException("Unable to find network by network id specified");
-            }
-
-            final NetworkOffering offering = _entityMgr.findById(NetworkOffering.class, network.getNetworkOfferingId());
-
-            final DataCenter zone = _entityMgr.findById(DataCenter.class, network.getDataCenterId());
-            if (zone.getNetworkType() == NetworkType.Basic && offering.getElasticIp() && offering.getElasticLb()) {
-                // Since the basic zone network is owned by 'Root' domain, domain access checkers will fail for the
-                // accounts in non-root domains while acquiring public IP. So add an exception for the 'Basic' zone
-                // shared network with EIP/ELB service.
-                return caller.getAccountId();
             }
 
             return network.getAccountId();

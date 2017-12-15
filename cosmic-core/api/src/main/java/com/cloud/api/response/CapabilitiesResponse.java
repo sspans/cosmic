@@ -23,10 +23,6 @@ public class CapabilitiesResponse extends BaseResponse {
     @Param(description = "true if user and domain admins can set templates to be shared, false otherwise")
     private boolean userPublicTemplateEnabled;
 
-    @SerializedName("supportELB")
-    @Param(description = "true if region supports elastic load balancer on basic zones")
-    private String supportELB;
-
     @SerializedName(ApiConstants.PROJECT_INVITE_REQUIRED)
     @Param(description = "If invitation confirmation is required when add account to project")
     private Boolean projectInviteRequired;
@@ -97,10 +93,6 @@ public class CapabilitiesResponse extends BaseResponse {
 
     public void setUserPublicTemplateEnabled(final boolean userPublicTemplateEnabled) {
         this.userPublicTemplateEnabled = userPublicTemplateEnabled;
-    }
-
-    public void setSupportELB(final String supportELB) {
-        this.supportELB = supportELB;
     }
 
     public void setProjectInviteRequired(final Boolean projectInviteRequired) {

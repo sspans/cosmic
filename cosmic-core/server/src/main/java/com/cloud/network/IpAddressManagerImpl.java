@@ -83,7 +83,6 @@ import com.cloud.network.vpc.VpcVO;
 import com.cloud.network.vpc.dao.PrivateIpDao;
 import com.cloud.network.vpc.dao.VpcDao;
 import com.cloud.network.vpn.RemoteAccessVpnService;
-import com.cloud.offering.NetworkOffering;
 import com.cloud.offering.NetworkOffering.Availability;
 import com.cloud.offerings.NetworkOfferingVO;
 import com.cloud.offerings.dao.NetworkOfferingDao;
@@ -1404,35 +1403,6 @@ public class IpAddressManagerImpl extends ManagerBase implements IpAddressManage
             }
         }
         return false;
-    }
-
-    @Override
-    public IpAddress assignSystemIp(final long networkId, final Account owner, final boolean forElasticLb, final boolean forElasticIp) throws InsufficientAddressCapacityException {
-        final Network guestNetwork = _networksDao.findById(networkId);
-        final NetworkOffering off = _entityMgr.findById(NetworkOffering.class, guestNetwork.getNetworkOfferingId());
-        IpAddress ip = null;
-        if ((off.getElasticLb() && forElasticLb) || (off.getElasticIp() && forElasticIp)) {
-
-            try {
-                s_logger.debug("Allocating system IP address for load balancer rule...");
-                // allocate ip
-                ip = allocateIP(owner, true, guestNetwork.getDataCenterId());
-                // apply ip associations
-                ip = associateIPToGuestNetwork(ip.getId(), networkId, true);
-            } catch (final ResourceAllocationException ex) {
-                throw new CloudRuntimeException("Failed to allocate system ip due to ", ex);
-            } catch (final ConcurrentOperationException ex) {
-                throw new CloudRuntimeException("Failed to allocate system lb ip due to ", ex);
-            } catch (final ResourceUnavailableException ex) {
-                throw new CloudRuntimeException("Failed to allocate system lb ip due to ", ex);
-            }
-
-            if (ip == null) {
-                throw new CloudRuntimeException("Failed to allocate system ip");
-            }
-        }
-
-        return ip;
     }
 
     @Override

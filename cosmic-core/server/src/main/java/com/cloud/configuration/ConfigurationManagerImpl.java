@@ -2664,8 +2664,8 @@ public class ConfigurationManagerImpl extends ManagerBase implements Configurati
     void validateLoadBalancerServiceCapabilities(final Map<Capability, String> lbServiceCapabilityMap) {
         if (lbServiceCapabilityMap != null && !lbServiceCapabilityMap.isEmpty()) {
             if (lbServiceCapabilityMap.keySet().size() > 3 || !lbServiceCapabilityMap.containsKey(Capability.SupportedLBIsolation)) {
-                throw new InvalidParameterValueException("Only " + Capability.SupportedLBIsolation.getName() + ", " + Capability.ElasticLb.getName() + ", "
-                        + Capability.InlineMode.getName() + " capabilities can be sepcified for LB service");
+                throw new InvalidParameterValueException("Only " + Capability.SupportedLBIsolation.getName() + ", " + Capability.InlineMode.getName() + " capabilities can be sepcified for LB " +
+                        "service");
             }
 
             for (final Capability cap : lbServiceCapabilityMap.keySet()) {
@@ -2675,12 +2675,6 @@ public class ConfigurationManagerImpl extends ManagerBase implements Configurati
                     final boolean sharedLB = value.contains("shared");
                     if (dedicatedLb && sharedLB || !dedicatedLb && !sharedLB) {
                         throw new InvalidParameterValueException("Either dedicated or shared isolation can be specified for " + Capability.SupportedLBIsolation.getName());
-                    }
-                } else if (cap == Capability.ElasticLb) {
-                    final boolean enabled = value.contains("true");
-                    final boolean disabled = value.contains("false");
-                    if (!enabled && !disabled) {
-                        throw new InvalidParameterValueException("Unknown specified value for " + Capability.ElasticLb.getName());
                     }
                 } else if (cap == Capability.InlineMode) {
                     final boolean enabled = value.contains("true");
@@ -2694,7 +2688,7 @@ public class ConfigurationManagerImpl extends ManagerBase implements Configurati
                         throw new InvalidParameterValueException("Unknown specified value for " + Capability.LbSchemes.getName());
                     }
                 } else {
-                    throw new InvalidParameterValueException("Only " + Capability.SupportedLBIsolation.getName() + ", " + Capability.ElasticLb.getName() + ", "
+                    throw new InvalidParameterValueException("Only " + Capability.SupportedLBIsolation.getName() + ", "
                             + Capability.InlineMode.getName() + ", " + Capability.LbSchemes.getName() + " capabilities can be sepcified for LB service");
                 }
             }
@@ -2734,25 +2728,23 @@ public class ConfigurationManagerImpl extends ManagerBase implements Configurati
 
     void validateStaticNatServiceCapablities(final Map<Capability, String> staticNatServiceCapabilityMap) {
         if (staticNatServiceCapabilityMap != null && !staticNatServiceCapabilityMap.isEmpty()) {
-            boolean eipEnabled = false;
             boolean associatePublicIP = true;
             for (final Capability capability : staticNatServiceCapabilityMap.keySet()) {
                 final String value = staticNatServiceCapabilityMap.get(capability).toLowerCase();
                 if (!(value.contains("true") ^ value.contains("false"))) {
                     throw new InvalidParameterValueException("Unknown specified value (" + value + ") for " + capability);
                 }
-                if (capability == Capability.ElasticIp) {
-                    eipEnabled = value.contains("true");
-                } else if (capability == Capability.AssociatePublicIP) {
+
+                if (capability == Capability.AssociatePublicIP) {
                     associatePublicIP = value.contains("true");
                 } else {
-                    throw new InvalidParameterValueException("Only " + Capability.ElasticIp.getName() + " and " + Capability.AssociatePublicIP.getName()
+                    throw new InvalidParameterValueException("Only " + Capability.AssociatePublicIP.getName()
                             + " capabilitiy can be sepcified for static nat service");
                 }
             }
-            if (!eipEnabled && associatePublicIP) {
+            if (associatePublicIP) {
                 throw new InvalidParameterValueException("Capability " + Capability.AssociatePublicIP.getName() + " can only be set when capability "
-                        + Capability.ElasticIp.getName() + " is true");
+                        + Capability.AssociatePublicIP.getName() + " is true");
             }
         }
     }
@@ -3693,11 +3685,8 @@ public class ConfigurationManagerImpl extends ManagerBase implements Configurati
         }
 
         boolean dedicatedLb = false;
-        boolean elasticLb = false;
         boolean sharedSourceNat = false;
         boolean redundantRouter = false;
-        boolean elasticIp = false;
-        boolean associatePublicIp = false;
         boolean inline = false;
         boolean publicLb = false;
         boolean strechedL2Subnet = false;
@@ -3712,11 +3701,6 @@ public class ConfigurationManagerImpl extends ManagerBase implements Configurati
                     dedicatedLb = isolationCapability.contains("dedicated");
                 } else {
                     dedicatedLb = true;
-                }
-
-                final String param = lbServiceCapabilityMap.get(Capability.ElasticLb);
-                if (param != null) {
-                    elasticLb = param.contains("true");
                 }
 
                 final String inlineMode = lbServiceCapabilityMap.get(Capability.InlineMode);
@@ -3751,18 +3735,6 @@ public class ConfigurationManagerImpl extends ManagerBase implements Configurati
                 }
             }
 
-            final Map<Capability, String> staticNatServiceCapabilityMap = serviceCapabilityMap.get(Service.StaticNat);
-            if (staticNatServiceCapabilityMap != null && !staticNatServiceCapabilityMap.isEmpty()) {
-                final String param = staticNatServiceCapabilityMap.get(Capability.ElasticIp);
-                if (param != null) {
-                    elasticIp = param.contains("true");
-                    final String associatePublicIP = staticNatServiceCapabilityMap.get(Capability.AssociatePublicIP);
-                    if (associatePublicIP != null) {
-                        associatePublicIp = associatePublicIP.contains("true");
-                    }
-                }
-            }
-
             final Map<Capability, String> connectivityServiceCapabilityMap = serviceCapabilityMap.get(Service.Connectivity);
             if (connectivityServiceCapabilityMap != null && !connectivityServiceCapabilityMap.isEmpty()) {
                 final String value = connectivityServiceCapabilityMap.get(Capability.StretchedL2Subnet);
@@ -3778,8 +3750,7 @@ public class ConfigurationManagerImpl extends ManagerBase implements Configurati
         }
 
         final NetworkOfferingVO offeringFinal = new NetworkOfferingVO(name, displayText, trafficType, systemOnly, specifyVlan, networkRate, multicastRate, isDefault, availability,
-                tags, type, conserveMode, dedicatedLb, sharedSourceNat, redundantRouter, elasticIp, elasticLb, specifyIpRanges, inline, isPersistent, associatePublicIp, publicLb,
-                egressDefaultPolicy, strechedL2Subnet);
+                tags, type, conserveMode, dedicatedLb, sharedSourceNat, redundantRouter, specifyIpRanges, inline, isPersistent, publicLb, egressDefaultPolicy, strechedL2Subnet);
 
         if (serviceOfferingId != null) {
             offeringFinal.setServiceOfferingId(serviceOfferingId);

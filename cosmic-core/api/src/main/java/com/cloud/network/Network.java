@@ -149,10 +149,10 @@ public interface Network extends ControlledEntity, StateObject<Network.State>, I
         public static final Service Firewall = new Service("Firewall", Capability.SupportedProtocols, Capability.MultipleIps, Capability.TrafficStatistics,
                 Capability.SupportedTrafficDirection, Capability.SupportedEgressProtocols);
         public static final Service Lb = new Service("Lb", Capability.SupportedLBAlgorithms, Capability.SupportedLBIsolation, Capability.SupportedProtocols,
-                Capability.TrafficStatistics, Capability.LoadBalancingSupportedIps, Capability.SupportedStickinessMethods, Capability.ElasticLb, Capability.LbSchemes);
+                Capability.TrafficStatistics, Capability.LoadBalancingSupportedIps, Capability.SupportedStickinessMethods, Capability.LbSchemes);
         public static final Service UserData = new Service("UserData");
         public static final Service SourceNat = new Service("SourceNat", Capability.SupportedSourceNatTypes, Capability.RedundantRouter);
-        public static final Service StaticNat = new Service("StaticNat", Capability.ElasticIp);
+        public static final Service StaticNat = new Service("StaticNat");
         public static final Service PortForwarding = new Service("PortForwarding");
         public static final Service SecurityGroup = new Service("SecurityGroup");
         public static final Service NetworkACL = new Service("NetworkACL", Capability.SupportedProtocols);
@@ -212,7 +212,6 @@ public interface Network extends ControlledEntity, StateObject<Network.State>, I
         public static final Provider VirtualRouter = new Provider("VirtualRouter", false, false);
         public static final Provider ExternalDhcpServer = new Provider("ExternalDhcpServer", true);
         public static final Provider ExternalGateWay = new Provider("ExternalGateWay", true);
-        public static final Provider ElasticLoadBalancerVm = new Provider("ElasticLoadBalancerVm", false);
         public static final Provider SecurityGroupProvider = new Provider("SecurityGroupProvider", false);
         public static final Provider VPCVirtualRouter = new Provider("VpcVirtualRouter", false);
         public static final Provider None = new Provider("None", false);
@@ -276,9 +275,6 @@ public interface Network extends ControlledEntity, StateObject<Network.State>, I
         public static final Capability LoadBalancingSupportedIps = new Capability("LoadBalancingSupportedIps");
         public static final Capability AllowDnsSuffixModification = new Capability("AllowDnsSuffixModification");
         public static final Capability RedundantRouter = new Capability("RedundantRouter");
-        public static final Capability ElasticIp = new Capability("ElasticIp");
-        public static final Capability AssociatePublicIP = new Capability("AssociatePublicIP");
-        public static final Capability ElasticLb = new Capability("ElasticLb");
         public static final Capability InlineMode = new Capability("InlineMode");
         public static final Capability SupportedTrafficDirection = new Capability("SupportedTrafficDirection");
         public static final Capability SupportedEgressProtocols = new Capability("SupportedEgressProtocols");
