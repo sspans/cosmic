@@ -9,10 +9,8 @@ import com.cloud.exception.ConcurrentOperationException;
 import com.cloud.exception.ResourceUnavailableException;
 import com.cloud.host.Status;
 import com.cloud.host.dao.HostDao;
-import com.cloud.model.enumeration.NetworkType;
 import com.cloud.network.IpAddress;
 import com.cloud.network.Network;
-import com.cloud.network.Networks.TrafficType;
 import com.cloud.network.PublicIpAddress;
 import com.cloud.network.RemoteAccessVpn;
 import com.cloud.network.VpnUser;
@@ -40,7 +38,6 @@ import com.cloud.network.vpc.StaticRouteProfile;
 import com.cloud.utils.exception.CloudRuntimeException;
 import com.cloud.vm.DomainRouterVO;
 import com.cloud.vm.NicProfile;
-import com.cloud.vm.VirtualMachine;
 import com.cloud.vm.VirtualMachine.State;
 import com.cloud.vm.VirtualMachineProfile;
 
@@ -137,14 +134,6 @@ public class BasicNetworkTopology implements NetworkTopology {
         final Long podId = dest.getPod().getId();
         boolean isPodLevelException = false;
 
-        // for user vm in Basic zone we should try to re-deploy vm in a diff pod
-        // if it fails to deploy in original pod; so throwing exception with Pod
-        // scope
-        if (podId != null && profile.getVirtualMachine().getType() == VirtualMachine.Type.User && network.getTrafficType() == TrafficType.Guest
-                && network.getGuestType() == Network.GuestType.Shared) {
-            isPodLevelException = true;
-        }
-
         final boolean failWhenDisconnect = false;
 
         final DhcpEntryRules dhcpRules = new DhcpEntryRules(network, nic, profile, dest);
@@ -161,11 +150,6 @@ public class BasicNetworkTopology implements NetworkTopology {
         final String typeString = "userdata and password entry";
         final Long podId = dest.getPod().getId();
         boolean isPodLevelException = false;
-
-        if (podId != null && profile.getVirtualMachine().getType() == VirtualMachine.Type.User && network.getTrafficType() == TrafficType.Guest
-                && network.getGuestType() == Network.GuestType.Shared) {
-            isPodLevelException = true;
-        }
 
         final boolean failWhenDisconnect = false;
 
@@ -353,11 +337,8 @@ public class BasicNetworkTopology implements NetworkTopology {
 
         final RuleApplier ruleApplier = ruleApplierWrapper.getRuleType();
 
-        final DataCenter dc = _dcDao.findById(network.getDataCenterId());
-        final boolean isZoneBasic = dc.getNetworkType() == NetworkType.Basic;
-
         // isPodLevelException and podId is only used for basic zone
-        assert !(!isZoneBasic && isPodLevelException || isZoneBasic && isPodLevelException && podId == null);
+        assert !(isPodLevelException);
 
         final List<VirtualRouter> connectedRouters = new ArrayList<>();
         final List<VirtualRouter> disconnectedRouters = new ArrayList<>();
@@ -386,7 +367,7 @@ public class BasicNetworkTopology implements NetworkTopology {
             // If rules fail to apply on one domR and not due to
             // disconnection, no need to proceed with the rest
             if (!result) {
-                if (isZoneBasic && isPodLevelException) {
+                if (false && isPodLevelException) {
                     throw new ResourceUnavailableException("Unable to apply " + typeString + " on router ", Pod.class, podId);
                 }
                 throw new ResourceUnavailableException("Unable to apply " + typeString + " on router ", DataCenter.class, router.getDataCenterId());
@@ -395,7 +376,7 @@ public class BasicNetworkTopology implements NetworkTopology {
             s_logger.debug("Router " + router.getInstanceName() + " is in " + router.getState() + ", so not sending apply " + typeString + " commands to the backend");
         } else {
             s_logger.warn("Unable to apply " + typeString + ", virtual router is not in the right state " + router.getState());
-            if (isZoneBasic && isPodLevelException) {
+            if (false && isPodLevelException) {
                 throw new ResourceUnavailableException("Unable to apply " + typeString + ", virtual router is not in the right state", Pod.class, podId);
             }
             throw new ResourceUnavailableException("Unable to apply " + typeString + ", virtual router is not in the right state", DataCenter.class, router.getDataCenterId());
@@ -403,7 +384,7 @@ public class BasicNetworkTopology implements NetworkTopology {
 
         if (!connectedRouters.isEmpty()) {
             // Shouldn't we include this check inside the method?
-            if (!isZoneBasic && !disconnectedRouters.isEmpty()) {
+            if (!disconnectedRouters.isEmpty()) {
                 // These disconnected redundant virtual routers are out of sync
                 // now, stop them for synchronization
                 for (final VirtualRouter virtualRouter : disconnectedRouters) {
@@ -418,9 +399,7 @@ public class BasicNetworkTopology implements NetworkTopology {
             if (s_logger.isDebugEnabled()) {
                 s_logger.debug(msg + router.getInstanceName() + "(" + router.getId() + ")");
             }
-            if (isZoneBasic && isPodLevelException) {
-                throw new ResourceUnavailableException(msg, Pod.class, podId);
-            }
+
             throw new ResourceUnavailableException(msg, DataCenter.class, disconnectedRouters.get(0).getDataCenterId());
         }
 

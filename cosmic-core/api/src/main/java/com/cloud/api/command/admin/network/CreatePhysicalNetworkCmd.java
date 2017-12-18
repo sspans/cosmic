@@ -53,7 +53,7 @@ public class CreatePhysicalNetworkCmd extends BaseAsyncCreateCmd {
 
     @Parameter(name = ApiConstants.BROADCAST_DOMAIN_RANGE,
             type = CommandType.STRING,
-            description = "the broadcast domain range for the physical network[Pod or Zone]. In Acton release it can be Zone only in Advance zone, and Pod in Basic")
+            description = "the broadcast domain range for the physical network[Pod or Zone]. In Acton release it can be Zone only in Advance zone")
     private String broadcastDomainRange;
 
     @Parameter(name = ApiConstants.TAGS, type = CommandType.LIST, collectionType = CommandType.STRING, description = "Tag the physical network")

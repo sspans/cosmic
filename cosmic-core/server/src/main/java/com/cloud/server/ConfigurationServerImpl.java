@@ -22,7 +22,6 @@ import com.cloud.framework.config.ConfigKey;
 import com.cloud.framework.config.dao.ConfigurationDao;
 import com.cloud.framework.config.impl.ConfigurationVO;
 import com.cloud.model.enumeration.NetworkType;
-import com.cloud.network.Network;
 import com.cloud.network.Network.State;
 import com.cloud.network.Networks.BroadcastDomainType;
 import com.cloud.network.Networks.Mode;
@@ -30,7 +29,6 @@ import com.cloud.network.Networks.TrafficType;
 import com.cloud.network.dao.NetworkDao;
 import com.cloud.network.dao.NetworkVO;
 import com.cloud.network.guru.ControlNetworkGuru;
-import com.cloud.network.guru.DirectPodBasedNetworkGuru;
 import com.cloud.network.guru.PodBasedNetworkGuru;
 import com.cloud.network.guru.PublicNetworkGuru;
 import com.cloud.network.guru.StorageNetworkGuru;
@@ -444,7 +442,6 @@ public class ConfigurationServerImpl extends ManagerBase implements Configuratio
         guruNames.put(TrafficType.Management, PodBasedNetworkGuru.class.getSimpleName());
         guruNames.put(TrafficType.Control, ControlNetworkGuru.class.getSimpleName());
         guruNames.put(TrafficType.Storage, StorageNetworkGuru.class.getSimpleName());
-        guruNames.put(TrafficType.Guest, DirectPodBasedNetworkGuru.class.getSimpleName());
 
         for (final DataCenterVO zone : zones) {
             final long zoneId = zone.getId();
@@ -477,7 +474,7 @@ public class ConfigurationServerImpl extends ManagerBase implements Configuratio
                     } else if (trafficType == TrafficType.Control) {
                         broadcastDomainType = BroadcastDomainType.LinkLocal;
                     } else if (offering.getTrafficType() == TrafficType.Public) {
-                        if ((zone.getNetworkType() == NetworkType.Advanced && !zone.isSecurityGroupEnabled()) || zone.getNetworkType() == NetworkType.Basic) {
+                        if ((zone.getNetworkType() == NetworkType.Advanced)) {
                             specifyIpRanges = true;
                             broadcastDomainType = BroadcastDomainType.Vlan;
                         } else {
@@ -486,10 +483,9 @@ public class ConfigurationServerImpl extends ManagerBase implements Configuratio
                     }
 
                     if (broadcastDomainType != null) {
-                        final NetworkVO network =
-                                new NetworkVO(id, trafficType, mode, broadcastDomainType, networkOfferingId, domainId, accountId, related, null, null, networkDomain,
-                                        Network.GuestType.Shared, zoneId, null, null, specifyIpRanges, null, offering.getRedundantRouter(),
-                                        zone.getDns1(), zone.getDns2(), null);
+                        final NetworkVO network = new NetworkVO(id, trafficType, mode, broadcastDomainType, networkOfferingId, domainId, accountId, related, null, null, networkDomain,
+                                null, zoneId, null, null, specifyIpRanges, null, offering.getRedundantRouter(),
+                                zone.getDns1(), zone.getDns2(), null);
                         network.setGuruName(guruNames.get(network.getTrafficType()));
                         network.setState(State.Implemented);
                         _networkDao.persist(network, false, getServicesAndProvidersForNetwork(networkOfferingId));

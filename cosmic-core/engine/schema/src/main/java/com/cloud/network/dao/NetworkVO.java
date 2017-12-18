@@ -159,7 +159,6 @@ public class NetworkVO implements Network {
      * @param aclType             TODO
      * @param specifyIpRanges     TODO
      * @param vpcId               TODO
-     * @param dataCenterId
      */
     public NetworkVO(final long id, final TrafficType trafficType, final Mode mode, final BroadcastDomainType broadcastDomainType, final long networkOfferingId,
                      final long domainId, final long accountId, final long related, final String name, final String displayText, final String networkDomain,

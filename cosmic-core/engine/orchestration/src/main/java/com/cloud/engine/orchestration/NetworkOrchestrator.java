@@ -31,7 +31,6 @@ import com.cloud.dc.dao.VlanDao;
 import com.cloud.deploy.DataCenterDeployment;
 import com.cloud.deploy.DeployDestination;
 import com.cloud.deploy.DeploymentPlan;
-import com.cloud.domain.Domain;
 import com.cloud.engine.cloud.entity.api.db.VMNetworkMapVO;
 import com.cloud.engine.cloud.entity.api.db.dao.VMNetworkMapDao;
 import com.cloud.engine.orchestration.service.NetworkOrchestrationService;
@@ -771,44 +770,17 @@ public class NetworkOrchestrator extends ManagerBase implements NetworkOrchestra
         return true;
     }
 
-    boolean isNetworkImplemented(final NetworkVO network) {
+    private boolean isNetworkImplemented(final NetworkVO network) {
         final Network.State state = network.getState();
-        if (state == Network.State.Implemented) {
+        if (state == Network.State.Implemented || state == Network.State.Setup) {
             return true;
-        } else if (state == Network.State.Setup) {
-            final Zone zone = _zoneRepository.findOne(network.getDataCenterId());
-            if (!isSharedNetworkOfferingWithServices(network.getNetworkOfferingId()) || zone.getNetworkType() == com.cloud.model.enumeration.NetworkType.Basic) {
-                return true;
-            }
         }
-        return false;
-    }
 
-    protected boolean isSharedNetworkWithServices(final Network network) {
-        assert network != null;
-        final Zone zone = _zoneRepository.findOne(network.getDataCenterId());
-        if (network.getGuestType() == GuestType.Shared && zone.getNetworkType() == com.cloud.model.enumeration.NetworkType.Advanced
-                && isSharedNetworkOfferingWithServices(network.getNetworkOfferingId())) {
-            return true;
-        }
         return false;
     }
 
     protected boolean stateTransitTo(final NetworkVO network, final Network.Event e) throws NoTransitionException {
         return _stateMachine.transitTo(network, e, null, _networksDao);
-    }
-
-    protected boolean isSharedNetworkOfferingWithServices(final long networkOfferingId) {
-        final NetworkOfferingVO networkOffering = _networkOfferingDao.findById(networkOfferingId);
-        if (networkOffering.getGuestType() == GuestType.Shared
-                && (_networkModel.areServicesSupportedByNetworkOffering(networkOfferingId, Service.SourceNat)
-                || _networkModel.areServicesSupportedByNetworkOffering(networkOfferingId, Service.StaticNat)
-                || _networkModel.areServicesSupportedByNetworkOffering(networkOfferingId, Service.Firewall)
-                || _networkModel.areServicesSupportedByNetworkOffering(networkOfferingId, Service.PortForwarding) || _networkModel.areServicesSupportedByNetworkOffering(
-                networkOfferingId, Service.Lb))) {
-            return true;
-        }
-        return false;
     }
 
     // This method re-programs the rules/ips for existing network
@@ -820,8 +792,7 @@ public class NetworkOrchestrator extends ManagerBase implements NetworkOrchestra
         final NetworkOfferingVO offering = _networkOfferingDao.findById(network.getNetworkOfferingId());
         final Zone zone = _zoneRepository.findOne(network.getDataCenterId());
         if (_networkModel.areServicesSupportedInNetwork(network.getId(), Service.Firewall) && _networkModel.areServicesSupportedInNetwork(network.getId(), Service.Firewall)
-                && (network.getGuestType() == GuestType.Isolated || network.getGuestType() == GuestType.Shared && zone.getNetworkType() == com.cloud.model.enumeration
-                .NetworkType.Advanced)) {
+                && (network.getGuestType() == GuestType.Isolated)) {
             // add default egress rule to accept the traffic
             _firewallMgr.applyDefaultEgressFirewallRule(network.getId(), offering.getEgressDefaultPolicy(), true);
         }
@@ -992,9 +963,7 @@ public class NetworkOrchestrator extends ManagerBase implements NetworkOrchestra
             // delete default egress rule
             final Zone zone = _zoneRepository.findOne(network.getDataCenterId());
             if (_networkModel.areServicesSupportedInNetwork(network.getId(), Service.Firewall)
-                    && (network.getGuestType() == GuestType.Isolated || network.getGuestType() == GuestType.Shared && zone.getNetworkType() == com.cloud.model.enumeration
-                    .NetworkType
-                    .Advanced)) {
+                    && (network.getGuestType() == GuestType.Isolated)) {
                 // add default egress rule to accept the traffic
                 _firewallMgr.applyDefaultEgressFirewallRule(network.getId(), _networkModel.getNetworkEgressDefaultPolicy(networkId), false);
             }
@@ -1238,11 +1207,7 @@ public class NetworkOrchestrator extends ManagerBase implements NetworkOrchestra
             final NetworkOfferingVO offering = _networkOfferingDao.findById(network.getNetworkOfferingId());
 
             network.setReservationId(context.getReservationId());
-            if (isSharedNetworkWithServices(network)) {
-                network.setState(Network.State.Implementing);
-            } else {
-                stateTransitTo(network, Event.ImplementNetwork);
-            }
+            stateTransitTo(network, Event.ImplementNetwork);
 
             final Network result = guru.implement(network, offering, dest, context);
             network.setCidr(result.getCidr());
@@ -1255,11 +1220,7 @@ public class NetworkOrchestrator extends ManagerBase implements NetworkOrchestra
             // implement network elements and re-apply all the network rules
             implementNetworkElementsAndResources(dest, context, network, offering);
 
-            if (isSharedNetworkWithServices(network)) {
-                network.setState(Network.State.Implemented);
-            } else {
-                stateTransitTo(network, Event.OperationSucceeded);
-            }
+            stateTransitTo(network, Event.OperationSucceeded);
 
             network.setRestartRequired(false);
             _networksDao.update(network.getId(), network);
@@ -1272,12 +1233,7 @@ public class NetworkOrchestrator extends ManagerBase implements NetworkOrchestra
             if (implemented.first() == null) {
                 s_logger.debug("Cleaning up because we're unable to implement the network " + network);
                 try {
-                    if (isSharedNetworkWithServices(network)) {
-                        network.setState(Network.State.Shutdown);
-                        _networksDao.update(networkId, network);
-                    } else {
-                        stateTransitTo(network, Event.OperationFailed);
-                    }
+                    stateTransitTo(network, Event.OperationFailed);
                 } catch (final NoTransitionException e) {
                     s_logger.error(e.getMessage());
                 }
@@ -1440,16 +1396,11 @@ public class NetworkOrchestrator extends ManagerBase implements NetworkOrchestra
                 return false;
             }
 
-            if (isSharedNetworkWithServices(network)) {
+            try {
+                stateTransitTo(network, Event.DestroyNetwork);
+            } catch (final NoTransitionException e) {
                 network.setState(Network.State.Shutdown);
                 _networksDao.update(network.getId(), network);
-            } else {
-                try {
-                    stateTransitTo(network, Event.DestroyNetwork);
-                } catch (final NoTransitionException e) {
-                    network.setState(Network.State.Shutdown);
-                    _networksDao.update(network.getId(), network);
-                }
             }
 
             final boolean success = shutdownNetworkElementsAndResources(context, cleanupElements, network);
@@ -1470,15 +1421,11 @@ public class NetworkOrchestrator extends ManagerBase implements NetworkOrchestra
 
                         applyProfileToNetwork(networkFinal, profile);
                         final Zone zone = _zoneRepository.findOne(networkFinal.getDataCenterId());
-                        if (isSharedNetworkOfferingWithServices(networkFinal.getNetworkOfferingId()) && zone.getNetworkType() == com.cloud.model.enumeration.NetworkType.Advanced) {
-                            networkFinal.setState(Network.State.Setup);
-                        } else {
-                            try {
-                                stateTransitTo(networkFinal, Event.OperationSucceeded);
-                            } catch (final NoTransitionException e) {
-                                networkFinal.setState(Network.State.Allocated);
-                                networkFinal.setRestartRequired(false);
-                            }
+                        try {
+                            stateTransitTo(networkFinal, Event.OperationSucceeded);
+                        } catch (final NoTransitionException e) {
+                            networkFinal.setState(Network.State.Allocated);
+                            networkFinal.setRestartRequired(false);
                         }
                         _networksDao.update(networkFinal.getId(), networkFinal);
                         _networksDao.clearCheckForGc(networkId);
@@ -1595,16 +1542,6 @@ public class NetworkOrchestrator extends ManagerBase implements NetworkOrchestra
             // at this point we have already determined that there are no active user vms in network
             // if the op_networks table shows active nics, it's a bug in releasing nics updating op_networks
             _networksDao.changeActiveNicsBy(networkId, -1 * nicCount);
-        }
-
-        //In Basic zone, make sure that there are no non-removed console proxies and SSVMs using the network
-        final Zone zone = _zoneRepository.findOne(network.getDataCenterId());
-        if (zone.getNetworkType() == com.cloud.model.enumeration.NetworkType.Basic) {
-            final List<VMInstanceVO> systemVms = _vmDao.listNonRemovedVmsByTypeAndNetwork(network.getId(), Type.ConsoleProxy, Type.SecondaryStorageVm);
-            if (systemVms != null && !systemVms.isEmpty()) {
-                s_logger.warn("Can't delete the network, not all consoleProxy/secondaryStorage vms are expunged");
-                return false;
-            }
         }
 
         // Shutdown network first
@@ -1757,66 +1694,6 @@ public class NetworkOrchestrator extends ManagerBase implements NetworkOrchestra
         }
         // Validate zone
         final Zone zone = _zoneRepository.findOne(zoneId);
-        if (zone.getNetworkType() == com.cloud.model.enumeration.NetworkType.Basic) {
-            if (ipv6) {
-                throw new InvalidParameterValueException("IPv6 is not supported in Basic zone");
-            }
-
-            // In Basic zone the network should have aclType=Domain, domainId=1, subdomainAccess=true
-            if (aclType == null || aclType != ACLType.Domain) {
-                throw new InvalidParameterValueException("Only AclType=Domain can be specified for network creation in Basic zone");
-            }
-
-            // Only one guest network is supported in Basic zone
-            final List<NetworkVO> guestNetworks = _networksDao.listByZoneAndTrafficType(zone.getId(), TrafficType.Guest);
-            if (!guestNetworks.isEmpty()) {
-                throw new InvalidParameterValueException("Can't have more than one Guest network in zone with network type " + NetworkType.Basic);
-            }
-
-            // if zone is basic, only Shared network offerings w/o source nat service are allowed
-            if (!(ntwkOff.getGuestType() == GuestType.Shared && !_networkModel.areServicesSupportedByNetworkOffering(ntwkOff.getId(), Service.SourceNat))) {
-                throw new InvalidParameterValueException("For zone of type " + NetworkType.Basic + " only offerings of " + "guestType " + GuestType.Shared + " with disabled "
-                        + Service.SourceNat.getName() + " service are allowed");
-            }
-
-            if (domainId == null || domainId != Domain.ROOT_DOMAIN) {
-                throw new InvalidParameterValueException("Guest network in Basic zone should be dedicated to ROOT domain");
-            }
-
-            if (subdomainAccess == null) {
-                subdomainAccess = true;
-            } else if (!subdomainAccess) {
-                throw new InvalidParameterValueException("Subdomain access should be set to true for the" + " guest network in the Basic zone");
-            }
-
-            if (vlanId == null) {
-                vlanId = Vlan.UNTAGGED;
-            } else {
-                if (!vlanId.equalsIgnoreCase(Vlan.UNTAGGED)) {
-                    throw new InvalidParameterValueException("Only vlan " + Vlan.UNTAGGED + " can be created in " + "the zone of type " + NetworkType.Basic);
-                }
-            }
-        } else if (zone.getNetworkType() == com.cloud.model.enumeration.NetworkType.Advanced) {
-            if (zone.isSecurityGroupEnabled()) {
-                if (ipv6) {
-                    throw new InvalidParameterValueException("IPv6 is not supported with security group!");
-                }
-                if (isolatedPvlan != null) {
-                    throw new InvalidParameterValueException("Isolated Private VLAN is not supported with security group!");
-                }
-                // Only Account specific Isolated network with sourceNat service disabled are allowed in security group
-                // enabled zone
-                if (ntwkOff.getGuestType() != GuestType.Shared) {
-                    throw new InvalidParameterValueException("Only shared guest network can be created in security group enabled zone");
-                }
-                if (_networkModel.areServicesSupportedByNetworkOffering(ntwkOff.getId(), Service.SourceNat)) {
-                    throw new InvalidParameterValueException("Service SourceNat is not allowed in security group enabled zone");
-                }
-                if (!_networkModel.areServicesSupportedByNetworkOffering(ntwkOff.getId(), Service.SecurityGroup)) {
-                    throw new InvalidParameterValueException("network must have SecurityGroup provider in security group enabled zone");
-                }
-            }
-        }
 
         //TODO(VXLAN): Support VNI specified
         // VlanId can be specified only when network offering supports it
@@ -1914,22 +1791,15 @@ public class NetworkOrchestrator extends ManagerBase implements NetworkOrchestra
         // In Advance zone Cidr for Shared networks and Isolated networks w/o source nat service can't be NULL - 2.2.x
         // limitation, remove after we introduce support for multiple ip ranges
         // with different Cidrs for the same Shared network
-        final boolean cidrRequired = zone.getNetworkType() == com.cloud.model.enumeration.NetworkType.Advanced
-                && ntwkOff.getTrafficType() == TrafficType.Guest
-                && (ntwkOff.getGuestType() == GuestType.Shared
-                || (ntwkOff.getGuestType() == GuestType.Isolated && !_networkModel.areServicesSupportedByNetworkOffering(ntwkOff.getId(), Service.SourceNat)));
+        final boolean cidrRequired = (zone.getNetworkType() == NetworkType.Advanced) && (ntwkOff.getTrafficType() == TrafficType.Guest) && ((ntwkOff.getGuestType() == GuestType.Isolated) &&
+                !_networkModel.areServicesSupportedByNetworkOffering(ntwkOff.getId(), Service.SourceNat));
         if (cidr == null && ip6Cidr == null && cidrRequired) {
-            throw new InvalidParameterValueException("StartIp/endIp/gateway/netmask are required when create network of" + " type " + GuestType.Shared
-                    + " and network of type " + GuestType.Isolated + " with service " + Service.SourceNat.getName() + " disabled");
-        }
-
-        // No cidr can be specified in Basic zone
-        if (zone.getNetworkType() == com.cloud.model.enumeration.NetworkType.Basic && cidr != null) {
-            throw new InvalidParameterValueException("StartIp/endIp/gateway/netmask can't be specified for zone of type " + NetworkType.Basic);
+            throw new InvalidParameterValueException("StartIp/endIp/gateway/netmask are required when create network of type " + GuestType.Isolated + " with service " + Service.SourceNat.getName()
+                    + " disabled");
         }
 
         // Check if cidr is RFC1918 compliant if the network is Guest Isolated for IPv4
-        if (cidr != null && ntwkOff.getGuestType() != GuestType.Shared && ntwkOff.getTrafficType() == TrafficType.Guest) {
+        if (cidr != null && ntwkOff.getTrafficType() == TrafficType.Guest) {
             if (!NetUtils.validateGuestCidr(cidr)) {
                 throw new InvalidParameterValueException("Virtual Guest Cidr " + cidr + " is not RFC1918 compliant");
             }
@@ -2075,20 +1945,7 @@ public class NetworkOrchestrator extends ManagerBase implements NetworkOrchestra
     public boolean reallocate(final VirtualMachineProfile vm, final DataCenterDeployment dest) throws InsufficientCapacityException, ConcurrentOperationException {
         final VMInstanceVO vmInstance = _vmDao.findById(vm.getId());
         final Zone dc = _zoneRepository.findOne(vmInstance.getDataCenterId());
-        if (dc.getNetworkType() == com.cloud.model.enumeration.NetworkType.Basic) {
-            final List<NicVO> nics = _nicDao.listByVmId(vmInstance.getId());
-            final NetworkVO network = _networksDao.findById(nics.get(0).getNetworkId());
-            final LinkedHashMap<Network, List<? extends NicProfile>> profiles = new LinkedHashMap<>();
-            profiles.put(network, new ArrayList<>());
 
-            Transaction.execute(new TransactionCallbackWithExceptionNoReturn<InsufficientCapacityException>() {
-                @Override
-                public void doInTransactionWithoutResult(final TransactionStatus status) throws InsufficientCapacityException {
-                    cleanupNics(vm);
-                    allocate(vm, profiles);
-                }
-            });
-        }
         return true;
     }
 
@@ -2442,11 +2299,9 @@ public class NetworkOrchestrator extends ManagerBase implements NetworkOrchestra
         final boolean sharedSourceNat = offering.getSharedSourceNat();
         final Zone zone = _zoneRepository.findOne(network.getDataCenterId());
 
-        if (!sharedSourceNat && _networkModel.areServicesSupportedInNetwork(network.getId(), Service.SourceNat)
-                && (network.getGuestType() == GuestType.Isolated || network.getGuestType() == GuestType.Shared && zone.getNetworkType() == com.cloud.model.enumeration
-                .NetworkType.Advanced)) {
+        if (!sharedSourceNat && _networkModel.areServicesSupportedInNetwork(network.getId(), Service.SourceNat) && ((network.getGuestType() == GuestType.Isolated))) {
 
-            List<IPAddressVO> ips = null;
+            List<IPAddressVO> ips;
             final Account owner = _entityMgr.findById(Account.class, network.getAccountId());
             if (network.getVpcId() != null) {
                 ips = _ipAddressDao.listByAssociatedVpc(network.getVpcId(), true);
@@ -2733,7 +2588,7 @@ public class NetworkOrchestrator extends ManagerBase implements NetworkOrchestra
     @Override
     public boolean resourceCountNeedsUpdate(final NetworkOffering ntwkOff, final ACLType aclType) {
         // Update resource count only for account specific non-system networks
-        return ntwkOff.getGuestType() != GuestType.Shared && !ntwkOff.isSystemOnly() && aclType == ACLType.Account;
+        return !ntwkOff.isSystemOnly() && aclType == ACLType.Account;
     }
 
     /*
@@ -2880,19 +2735,6 @@ public class NetworkOrchestrator extends ManagerBase implements NetworkOrchestra
                         s_logger.warn("release failed during the nic " + nic.toString() + " removeNic due to ", ex);
                     }
                 }
-            }
-        }
-
-        if (vm.getType() == Type.User
-                && _networkModel.areServicesSupportedInNetwork(network.getId(), Service.Dhcp)
-                && network.getTrafficType() == TrafficType.Guest
-                && network.getGuestType() == GuestType.Shared
-                && isLastNicInSubnet(nic)) {
-            // remove the dhcpservice ip if this is the last nic in subnet.
-            final DhcpServiceProvider dhcpServiceProvider = getDhcpServiceProvider(network);
-            if (dhcpServiceProvider != null
-                    && isDhcpAccrossMultipleSubnetsSupported(dhcpServiceProvider)) {
-                removeDhcpServiceInSubnet(nic);
             }
         }
 

@@ -15,7 +15,6 @@ import com.cloud.exception.InsufficientCapacityException;
 import com.cloud.exception.ResourceUnavailableException;
 import com.cloud.framework.config.dao.ConfigurationDao;
 import com.cloud.host.dao.HostDao;
-import com.cloud.model.enumeration.NetworkType;
 import com.cloud.network.Network;
 import com.cloud.network.Network.Capability;
 import com.cloud.network.Network.Provider;
@@ -23,7 +22,6 @@ import com.cloud.network.Network.Service;
 import com.cloud.network.NetworkMigrationResponder;
 import com.cloud.network.NetworkModel;
 import com.cloud.network.Networks;
-import com.cloud.network.Networks.TrafficType;
 import com.cloud.network.PhysicalNetworkServiceProvider;
 import com.cloud.network.PublicIpAddress;
 import com.cloud.network.RemoteAccessVpn;
@@ -370,7 +368,7 @@ public class VirtualRouterElement extends AdapterBase implements VirtualRouterEl
                 String tablesize = "200k"; // optional
                 String expire = "30m"; // optional
 
-        /* overwrite default values with the stick parameters */
+                /* overwrite default values with the stick parameters */
                 for (final Pair<String, String> paramKV : paramsList) {
                     final String key = paramKV.first();
                     final String value = paramKV.second();
@@ -910,35 +908,16 @@ public class VirtualRouterElement extends AdapterBase implements VirtualRouterEl
         if (_networkMdl.isProviderSupportServiceInNetwork(network.getId(), Service.SourceNat, getProvider())) {
             publicNetwork = true;
         }
-        final boolean isPodBased = (dest.getZone().getNetworkType() == NetworkType.Basic || _networkMdl.isSecurityGroupSupportedInNetwork(network))
-                && network.getTrafficType() == TrafficType.Guest;
+        final boolean isPodBased = false;
 
         final List<DomainRouterVO> routers;
 
         if (publicNetwork) {
             routers = _routerDao.listByNetworkAndRole(network.getId(), Role.VIRTUAL_ROUTER);
         } else {
-            if (isPodBased && dest.getPod() != null) {
-                final Long podId = dest.getPod().getId();
-                routers = _routerDao.listByNetworkAndPodAndRole(network.getId(), podId, Role.VIRTUAL_ROUTER);
-            } else {
-                // With pod == null, it's network restart case, we would add all
-                // router to it
-                // Ignore DnsBasicZoneUpdate() parameter here
-                routers = _routerDao.listByNetworkAndRole(network.getId(), Role.VIRTUAL_ROUTER);
-            }
+            routers = _routerDao.listByNetworkAndRole(network.getId(), Role.VIRTUAL_ROUTER);
         }
 
-        // for Basic zone, add all Running routers - we have to send
-        // Dhcp/vmData/password info to them when
-        // network.dns.basiczone.updates is set to "all"
-        // With pod == null, it's network restart case, we already add all
-        // routers to it
-        if (isPodBased && dest.getPod() != null && _routerMgr.getDnsBasicZoneUpdate().equalsIgnoreCase("all")) {
-            final Long podId = dest.getPod().getId();
-            final List<DomainRouterVO> allRunningRoutersOutsideThePod = _routerDao.findByNetworkOutsideThePod(network.getId(), podId, State.Running, Role.VIRTUAL_ROUTER);
-            routers.addAll(allRunningRoutersOutsideThePod);
-        }
         return routers;
     }
 

@@ -103,8 +103,6 @@ public interface NetworkService {
 
     Pair<List<? extends PhysicalNetworkTrafficType>, Integer> listTrafficTypes(Long physicalNetworkId);
 
-    Network getExclusiveGuestNetwork(long zoneId);
-
     List<Pair<TrafficType, String>> listTrafficTypeImplementor(ListTrafficTypeImplementorsCmd cmd);
 
     List<? extends Network> getIsolatedNetworksWithSourceNATOwnedByAccountInZone(long zoneId, Account owner);

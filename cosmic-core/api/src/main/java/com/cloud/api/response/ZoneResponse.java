@@ -63,12 +63,6 @@ public class ZoneResponse extends BaseResponse {
     @SerializedName("domainname")
     @Param(description = "the name of the containing domain, null for public zones")
     private String domainName;
-    @SerializedName(ApiConstants.NETWORK_TYPE)
-    @Param(description = "the network type of the zone; can be Basic or Advanced")
-    private String networkType;
-    @SerializedName("securitygroupsenabled")
-    @Param(description = "true if security groups support is enabled, false otherwise")
-    private boolean securityGroupsEnabled;
     @SerializedName("allocationstate")
     @Param(description = "the allocation state of the cluster")
     private String allocationState;
@@ -138,14 +132,6 @@ public class ZoneResponse extends BaseResponse {
 
     public void setDomainId(final String domainId) {
         this.domainId = domainId;
-    }
-
-    public void setType(final String networkType) {
-        this.networkType = networkType;
-    }
-
-    public void setSecurityGroupsEnabled(final boolean securityGroupsEnabled) {
-        this.securityGroupsEnabled = securityGroupsEnabled;
     }
 
     public void setAllocationState(final String allocationState) {

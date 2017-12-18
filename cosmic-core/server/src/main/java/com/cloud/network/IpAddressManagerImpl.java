@@ -471,12 +471,7 @@ public class IpAddressManagerImpl extends ManagerBase implements IpAddressManage
     protected IPAddressVO getExistingSourceNatInNetwork(final long ownerId, final Long networkId) {
         final List<? extends IpAddress> addrs;
         final Network guestNetwork = _networksDao.findById(networkId);
-        if (guestNetwork.getGuestType() == GuestType.Shared) {
-            // ignore the account id for the shared network
-            addrs = _networkModel.listPublicIpsAssignedToGuestNtwk(networkId, true);
-        } else {
-            addrs = _networkModel.listPublicIpsAssignedToGuestNtwk(ownerId, networkId, true);
-        }
+        addrs = _networkModel.listPublicIpsAssignedToGuestNtwk(ownerId, networkId, true);
 
         IPAddressVO sourceNatIp = null;
         if (addrs.isEmpty()) {
@@ -494,19 +489,6 @@ public class IpAddressManagerImpl extends ManagerBase implements IpAddressManage
         }
 
         return sourceNatIp;
-    }
-
-    protected boolean isSharedNetworkOfferingWithServices(final long networkOfferingId) {
-        final NetworkOfferingVO networkOffering = _networkOfferingDao.findById(networkOfferingId);
-        if ((networkOffering.getGuestType() == Network.GuestType.Shared)
-                && (_networkModel.areServicesSupportedByNetworkOffering(networkOfferingId, Service.SourceNat)
-                || _networkModel.areServicesSupportedByNetworkOffering(networkOfferingId, Service.StaticNat)
-                || _networkModel.areServicesSupportedByNetworkOffering(networkOfferingId, Service.Firewall)
-                || _networkModel.areServicesSupportedByNetworkOffering(networkOfferingId, Service.PortForwarding) || _networkModel.areServicesSupportedByNetworkOffering(
-                networkOfferingId, Service.Lb))) {
-            return true;
-        }
-        return false;
     }
 
     @Override
@@ -1048,20 +1030,6 @@ public class IpAddressManagerImpl extends ManagerBase implements IpAddressManage
                 throw new InvalidParameterValueException("Invalid network id is given");
             }
 
-            final DataCenter zone = _entityMgr.findById(DataCenter.class, network.getDataCenterId());
-            if (zone.getNetworkType() == NetworkType.Advanced) {
-                if (network.getGuestType() == Network.GuestType.Shared) {
-                    if (isSharedNetworkOfferingWithServices(network.getNetworkOfferingId())) {
-                        _accountMgr.checkAccess(CallContext.current().getCallingAccount(), AccessType.UseEntry, false,
-                                network);
-                    } else {
-                        throw new InvalidParameterValueException("IP can be associated with guest network of 'shared' type only if "
-                                + "network services Source Nat, Static Nat, Port Forwarding, Load balancing, firewall are enabled in the network");
-                    }
-                }
-            } else {
-                _accountMgr.checkAccess(caller, null, true, ipToAssoc);
-            }
             owner = _accountMgr.getAccount(ipToAssoc.getAllocatedToAccountId());
         } else {
             s_logger.debug("Unable to find ip address by id: " + ipId);
@@ -1088,14 +1056,8 @@ public class IpAddressManagerImpl extends ManagerBase implements IpAddressManage
             throw new InvalidParameterValueException("Ip address can be associated to the network with trafficType " + TrafficType.Guest);
         }
 
-        // Check that network belongs to IP owner - skip this check
-        //     - if zone is basic zone as there is just one guest network,
-        //     - if shared network in Advanced zone
-        //     - and it belongs to the system
         if (network.getAccountId() != owner.getId()) {
-            if (zone.getNetworkType() != NetworkType.Basic && !(zone.getNetworkType() == NetworkType.Advanced && network.getGuestType() == Network.GuestType.Shared)) {
-                throw new InvalidParameterValueException("The owner of the network is not the same as owner of the IP");
-            }
+            throw new InvalidParameterValueException("The owner of the network is not the same as owner of the IP");
         }
 
         if (zone.getNetworkType() == NetworkType.Advanced) {
@@ -1103,13 +1065,6 @@ public class IpAddressManagerImpl extends ManagerBase implements IpAddressManage
             if (network.getGuestType() == GuestType.Isolated && !(_networkModel.areServicesSupportedInNetwork(network.getId(), Service.SourceNat))) {
                 throw new InvalidParameterValueException("In zone of type " + NetworkType.Advanced + " ip address can be associated only to the network of guest type "
                         + GuestType.Isolated + " with the " + Service.SourceNat.getName() + " enabled");
-            }
-
-            // In Advance zone allow to do IP assoc only for shared networks with source nat/static nat/lb/pf services enabled
-            if (network.getGuestType() == GuestType.Shared && !isSharedNetworkOfferingWithServices(network.getNetworkOfferingId())) {
-                throw new InvalidParameterValueException("In zone of type " + NetworkType.Advanced + " ip address can be associated with network of guest type " + GuestType.Shared
-                        + "only if at " + "least one of the services " + Service.SourceNat.getName() + "/" + Service.StaticNat.getName() + "/" + Service.Lb.getName() + "/"
-                        + Service.PortForwarding.getName() + " is enabled");
             }
         }
 
@@ -1149,7 +1104,6 @@ public class IpAddressManagerImpl extends ManagerBase implements IpAddressManage
     }
 
     protected List<? extends Network> getIsolatedNetworksWithSourceNATOwnedByAccountInZone(final long zoneId, final Account owner) {
-
         return _networksDao.listSourceNATEnabledNetworks(owner.getId(), zoneId, Network.GuestType.Isolated);
     }
 

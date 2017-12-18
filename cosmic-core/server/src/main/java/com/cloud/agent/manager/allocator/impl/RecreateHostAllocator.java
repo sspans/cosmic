@@ -14,9 +14,7 @@ import com.cloud.host.Host;
 import com.cloud.host.Host.Type;
 import com.cloud.host.dao.HostDao;
 import com.cloud.model.enumeration.AllocationState;
-import com.cloud.model.enumeration.NetworkType;
 import com.cloud.resource.ResourceManager;
-import com.cloud.storage.VolumeVO;
 import com.cloud.storage.dao.VolumeDao;
 import com.cloud.storage.datastore.db.PrimaryDataStoreDao;
 import com.cloud.utils.Pair;
@@ -27,7 +25,6 @@ import javax.inject.Inject;
 import javax.naming.ConfigurationException;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -78,20 +75,6 @@ public class RecreateHostAllocator extends FirstFitRoutingAllocator {
         final List<PodCluster> pcs = _resourceMgr.listByDataCenter(dc.getId());
         //getting rid of direct.attached.untagged.vlan.enabled config param: Bug 7204
         //basic network type for zone maps to direct untagged case
-        if (dc.getNetworkType().equals(NetworkType.Basic)) {
-            s_logger.debug("Direct Networking mode so we can only allow the host to be allocated in the same pod due to public ip address cannot change");
-            final List<VolumeVO> vols = _volsDao.findByInstance(vm.getId());
-            final VolumeVO vol = vols.get(0);
-            final long podId = vol.getPodId();
-            s_logger.debug("Pod id determined from volume " + vol.getId() + " is " + podId);
-            final Iterator<PodCluster> it = pcs.iterator();
-            while (it.hasNext()) {
-                final PodCluster pc = it.next();
-                if (pc.getPod().getId() != podId) {
-                    it.remove();
-                }
-            }
-        }
         final Set<Pair<Long, Long>> avoidPcs = new HashSet<>();
         final Set<Long> hostIdsToAvoid = avoid.getHostsToAvoid();
         if (hostIdsToAvoid != null) {

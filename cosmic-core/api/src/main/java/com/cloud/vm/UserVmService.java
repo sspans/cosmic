@@ -45,8 +45,6 @@ public interface UserVmService {
     /**
      * Destroys one virtual machine
      *
-     * @param userId the id of the user performing the action
-     * @param vmId   the id of the virtual machine.
      * @throws ConcurrentOperationException
      * @throws ResourceUnavailableException
      */
@@ -55,8 +53,7 @@ public interface UserVmService {
     /**
      * Destroys one virtual machine
      *
-     * @param userId the id of the user performing the action
-     * @param vmId   the id of the virtual machine.
+     * @param vmId the id of the virtual machine.
      * @throws ConcurrentOperationException
      * @throws ResourceUnavailableException
      */
@@ -120,112 +117,6 @@ public interface UserVmService {
     UserVm recoverVirtualMachine(RecoverVMCmd cmd) throws ResourceAllocationException;
 
     /**
-     * Creates a Basic Zone User VM in the database and returns the VM to the
-     * caller.
-     *
-     * @param zone                - availability zone for the virtual machine
-     * @param serviceOffering     - the service offering for the virtual machine
-     * @param template            - the template for the virtual machine
-     * @param securityGroupIdList - comma separated list of security groups id that going to be
-     *                            applied to the virtual machine
-     * @param hostName            - host name for the virtual machine
-     * @param displayName         - an optional user generated name for the virtual machine
-     * @param diskOfferingId      - the ID of the disk offering for the virtual machine. If the
-     *                            template is of ISO format, the diskOfferingId is for the root
-     *                            disk volume. Otherwise this parameter is used to indicate the
-     *                            offering for the data disk volume. If the templateId parameter
-     *                            passed is from a Template object, the diskOfferingId refers to
-     *                            a DATA Disk Volume created. If the templateId parameter passed
-     *                            is from an ISO object, the diskOfferingId refers to a ROOT
-     *                            Disk Volume created
-     * @param diskSize            - the arbitrary size for the DATADISK volume. Mutually
-     *                            exclusive with diskOfferingId
-     * @param group               - an optional group for the virtual machine
-     * @param hypervisor          - the hypervisor on which to deploy the virtual machine
-     * @param userData            - an optional binary data that can be sent to the virtual
-     *                            machine upon a successful deployment. This binary data must be
-     *                            base64 encoded before adding it to the request. Currently only
-     *                            HTTP GET is supported. Using HTTP GET (via querystring), you
-     *                            can send up to 2KB of data after base64 encoding
-     * @param sshKeyPair          - name of the ssh key pair used to login to the virtual
-     *                            machine
-     * @param requestedIps        TODO
-     * @param defaultIp           TODO
-     * @param displayVm           - Boolean flag whether to the display the vm to the end user or not
-     * @param affinityGroupIdList
-     * @param cpuSpeed
-     * @param memory
-     * @param cpuNumber
-     * @param customId
-     * @return UserVm object if successful.
-     * @throws InsufficientCapacityException if there is insufficient capacity to deploy the VM.
-     * @throws ConcurrentOperationException  if there are multiple users working on the same VM or in the
-     *                                       same environment.
-     * @throws ResourceUnavailableException  if the resources required to deploy the VM is not currently
-     *                                       available.
-     */
-    UserVm createBasicSecurityGroupVirtualMachine(Zone zone, ServiceOffering serviceOffering, VirtualMachineTemplate template, List<Long> securityGroupIdList,
-                                                  Account owner, String hostName, String displayName, Long diskOfferingId, Long diskSize, String group, HypervisorType
-                                                          hypervisor, HTTPMethod httpmethod,
-                                                  String userData, String sshKeyPair, Map<Long, IpAddresses> requestedIps, IpAddresses defaultIp, Boolean displayVm, String
-                                                          keyboard,
-                                                  List<Long> affinityGroupIdList, Map<String, String> customParameter, String customId) throws InsufficientCapacityException,
-            ConcurrentOperationException, ResourceUnavailableException, StorageUnavailableException, ResourceAllocationException;
-
-    /**
-     * Creates a User VM in Advanced Zone (Security Group feature is enabled) in
-     * the database and returns the VM to the caller.
-     *
-     * @param zone                - availability zone for the virtual machine
-     * @param serviceOffering     - the service offering for the virtual machine
-     * @param template            - the template for the virtual machine
-     * @param networkIdList       - list of network ids used by virtual machine
-     * @param securityGroupIdList - comma separated list of security groups id that going to be
-     *                            applied to the virtual machine
-     * @param hostName            - host name for the virtual machine
-     * @param displayName         - an optional user generated name for the virtual machine
-     * @param diskOfferingId      - the ID of the disk offering for the virtual machine. If the
-     *                            template is of ISO format, the diskOfferingId is for the root
-     *                            disk volume. Otherwise this parameter is used to indicate the
-     *                            offering for the data disk volume. If the templateId parameter
-     *                            passed is from a Template object, the diskOfferingId refers to
-     *                            a DATA Disk Volume created. If the templateId parameter passed
-     *                            is from an ISO object, the diskOfferingId refers to a ROOT
-     *                            Disk Volume created
-     * @param diskSize            - the arbitrary size for the DATADISK volume. Mutually
-     *                            exclusive with diskOfferingId
-     * @param group               - an optional group for the virtual machine
-     * @param hypervisor          - the hypervisor on which to deploy the virtual machine
-     * @param userData            - an optional binary data that can be sent to the virtual
-     *                            machine upon a successful deployment. This binary data must be
-     *                            base64 encoded before adding it to the request. Currently only
-     *                            HTTP GET is supported. Using HTTP GET (via querystring), you
-     *                            can send up to 2KB of data after base64 encoding
-     * @param sshKeyPair          - name of the ssh key pair used to login to the virtual
-     *                            machine
-     * @param requestedIps        TODO
-     * @param defaultIps          TODO
-     * @param displayVm           - Boolean flag whether to the display the vm to the end user or not
-     * @param affinityGroupIdList
-     * @param memory
-     * @param cpuNumber
-     * @param customId
-     * @return UserVm object if successful.
-     * @throws InsufficientCapacityException if there is insufficient capacity to deploy the VM.
-     * @throws ConcurrentOperationException  if there are multiple users working on the same VM or in the
-     *                                       same environment.
-     * @throws ResourceUnavailableException  if the resources required to deploy the VM is not currently
-     *                                       available.
-     */
-    UserVm createAdvancedSecurityGroupVirtualMachine(Zone zone, ServiceOffering serviceOffering, VirtualMachineTemplate template, List<Long> networkIdList,
-                                                     List<Long> securityGroupIdList, Account owner, String hostName, String displayName, Long diskOfferingId, Long diskSize,
-                                                     String group, HypervisorType hypervisor,
-                                                     HTTPMethod httpmethod, String userData, String sshKeyPair, Map<Long, IpAddresses> requestedIps, IpAddresses defaultIps,
-                                                     Boolean displayVm, String keyboard,
-                                                     List<Long> affinityGroupIdList, Map<String, String> customParameters, String customId) throws InsufficientCapacityException,
-            ConcurrentOperationException, ResourceUnavailableException, StorageUnavailableException, ResourceAllocationException;
-
-    /**
      * Creates a User VM in Advanced Zone (Security Group feature is disabled)
      * in the database and returns the VM to the caller.
      *
@@ -258,9 +149,6 @@ public interface UserVmService {
      * @param defaultIps          TODO
      * @param displayVm           - Boolean flag whether to the display the vm to the end user or not
      * @param affinityGroupIdList
-     * @param cpuSpeed
-     * @param memory
-     * @param cpuNumber
      * @param customId
      * @return UserVm object if successful.
      * @throws InsufficientCapacityException if there is insufficient capacity to deploy the VM.
@@ -291,9 +179,6 @@ public interface UserVmService {
 
     /**
      * Creates a vm group.
-     *
-     * @param name      - name of the group
-     * @param accountId - accountId
      */
     InstanceGroup createVmGroup(CreateVMGroupCmd cmd);
 
@@ -324,10 +209,6 @@ public interface UserVmService {
      * Only Root
      * Admin can migrate a VM.
      *
-     * @param destinationStorage TODO
-     * @param Long               vmId
-     *                           vmId of The VM to migrate
-     * @param Host               destinationHost to migrate the VM
      * @return VirtualMachine migrated VM
      * @throws ManagementServerException        in case we get error finding the VM or host or access errors or other internal errors.
      * @throws ConcurrentOperationException     if there are multiple users working on the same VM.
@@ -341,10 +222,6 @@ public interface UserVmService {
      * Migrate the given VM with its volumes to the destination host. The API returns the migrated VM if it succeeds.
      * Only root admin can migrate a VM.
      *
-     * @param destinationStorage TODO
-     * @param Long               vmId of The VM to migrate
-     * @param Host               destinationHost to migrate the VM
-     * @param Map                A map of volume to which pool it should be migrated
      * @return VirtualMachine migrated VM
      * @throws ManagementServerException        in case we get error finding the VM or host or access errors or other internal errors.
      * @throws ConcurrentOperationException     if there are multiple users working on the same VM.
@@ -369,7 +246,6 @@ public interface UserVmService {
     /**
      * Finds and returns an encrypted password for a VM.
      *
-     * @param userVmId
      * @return Base64 encoded userdata
      */
     String getVmUserData(long vmId);

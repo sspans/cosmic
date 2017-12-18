@@ -1156,18 +1156,6 @@ public class SecondaryStorageManagerImpl extends SystemVmManagerBase implements 
         return getNetworkForAdvancedZone(zone, _networkDao);
     }
 
-    /**
-     * Get default network for secondary storage VM for starting up in a basic zone. Basic zones select
-     * the Guest network whether or not the zone is SG-enabled.
-     *
-     * @param zone - The zone.
-     * @return The default network according to the zone's network selection rules.
-     * @throws CloudRuntimeException - If the zone is not a valid choice or a network couldn't be found.
-     */
-    protected NetworkVO getDefaultNetworkForBasicZone(final Zone zone) {
-        return getNetworkForBasicZone(zone, _networkDao);
-    }
-
     @Override
     public void shrinkPool(final Long pool, final Object actionArgs) {
         logger.warn("Shrink pool is not implemented!");

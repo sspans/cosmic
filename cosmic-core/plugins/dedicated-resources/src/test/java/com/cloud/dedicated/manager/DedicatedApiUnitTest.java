@@ -125,65 +125,6 @@ public class DedicatedApiUnitTest {
         }
     }
 
-    /*    @Test
-        public void runDedicateZoneTest() {
-            DataCenterVO dc = new DataCenterVO(10L, "TestZone", "Dedicated",
-                    "8.8.8.8", null, "10.0.0.1", null, "10.0.0.1/24", null, null,
-                    NetworkType.Basic, null, null);
-            when(_dcDao.findById(10L)).thenReturn(dc);
-            try {
-                List<DedicatedResourceVO> result = _dedicatedService.dedicateZone(10L, domainId, accountName);
-                Assert.assertNotNull(result);
-            } catch (Exception e) {
-                s_logger.info("exception in testing dedication of zone "
-                        + e.toString());
-            }
-        }
-
-        @Test
-        public void runDedicatePodTest() {
-            HostPodVO pod = new HostPodVO("TestPod", 20L, "10.0.0.1", "10.0.0.0",
-                    22, null);
-            when(_podDao.findById(10L)).thenReturn(pod);
-            try {
-                List<DedicatedResourceVO> result = _dedicatedService.dedicatePod(10L, domainId, accountName);
-                Assert.assertNotNull(result);
-            } catch (Exception e) {
-                s_logger.info("exception in testing dedication of pod "
-                        + e.toString());
-            }
-        }
-
-        @Test
-        public void runDedicateClusterTest() {
-            ClusterVO cluster = new ClusterVO(10L, 10L, "TestCluster");
-            when(_clusterDao.findById(10L)).thenReturn(cluster);
-            try {
-                List<DedicatedResourceVO> result = _dedicatedService.dedicateCluster(10L, domainId, accountName);
-                Assert.assertNotNull(result);
-            } catch (Exception e) {
-                s_logger.info("exception in testing dedication of cluster "
-                        + e.toString());
-            }
-        }
-
-        @Test
-        public void runDedicateHostTest() {
-            HostVO host = new HostVO(10L, "Host-1", Host.Type.Routing, null,
-                    "10.0.0.0", null, null, null, null, null, null, null, null,
-                    Status.Up, null, null, null, 10L, 10L, 30L, 10233, null, null,
-                    null, 0, null);
-            when(_hostDao.findById(10L)).thenReturn(host);
-            try {
-                List<DedicatedResourceVO> result = _dedicatedService.dedicateHost(10L, domainId, accountName);
-                Assert.assertNotNull(result);
-            } catch (Exception e) {
-                s_logger.info("exception in testing dedication of host "
-                        + e.toString());
-            }
-        }
-    */
-
     @Test(expected = CloudRuntimeException.class)
     public void dedicateZoneExistTest() {
         final DedicatedResourceVO dr = new DedicatedResourceVO(10L, null, null, null, domainId, accountId, 12L);

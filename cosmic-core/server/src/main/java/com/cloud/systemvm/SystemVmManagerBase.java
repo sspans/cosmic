@@ -34,7 +34,6 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,8 +42,7 @@ public abstract class SystemVmManagerBase extends ManagerBase implements SystemV
 
     protected void computeVmIps(final SystemVm vmVO, final Zone zone, final List<NicProfile> nics) {
         for (final NicProfile nic : nics) {
-            if ((nic.getTrafficType() == TrafficType.Public && zone.getNetworkType() == NetworkType.Advanced) ||
-                    (nic.getTrafficType() == TrafficType.Guest && (zone.getNetworkType() == NetworkType.Basic || zone.isSecurityGroupEnabled()))) {
+            if ((nic.getTrafficType() == TrafficType.Public && zone.getNetworkType() == NetworkType.Advanced)) {
                 vmVO.setPublicIpAddress(nic.getIPv4Address());
                 vmVO.setPublicNetmask(nic.getIPv4Netmask());
                 vmVO.setPublicMacAddress(nic.getMacAddress());
@@ -97,31 +95,7 @@ public abstract class SystemVmManagerBase extends ManagerBase implements SystemV
             throw new CloudRuntimeException("Zone " + zone + " is not advanced.");
         }
 
-        if (zone.isSecurityGroupEnabled()) {
-            final List<NetworkVO> networks = _networkDao.listByZoneSecurityGroup(zone.getId());
-            if (CollectionUtils.isEmpty(networks)) {
-                throw new CloudRuntimeException("Can not found security enabled network in SG Zone " + zone);
-            }
-
-            return networks.get(0);
-        } else {
-            final TrafficType defaultTrafficType = TrafficType.Public;
-            final List<NetworkVO> defaultNetworks = _networkDao.listByZoneAndTrafficType(zone.getId(), defaultTrafficType);
-            // api should never allow this situation to happen
-            if (defaultNetworks.size() != 1) {
-                throw new CloudRuntimeException("Found " + defaultNetworks.size() + " networks of type " + defaultTrafficType + " when expect to find 1");
-            }
-
-            return defaultNetworks.get(0);
-        }
-    }
-
-    protected static NetworkVO getNetworkForBasicZone(final Zone zone, final NetworkDao _networkDao) {
-        if (zone.getNetworkType() != NetworkType.Basic) {
-            throw new CloudRuntimeException("Zone " + zone + " is not basic.");
-        }
-
-        final TrafficType defaultTrafficType = TrafficType.Guest;
+        final TrafficType defaultTrafficType = TrafficType.Public;
         final List<NetworkVO> defaultNetworks = _networkDao.listByZoneAndTrafficType(zone.getId(), defaultTrafficType);
         // api should never allow this situation to happen
         if (defaultNetworks.size() != 1) {

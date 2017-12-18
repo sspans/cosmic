@@ -150,10 +150,6 @@ public class EngineDataCenterVO implements EngineDataCenter, Identity {
             gatewayProvider = Provider.VirtualRouter.getName();
             vpnProvider = Provider.VirtualRouter.getName();
             userDataProvider = Provider.VirtualRouter.getName();
-        } else if (zoneType == NetworkType.Basic) {
-            dhcpProvider = Provider.VirtualRouter.getName();
-            dnsProvider = Provider.VirtualRouter.getName();
-            userDataProvider = Provider.VirtualRouter.getName();
         }
 
         this.zoneToken = zoneToken;

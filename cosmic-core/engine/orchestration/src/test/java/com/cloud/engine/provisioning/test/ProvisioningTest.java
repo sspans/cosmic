@@ -55,7 +55,7 @@ public class ProvisioningTest extends TestCase {
     @Before
     public void setUp() {
         final EngineDataCenterVO dc =
-                new EngineDataCenterVO(UUID.randomUUID().toString(), "test", "8.8.8.8", null, "10.0.0.1", null, "10.0.0.1/24", null, null, NetworkType.Basic, null, null,
+                new EngineDataCenterVO(UUID.randomUUID().toString(), "test", "8.8.8.8", null, "10.0.0.1", null, "10.0.0.1/24", null, null, NetworkType.Advanced, null, null,
                         true, true, null, null);
         Mockito.when(dcDao.findByUuid(Matchers.anyString())).thenReturn(dc);
         Mockito.when(dcDao.persist((EngineDataCenterVO) Matchers.anyObject())).thenReturn(dc);

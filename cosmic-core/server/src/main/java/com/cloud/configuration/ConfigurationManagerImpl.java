@@ -1311,28 +1311,13 @@ public class ConfigurationManagerImpl extends ManagerBase implements Configurati
         final String internalDns2 = cmd.getInternalDns2();
         final String guestCidr = cmd.getGuestCidrAddress();
         final Long domainId = cmd.getDomainId();
-        final String type = cmd.getNetworkType();
         Boolean isBasic = false;
         String allocationState = cmd.getAllocationState();
         final String networkDomain = cmd.getDomain();
-        boolean isSecurityGroupEnabled = cmd.getSecuritygroupenabled();
         final boolean isLocalStorageEnabled = cmd.getLocalStorageEnabled();
 
         if (allocationState == null) {
             allocationState = AllocationState.Disabled.toString();
-        }
-
-        if (!type.equalsIgnoreCase(NetworkType.Basic.toString()) && !type.equalsIgnoreCase(NetworkType.Advanced.toString())) {
-            throw new InvalidParameterValueException("Invalid zone type; only Advanced and Basic values are supported");
-        } else if (type.equalsIgnoreCase(NetworkType.Basic.toString())) {
-            isBasic = true;
-        }
-
-        final NetworkType zoneType = isBasic ? NetworkType.Basic : NetworkType.Advanced;
-
-        // error out when the parameter specified for Basic zone
-        if (zoneType == NetworkType.Basic && guestCidr != null) {
-            throw new InvalidParameterValueException("guestCidrAddress parameter is not supported for Basic zone");
         }
 
         DomainVO domainVO = null;
@@ -1341,12 +1326,8 @@ public class ConfigurationManagerImpl extends ManagerBase implements Configurati
             domainVO = _domainDao.findById(domainId);
         }
 
-        if (zoneType == NetworkType.Basic) {
-            isSecurityGroupEnabled = true;
-        }
-
-        return createZone(userId, zoneName, dns1, dns2, internalDns1, internalDns2, guestCidr, domainVO != null ? domainVO.getName() : null, domainId, zoneType, allocationState,
-                networkDomain, isSecurityGroupEnabled, isLocalStorageEnabled, ip6Dns1, ip6Dns2);
+        return createZone(userId, zoneName, dns1, dns2, internalDns1, internalDns2, guestCidr, domainVO != null ? domainVO.getName() : null, domainId, NetworkType.Advanced, allocationState,
+                networkDomain, isLocalStorageEnabled, ip6Dns1, ip6Dns2);
     }
 
     @Override
@@ -1508,7 +1489,7 @@ public class ConfigurationManagerImpl extends ManagerBase implements Configurati
                             // zone should have a physical network with management
                             // traffiType
                             mgmtPhyNetwork = _networkModel.getDefaultPhysicalNetworkByZoneAndTrafficType(zoneId, TrafficType.Management);
-                            if (NetworkType.Advanced == zone.getNetworkType() && !zone.isSecurityGroupEnabled()) {
+                            if (NetworkType.Advanced == zone.getNetworkType()) {
                                 // advanced zone without SG should have a physical
                                 // network with public Thpe
                                 _networkModel.getDefaultPhysicalNetworkByZoneAndTrafficType(zoneId, TrafficType.Public);
@@ -1754,11 +1735,6 @@ public class ConfigurationManagerImpl extends ManagerBase implements Configurati
             throw new InvalidParameterValueException("Unable to find zone by id " + zoneId);
         }
 
-        if (ipv6) {
-            if (network.getGuestType() != GuestType.Shared || zone.isSecurityGroupEnabled()) {
-                throw new InvalidParameterValueException("Only support IPv6 on extending existed share network without SG");
-            }
-        }
         // verify that physical network exists
         final PhysicalNetworkVO pNtwk;
         if (physicalNetworkId != null) {
@@ -1781,16 +1757,8 @@ public class ConfigurationManagerImpl extends ManagerBase implements Configurati
                     // default physical network with public traffic in the zone
                     physicalNetworkId = _networkModel.getDefaultPhysicalNetworkByZoneAndTrafficType(zoneId, TrafficType.Public).getId();
                 } else {
-                    if (zone.getNetworkType() == NetworkType.Basic) {
-                        // default physical network with guest traffic in the
-                        // zone
-                        physicalNetworkId = _networkModel.getDefaultPhysicalNetworkByZoneAndTrafficType(zoneId, TrafficType.Guest).getId();
-                    } else if (zone.getNetworkType() == NetworkType.Advanced) {
-                        if (zone.isSecurityGroupEnabled()) {
-                            physicalNetworkId = _networkModel.getDefaultPhysicalNetworkByZoneAndTrafficType(zoneId, TrafficType.Guest).getId();
-                        } else {
-                            throw new InvalidParameterValueException("Physical Network Id is null, please provide the Network id for Direct vlan creation ");
-                        }
+                    if (zone.getNetworkType() == NetworkType.Advanced) {
+                        throw new InvalidParameterValueException("Physical Network Id is null, please provide the Network id for Direct vlan creation ");
                     }
                 }
             }
@@ -1801,10 +1769,6 @@ public class ConfigurationManagerImpl extends ManagerBase implements Configurati
         if (AllocationState.Disabled == zone.getAllocationState()
                 && !_accountMgr.isRootAdmin(caller.getId())) {
             throw new PermissionDeniedException("Cannot perform this operation, Zone is currently disabled: " + zoneId);
-        }
-
-        if (zone.isSecurityGroupEnabled() && zone.getNetworkType() != NetworkType.Basic && forVirtualNetwork) {
-            throw new InvalidParameterValueException("Can't add virtual ip range into a zone with security group enabled");
         }
 
         // If networkId is not specified, and vlan is Virtual or Direct
@@ -1819,17 +1783,12 @@ public class ConfigurationManagerImpl extends ManagerBase implements Configurati
             }
         } else {
             if (network == null) {
-                if (zone.getNetworkType() == NetworkType.Basic) {
-                    networkId = _networkModel.getExclusiveGuestNetwork(zoneId).getId();
-                    network = _networkModel.getNetwork(networkId);
-                } else {
-                    network = _networkModel.getNetworkWithSecurityGroupEnabled(zoneId);
-                    if (network == null) {
-                        throw new InvalidParameterValueException("Nework id is required for Direct vlan creation ");
-                    }
-                    networkId = network.getId();
-                    zoneId = network.getDataCenterId();
+                network = _networkModel.getNetworkWithSecurityGroupEnabled(zoneId);
+                if (network == null) {
+                    throw new InvalidParameterValueException("Nework id is required for Direct vlan creation ");
                 }
+                networkId = network.getId();
+                zoneId = network.getDataCenterId();
             } else if (network.getGuestType() == null ||
                     network.getGuestType() == Network.GuestType.Isolated
                             && _ntwkOffServiceMapDao.areServicesSupportedByNetworkOffering(network.getNetworkOfferingId(), Service.SourceNat)) {
@@ -1845,28 +1804,11 @@ public class ConfigurationManagerImpl extends ManagerBase implements Configurati
 
         if (zone.getNetworkType() == NetworkType.Advanced) {
             if (network.getTrafficType() == TrafficType.Guest) {
-                if (network.getGuestType() != GuestType.Shared) {
-                    throw new InvalidParameterValueException("Can execute createVLANIpRanges on shared guest network, but type of this guest network " + network.getId() + " is "
-                            + network.getGuestType());
-                }
-
-                final List<VlanVO> vlans = _vlanDao.listVlansByNetworkId(network.getId());
-                if (vlans != null && vlans.size() > 0) {
-                    final VlanVO vlan = vlans.get(0);
-                    if (vlanId == null || vlanId.contains(Vlan.UNTAGGED)) {
-                        vlanId = vlan.getVlanTag();
-                    } else if (!NetUtils.isSameIsolationId(vlan.getVlanTag(), vlanId)) {
-                        throw new InvalidParameterValueException("there is already one vlan " + vlan.getVlanTag() + " on network :" + +network.getId()
-                                + ", only one vlan is allowed on guest network");
-                    }
-                }
-                sameSubnet = validateIpRange(startIP, endIP, newVlanGateway, newVlanNetmask, vlans, ipv4, ipv6, ip6Gateway, ip6Cidr, startIPv6, endIPv6, network);
+                throw new InvalidParameterValueException("Can execute createVLANIpRanges on shared guest network, but type of this guest network " + network.getId() + " is "
+                        + network.getGuestType());
             }
         } else if (network.getTrafficType() == TrafficType.Management) {
             throw new InvalidParameterValueException("Cannot execute createVLANIpRanges on management network");
-        } else if (zone.getNetworkType() == NetworkType.Basic) {
-            final List<VlanVO> vlans = _vlanDao.listVlansByNetworkId(network.getId());
-            sameSubnet = validateIpRange(startIP, endIP, newVlanGateway, newVlanNetmask, vlans, ipv4, ipv6, ip6Gateway, ip6Cidr, startIPv6, endIPv6, network);
         }
 
         if (zoneId == null || ipv6 && (ip6Gateway == null || ip6Cidr == null)) {
@@ -1988,16 +1930,7 @@ public class ConfigurationManagerImpl extends ManagerBase implements Configurati
                 String newVlanNetmask = newVlanNetmaskFinal;
                 String newVlanGateway = newVlanGatewayFinal;
 
-                if ((sameSubnet == null || sameSubnet.first() == false) && network.getTrafficType() == TrafficType.Guest && network.getGuestType() == GuestType.Shared
-                        && _vlanDao.listVlansByNetworkId(networkId) != null) {
-                    final Map<Capability, String> dhcpCapabilities = _networkSvc.getNetworkOfferingServiceCapabilities(_networkOfferingDao.findById(network.getNetworkOfferingId()),
-                            Service.Dhcp);
-                    final String supportsMultipleSubnets = dhcpCapabilities.get(Capability.DhcpAccrossMultipleSubnets);
-                    if (supportsMultipleSubnets == null || !Boolean.valueOf(supportsMultipleSubnets)) {
-                        throw new InvalidParameterValueException("The Dhcp serivice provider for this network dose not support the dhcp  across multiple subnets");
-                    }
-                    s_logger.info("adding a new subnet to the network " + network.getId());
-                } else if (sameSubnet != null) {
+                if (sameSubnet != null) {
                     // if it is same subnet the user might not send the vlan and the
                     // netmask details. so we are
                     // figuring out while validation and setting them here.
@@ -2256,9 +2189,6 @@ public class ConfigurationManagerImpl extends ManagerBase implements Configurati
         if (zone == null) {
             throw new InvalidParameterValueException("Unable to find zone by id " + zoneId);
         }
-        if (zone.getNetworkType() == NetworkType.Basic) {
-            throw new InvalidParameterValueException("Public IP range can be dedicated to an account only in the zone of type " + NetworkType.Advanced);
-        }
 
         // Check Public IP resource limits
         if (vlanOwner != null) {
@@ -2483,16 +2413,6 @@ public class ConfigurationManagerImpl extends ManagerBase implements Configurati
                 throw new InvalidParameterValueException("Invalid service " + serviceName);
             }
 
-            if (service == Service.SecurityGroup) {
-                // allow security group service for Shared networks only
-                if (guestType != GuestType.Shared) {
-                    throw new InvalidParameterValueException("Secrity group service is supported for network offerings with guest ip type " + GuestType.Shared);
-                }
-                final Set<Network.Provider> sgProviders = new HashSet<>();
-                sgProviders.add(Provider.SecurityGroupProvider);
-                serviceProviderMap.put(Network.Service.SecurityGroup, sgProviders);
-                continue;
-            }
             serviceProviderMap.put(service, defaultProviders);
         }
 

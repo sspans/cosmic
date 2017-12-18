@@ -88,7 +88,7 @@ public interface ConfigurationManager {
      * @throws
      */
     DataCenterVO createZone(long userId, String zoneName, String dns1, String dns2, String internalDns1, String internalDns2, String guestCidr, String domain,
-                            Long domainId, NetworkType zoneType, String allocationState, String networkDomain, boolean isSecurityGroupEnabled, boolean isLocalStorageEnabled,
+                            Long domainId, NetworkType zoneType, String allocationState, String networkDomain, boolean isLocalStorageEnabled,
                             String ip6Dns1,
                             String ip6Dns2);
 

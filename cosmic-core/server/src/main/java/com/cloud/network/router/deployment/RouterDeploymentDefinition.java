@@ -12,7 +12,6 @@ import com.cloud.exception.ConcurrentOperationException;
 import com.cloud.exception.InsufficientAddressCapacityException;
 import com.cloud.exception.InsufficientCapacityException;
 import com.cloud.exception.ResourceUnavailableException;
-import com.cloud.model.enumeration.NetworkType;
 import com.cloud.network.IpAddressManager;
 import com.cloud.network.Network;
 import com.cloud.network.Network.Provider;
@@ -159,10 +158,6 @@ public class RouterDeploymentDefinition {
         return vrProvider;
     }
 
-    public boolean isBasic() {
-        return dest.getZone().getNetworkType() == NetworkType.Basic;
-    }
-
     public boolean isPublicNetwork() {
         return isPublicNetwork;
     }
@@ -186,12 +181,6 @@ public class RouterDeploymentDefinition {
     protected void generateDeploymentPlan() {
         final long dcId = dest.getZone().getId();
         Long podId = null;
-        if (isBasic()) {
-            if (dest.getPod() == null) {
-                throw new CloudRuntimeException("Pod id is expected in deployment destination");
-            }
-            podId = dest.getPod().getId();
-        }
         plan = new DataCenterDeployment(dcId, podId, null, null, null, null);
     }
 
@@ -271,38 +260,8 @@ public class RouterDeploymentDefinition {
 
         // for basic zone, if 'dest' has pod set to null then this is network
         // restart scenario otherwise it is a vm deployment scenario
-        if (isBasic() && dest.getPod() == null) {
-            // Find all pods in the data center with running or starting user vms
-            final long dcId = dest.getZone().getId();
-            final List<HostPodVO> pods = listByDataCenterIdVMTypeAndStates(dcId, VirtualMachine.Type.User, VirtualMachine.State.Starting, VirtualMachine.State.Running);
-
-            // Loop through all the pods skip those with running or starting VRs
-            for (final HostPodVO pod : pods) {
-                // Get list of VRs in starting or running state
-                final long podId = pod.getId();
-                final List<DomainRouterVO> virtualRouters = routerDao.listByPodIdAndStates(podId, VirtualMachine.State.Starting, VirtualMachine.State.Running);
-
-                if (virtualRouters.size() > 1) {
-                    // FIXME Find or create a better and more specific exception for this
-                    throw new CloudRuntimeException("Pod can have utmost one VR in Basic Zone, please check!");
-                }
-
-                // Add virtualRouters to the routers, this avoids the situation when
-                // all routers are skipped and VirtualRouterElement throws exception
-                routers.addAll(virtualRouters);
-
-                // If List size is one, we already have a starting or running VR, skip deployment
-                if (virtualRouters.size() == 1) {
-                    logger.debug("Skipping VR deployment: Found a running or starting VR in Pod " + pod.getName() + " id=" + podId);
-                    continue;
-                }
-                // Add new DeployDestination for this pod
-                destinations.add(new DeployDestination(dest.getZone(), pod, null, null));
-            }
-        } else {
-            // Else, just add the supplied dest
-            destinations.add(dest);
-        }
+        // Else, just add the supplied dest
+        destinations.add(dest);
         return destinations;
     }
 
@@ -322,7 +281,7 @@ public class RouterDeploymentDefinition {
     }
 
     protected void setupAccountOwner() {
-        if (networkModel.isNetworkSystem(guestNetwork) || guestNetwork.getGuestType() == Network.GuestType.Shared) {
+        if (networkModel.isNetworkSystem(guestNetwork)) {
             owner = accountMgr.getAccount(Account.ACCOUNT_ID_SYSTEM);
         }
     }
@@ -459,26 +418,6 @@ public class RouterDeploymentDefinition {
     }
 
     protected void planDeploymentRouters() {
-        if (isBasic()) {
-            routers.addAll(routerDao.listByNetworkAndPodAndRole(guestNetwork.getId(), getPodId(), Role.VIRTUAL_ROUTER));
-        } else {
-            routers.addAll(routerDao.listByNetworkAndRole(guestNetwork.getId(), Role.VIRTUAL_ROUTER));
-        }
-    }
-
-    /**
-     * Routers need reset if at least one of the routers is not redundant or
-     * stopped.
-     */
-    protected boolean routersNeedReset() {
-        boolean needReset = true;
-        for (final DomainRouterVO router : routers) {
-            if (!router.getIsRedundantRouter() || router.getState() != VirtualMachine.State.Stopped) {
-                needReset = false;
-                break;
-            }
-        }
-
-        return needReset;
+        routers.addAll(routerDao.listByNetworkAndRole(guestNetwork.getId(), Role.VIRTUAL_ROUTER));
     }
 }

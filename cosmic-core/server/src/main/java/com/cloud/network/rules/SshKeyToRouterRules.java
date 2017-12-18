@@ -42,7 +42,7 @@ public class SshKeyToRouterRules extends RuleApplier {
 
         final NicDao nicDao = visitor.getVirtualNetworkApplianceFactory().getNicDao();
         _nicVo = nicDao.findById(_nic.getId());
-        // for basic zone, send vm data/password information only to the router in the same pod
+
         final VMTemplateDao templateDao = visitor.getVirtualNetworkApplianceFactory().getTemplateDao();
         _template = templateDao.findByIdIncludingRemoved(_profile.getTemplateId());
 

@@ -28,7 +28,7 @@ public interface Network extends ControlledEntity, StateObject<Network.State>, I
 
     TrafficType getTrafficType();
 
-    public void setTrafficType(TrafficType type);
+    void setTrafficType(TrafficType type);
 
     String getGateway();
 
@@ -102,7 +102,7 @@ public interface Network extends ControlledEntity, StateObject<Network.State>, I
     boolean isStrechedL2Network();
 
     enum GuestType {
-        Shared, Isolated, Private, Sync
+        Isolated, Private, Sync
     }
 
     enum Event {
@@ -154,7 +154,6 @@ public interface Network extends ControlledEntity, StateObject<Network.State>, I
         public static final Service SourceNat = new Service("SourceNat", Capability.SupportedSourceNatTypes, Capability.RedundantRouter);
         public static final Service StaticNat = new Service("StaticNat");
         public static final Service PortForwarding = new Service("PortForwarding");
-        public static final Service SecurityGroup = new Service("SecurityGroup");
         public static final Service NetworkACL = new Service("NetworkACL", Capability.SupportedProtocols);
         public static final Service Connectivity = new Service("Connectivity", Capability.StretchedL2Subnet);
         private final String name;
@@ -186,21 +185,6 @@ public interface Network extends ControlledEntity, StateObject<Network.State>, I
         public Capability[] getCapabilities() {
             return caps;
         }
-
-        public boolean containsCapability(final Capability cap) {
-            boolean success = false;
-            if (caps != null) {
-                final int length = caps.length;
-                for (int i = 0; i < length; i++) {
-                    if (caps[i].getName().equalsIgnoreCase(cap.getName())) {
-                        success = true;
-                        break;
-                    }
-                }
-            }
-
-            return success;
-        }
     }
 
     /**
@@ -211,7 +195,6 @@ public interface Network extends ControlledEntity, StateObject<Network.State>, I
 
         public static final Provider VirtualRouter = new Provider("VirtualRouter", false, false);
         public static final Provider ExternalDhcpServer = new Provider("ExternalDhcpServer", true);
-        public static final Provider ExternalGateWay = new Provider("ExternalGateWay", true);
         public static final Provider SecurityGroupProvider = new Provider("SecurityGroupProvider", false);
         public static final Provider VPCVirtualRouter = new Provider("VpcVirtualRouter", false);
         public static final Provider None = new Provider("None", false);

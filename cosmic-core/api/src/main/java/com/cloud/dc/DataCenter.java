@@ -48,8 +48,6 @@ public interface DataCenter extends InfrastructureEntity, Identity, InternalIden
 
     String getVpnProvider();
 
-    boolean isSecurityGroupEnabled();
-
     Map<String, String> getDetails();
 
     void setDetails(Map<String, String> details);

@@ -94,8 +94,6 @@ public interface NetworkModel {
 
     List<Long> listNetworkOfferingsForUpgrade(long networkId);
 
-    boolean isSecurityGroupSupportedInNetwork(Network network);
-
     boolean isProviderSupportServiceInNetwork(long networkId, Service service, Provider provider);
 
     boolean isProviderEnabledInPhysicalNetwork(long physicalNetowrkId, String providerName);

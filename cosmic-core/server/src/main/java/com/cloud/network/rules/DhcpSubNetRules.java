@@ -1,24 +1,12 @@
 package com.cloud.network.rules;
 
 import com.cloud.context.CallContext;
-import com.cloud.dc.DataCenter;
-import com.cloud.dc.Vlan;
-import com.cloud.dc.VlanVO;
-import com.cloud.dc.dao.DataCenterDao;
-import com.cloud.dc.dao.HostPodDao;
-import com.cloud.dc.dao.VlanDao;
-import com.cloud.exception.InsufficientAddressCapacityException;
 import com.cloud.exception.ResourceUnavailableException;
-import com.cloud.model.enumeration.NetworkType;
-import com.cloud.network.IpAddressManager;
 import com.cloud.network.Network;
-import com.cloud.network.Network.GuestType;
-import com.cloud.network.Networks.TrafficType;
 import com.cloud.network.addr.PublicIp;
 import com.cloud.network.dao.IPAddressDao;
 import com.cloud.network.router.VirtualRouter;
 import com.cloud.network.topology.NetworkTopologyVisitor;
-import com.cloud.user.Account;
 import com.cloud.utils.db.Transaction;
 import com.cloud.utils.db.TransactionCallbackNoReturn;
 import com.cloud.utils.db.TransactionStatus;
@@ -35,7 +23,6 @@ import com.cloud.vm.dao.NicIpAliasDao;
 import com.cloud.vm.dao.NicIpAliasVO;
 import com.cloud.vm.dao.UserVmDao;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -89,37 +76,7 @@ public class DhcpSubNetRules extends RuleApplier {
             }
 
             PublicIp routerPublicIP = null;
-            final DataCenterDao dcDao = visitor.getVirtualNetworkApplianceFactory().getDcDao();
-            final DataCenter dc = dcDao.findById(_router.getDataCenterId());
             if (ipInVmsubnet == false) {
-                try {
-                    if (_network.getTrafficType() == TrafficType.Guest && _network.getGuestType() == GuestType.Shared) {
-                        final HostPodDao podDao = visitor.getVirtualNetworkApplianceFactory().getPodDao();
-                        podDao.findById(vm.getPodIdToDeployIn());
-                        final Account caller = CallContext.current().getCallingAccount();
-
-                        final VlanDao vlanDao = visitor.getVirtualNetworkApplianceFactory().getVlanDao();
-                        final List<VlanVO> vlanList = vlanDao.listVlansByNetworkIdAndGateway(_network.getId(), _nic.getIPv4Gateway());
-                        final List<Long> vlanDbIdList = new ArrayList<>();
-                        for (final VlanVO vlan : vlanList) {
-                            vlanDbIdList.add(vlan.getId());
-                        }
-                        final IpAddressManager ipAddrMgr = visitor.getVirtualNetworkApplianceFactory().getIpAddrMgr();
-                        if (dc.getNetworkType() == NetworkType.Basic) {
-                            routerPublicIP = ipAddrMgr.assignPublicIpAddressFromVlans(_router.getDataCenterId(), vm.getPodIdToDeployIn(), caller, Vlan.VlanType.DirectAttached,
-                                    vlanDbIdList, _nic.getNetworkId(), null, false);
-                        } else {
-                            routerPublicIP = ipAddrMgr.assignPublicIpAddressFromVlans(_router.getDataCenterId(), null, caller, Vlan.VlanType.DirectAttached, vlanDbIdList,
-                                    _nic.getNetworkId(), null, false);
-                        }
-
-                        _routerAliasIp = routerPublicIP.getAddress().addr();
-                    }
-                } catch (final InsufficientAddressCapacityException e) {
-                    s_logger.info(e.getMessage());
-                    s_logger.info("unable to configure dhcp for this VM.");
-                    return false;
-                }
                 // this means we did not create an IP alias on the router.
                 _nicAlias = new NicIpAliasVO(domrGuestNic.getId(), _routerAliasIp, _router.getId(), CallContext.current().getCallingAccountId(), _network.getDomainId(),
                         _nic.getNetworkId(), _nic.getIPv4Gateway(), _nic.getIPv4Netmask());

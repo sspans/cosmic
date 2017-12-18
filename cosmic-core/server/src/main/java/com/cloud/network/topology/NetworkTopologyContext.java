@@ -13,15 +13,10 @@ public class NetworkTopologyContext {
     private final Hashtable<NetworkType, NetworkTopology> _flyweight = new Hashtable<>();
 
     @Inject
-    @Qualifier("basicNetworkTopology")
-    private BasicNetworkTopology _basicNetworkTopology;
-
-    @Inject
     @Qualifier("advancedNetworkTopology")
     private AdvancedNetworkTopology _advancedNetworkTopology;
 
     public void init() {
-        _flyweight.put(NetworkType.Basic, _basicNetworkTopology);
         _flyweight.put(NetworkType.Advanced, _advancedNetworkTopology);
     }
 
@@ -40,14 +35,5 @@ public class NetworkTopologyContext {
      */
     public void setAdvancedNetworkTopology(final AdvancedNetworkTopology advancedNetworkTopology) {
         _advancedNetworkTopology = advancedNetworkTopology;
-    }
-
-    /**
-     * Method used for tests purpose only. Please do not use it to set the BasicNetworkTopology and it is managed by Spring.
-     *
-     * @param basicNetworkTopology
-     */
-    public void setBasicNetworkTopology(final BasicNetworkTopology basicNetworkTopology) {
-        _basicNetworkTopology = basicNetworkTopology;
     }
 }

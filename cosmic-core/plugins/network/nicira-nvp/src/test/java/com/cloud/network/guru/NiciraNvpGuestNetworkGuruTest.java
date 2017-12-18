@@ -116,15 +116,6 @@ public class NiciraNvpGuestNetworkGuruTest {
         when(offering.getTrafficType()).thenReturn(TrafficType.Management);
         assertFalse(guru.canHandle(offering, NetworkType.Advanced, physnet) == true);
 
-        // Not supported: GuestType Shared
-        when(offering.getTrafficType()).thenReturn(TrafficType.Guest);
-        when(offering.getGuestType()).thenReturn(GuestType.Shared);
-        assertFalse(guru.canHandle(offering, NetworkType.Advanced, physnet) == true);
-
-        // Not supported: Basic networking
-        when(offering.getGuestType()).thenReturn(GuestType.Isolated);
-        assertFalse(guru.canHandle(offering, NetworkType.Basic, physnet) == true);
-
         // Not supported: IsolationMethod != STT, VXLAN
         when(physnet.getIsolationMethods()).thenReturn(Arrays.asList(new String[]{"VLAN"}));
         assertFalse(guru.canHandle(offering, NetworkType.Advanced, physnet) == true);
