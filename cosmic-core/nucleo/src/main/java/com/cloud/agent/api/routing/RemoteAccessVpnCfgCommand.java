@@ -2,11 +2,11 @@ package com.cloud.agent.api.routing;
 
 public class RemoteAccessVpnCfgCommand extends NetworkElementCommand {
 
-    boolean create;
-    String vpnServerIp;
-    String ipRange;
-    String presharedKey;
-    String localIp;
+    private boolean create;
+    private String vpnServerIp;
+    private String ipRange;
+    private String presharedKey;
+    private String localIp;
     private boolean vpcEnabled;
     private String localCidr;
     private String publicInterface;
