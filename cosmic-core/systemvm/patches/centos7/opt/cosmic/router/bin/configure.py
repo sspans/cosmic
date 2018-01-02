@@ -8,9 +8,7 @@ from cs.CsAcl import CsAcl
 from cs.CsForwardingRules import CsForwardingRules
 from cs.CsLoadBalancer import CsLoadBalancer
 from cs.CsNetfilter import CsNetfilters
-from cs.CsRemoteAccessVpn import CsRemoteAccessVpn
 from cs.CsSite2SiteVpn import CsSite2SiteVpn
-from cs.CsVpnUser import CsVpnUser
 from cs.CsVrConfig import CsVrConfig
 from cs.config import Config
 from cs.firewall import Firewall
@@ -41,9 +39,6 @@ class IpTablesExecutor:
 
         vpns = CsSite2SiteVpn(self.config)
         vpns.process()
-
-        rvpn = CsRemoteAccessVpn(self.config)
-        rvpn.process()
 
         lb = CsLoadBalancer(self.config)
         lb.process()
@@ -79,8 +74,6 @@ def main(argv):
             ("forwarding_rules", {"process_iptables": True, "executor": IpTablesExecutor(config)}),
             ("staticnat_rules", {"process_iptables": True, "executor": IpTablesExecutor(config)}),
             ("site_2_site_vpn", {"process_iptables": True, "executor": IpTablesExecutor(config)}),
-            ("remote_access_vpn", {"process_iptables": True, "executor": IpTablesExecutor(config)}),
-            ("vpn_user_list", {"process_iptables": False, "executor": CsVpnUser(config)}),
             ("load_balancer", {"process_iptables": True, "executor": IpTablesExecutor(config)}),
             ("vr", {"process_iptables": True, "executor": IpTablesExecutor(config)})
         ]
