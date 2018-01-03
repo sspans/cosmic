@@ -612,12 +612,11 @@ public class CommandSetupHelper {
     }
 
     private void configureSite2SiteVpn(final VirtualRouter router, final Site2SiteVpnConnection site2siteVpnToExclude, final NetworkOverviewTO.VPNTO vpnTO) {
-        final List<NetworkOverviewTO.VPNTO.Site2SiteTO> site2siteVpns = _s2sVpnDao.listByVpcId(router.getVpcId())
-                                                                                  .stream()
-                                                                                  .filter(vpnConnection -> !vpnConnection.equals(site2siteVpnToExclude))
-                                                                                  .map(this::toSite2SiteTO)
-                                                                                  .collect(Collectors.toList());
-        vpnTO.setSite2site(new NetworkOverviewTO.VPNTO.Site2SiteTO[site2siteVpns.size()]);
+        vpnTO.setSite2site(_s2sVpnDao.listByVpcId(router.getVpcId())
+                                     .stream()
+                                     .filter(vpnConnection -> !vpnConnection.equals(site2siteVpnToExclude))
+                                     .map(this::toSite2SiteTO)
+                                     .toArray(NetworkOverviewTO.VPNTO.Site2SiteTO[]::new));
     }
 
     private NetworkOverviewTO.VPNTO.Site2SiteTO toSite2SiteTO(Site2SiteVpnConnectionVO vpnConnection) {
