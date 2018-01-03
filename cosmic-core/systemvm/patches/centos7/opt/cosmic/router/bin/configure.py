@@ -8,7 +8,6 @@ from cs.CsAcl import CsAcl
 from cs.CsForwardingRules import CsForwardingRules
 from cs.CsLoadBalancer import CsLoadBalancer
 from cs.CsNetfilter import CsNetfilters
-from cs.CsSite2SiteVpn import CsSite2SiteVpn
 from cs.CsVrConfig import CsVrConfig
 from cs.config import Config
 from cs.firewall import Firewall
@@ -36,9 +35,6 @@ class IpTablesExecutor:
 
         vr = CsVrConfig(self.config)
         vr.process()
-
-        vpns = CsSite2SiteVpn(self.config)
-        vpns.process()
 
         lb = CsLoadBalancer(self.config)
         lb.process()
@@ -73,7 +69,6 @@ def main(argv):
             ("firewall_rules", {"process_iptables": True, "executor": IpTablesExecutor(config)}),
             ("forwarding_rules", {"process_iptables": True, "executor": IpTablesExecutor(config)}),
             ("staticnat_rules", {"process_iptables": True, "executor": IpTablesExecutor(config)}),
-            ("site_2_site_vpn", {"process_iptables": True, "executor": IpTablesExecutor(config)}),
             ("load_balancer", {"process_iptables": True, "executor": IpTablesExecutor(config)}),
             ("vr", {"process_iptables": True, "executor": IpTablesExecutor(config)})
         ]
