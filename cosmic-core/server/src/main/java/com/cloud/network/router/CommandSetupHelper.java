@@ -25,7 +25,6 @@ import com.cloud.agent.manager.Commands;
 import com.cloud.configuration.Config;
 import com.cloud.db.model.Zone;
 import com.cloud.db.repository.ZoneRepository;
-import com.cloud.dc.dao.VlanDao;
 import com.cloud.framework.config.dao.ConfigurationDao;
 import com.cloud.network.IpAddress;
 import com.cloud.network.Network;
@@ -135,8 +134,6 @@ public class CommandSetupHelper {
     private StaticRouteDao _staticRouteDao;
     @Inject
     private VpcDao _vpcDao;
-    @Inject
-    private VlanDao _vlanDao;
     @Inject
     private IPAddressDao _ipAddressDao;
     @Inject
@@ -628,23 +625,22 @@ public class CommandSetupHelper {
 
         final Site2SiteCustomerGatewayVO customerGateway = _s2sCustomerGatewayDao.findById(vpnConnection.getCustomerGatewayId());
         site2SiteTO.setDpd(customerGateway.getDpd());
-        site2SiteTO.setEncap(customerGateway.getEncap());
-        site2SiteTO.setEspLifetime(customerGateway.getEspLifetime());
-        site2SiteTO.setEspPolicy(customerGateway.getEspPolicy());
+        site2SiteTO.setForceEncaps(customerGateway.getEncap());
+        site2SiteTO.setLifetime(customerGateway.getEspLifetime());
+        site2SiteTO.setEsp(customerGateway.getEspPolicy());
         site2SiteTO.setIkeLifetime(customerGateway.getIkeLifetime());
-        site2SiteTO.setIkePolicy(customerGateway.getIkePolicy());
-        site2SiteTO.setIpsecPsk(customerGateway.getIpsecPsk());
+        site2SiteTO.setIke(customerGateway.getIkePolicy());
+        site2SiteTO.setPsk(customerGateway.getIpsecPsk());
 
         final Site2SiteVpnGatewayVO vpnGateway = _s2sVpnGatewayDao.findById(vpnConnection.getVpnGatewayId());
         final IpAddress ipAddress = _ipAddressDao.findById(vpnGateway.getAddrId());
-        site2SiteTO.setLocalGuestCidr(_vpcDao.findById(ipAddress.getVpcId()).getCidr());
-        site2SiteTO.setLocalPublicGateway(_vlanDao.findById(ipAddress.getVlanId()).getVlanGateway());
-        site2SiteTO.setLocalPublicIp(ipAddress.getAddress().addr());
+        site2SiteTO.setLeft(ipAddress.getAddress().addr());
+        site2SiteTO.setLeftSubnet(_vpcDao.findById(ipAddress.getVpcId()).getCidr());
 
         site2SiteTO.setPassive(vpnConnection.isPassive());
 
-        site2SiteTO.setPeerGatewayIp(customerGateway.getGatewayIp());
-        site2SiteTO.setPeerGuestCidrList(customerGateway.getGuestCidrList());
+        site2SiteTO.setRight(customerGateway.getGatewayIp());
+        site2SiteTO.setPeerList(customerGateway.getGuestCidrList());
 
         return site2SiteTO;
     }

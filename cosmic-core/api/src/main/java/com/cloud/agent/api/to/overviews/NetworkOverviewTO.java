@@ -600,21 +600,20 @@ public class NetworkOverviewTO {
 
         public static class Site2SiteTO {
             private Boolean dpd;
-            private Boolean encap;
-            private Long espLifetime;
-            private String espPolicy;
+            private Boolean forceEncaps;
+            private Long lifetime;
+            private String esp;
             private Long ikeLifetime;
-            private String ikePolicy;
-            private String ipsecPsk;
+            private String ike;
+            private String psk;
 
-            private String localGuestCidr;
-            private String localPublicGateway;
-            private String localPublicIp;
+            private String left;
+            private String leftSubnet;
 
             private Boolean passive;
 
-            private String peerGatewayIp;
-            private String peerGuestCidrList;
+            private String right;
+            private String peerList;
 
             public Boolean getDpd() {
                 return dpd;
@@ -624,28 +623,28 @@ public class NetworkOverviewTO {
                 this.dpd = dpd;
             }
 
-            public Boolean getEncap() {
-                return encap;
+            public Boolean getForceEncaps() {
+                return forceEncaps;
             }
 
-            public void setEncap(final Boolean encap) {
-                this.encap = encap;
+            public void setForceEncaps(final Boolean forceEncaps) {
+                this.forceEncaps = forceEncaps;
             }
 
-            public Long getEspLifetime() {
-                return espLifetime;
+            public Long getLifetime() {
+                return lifetime;
             }
 
-            public void setEspLifetime(final Long espLifetime) {
-                this.espLifetime = espLifetime;
+            public void setLifetime(final Long lifetime) {
+                this.lifetime = lifetime;
             }
 
-            public String getEspPolicy() {
-                return espPolicy;
+            public String getEsp() {
+                return esp;
             }
 
-            public void setEspPolicy(final String espPolicy) {
-                this.espPolicy = espPolicy;
+            public void setEsp(final String esp) {
+                this.esp = esp;
             }
 
             public Long getIkeLifetime() {
@@ -656,44 +655,36 @@ public class NetworkOverviewTO {
                 this.ikeLifetime = ikeLifetime;
             }
 
-            public String getIkePolicy() {
-                return ikePolicy;
+            public String getIke() {
+                return ike;
             }
 
-            public void setIkePolicy(final String ikePolicy) {
-                this.ikePolicy = ikePolicy;
+            public void setIke(final String ike) {
+                this.ike = ike;
             }
 
-            public String getIpsecPsk() {
-                return ipsecPsk;
+            public String getPsk() {
+                return psk;
             }
 
-            public void setIpsecPsk(final String ipsecPsk) {
-                this.ipsecPsk = ipsecPsk;
+            public void setPsk(final String psk) {
+                this.psk = psk;
             }
 
-            public String getLocalGuestCidr() {
-                return localGuestCidr;
+            public String getLeft() {
+                return left;
             }
 
-            public void setLocalGuestCidr(final String localGuestCidr) {
-                this.localGuestCidr = localGuestCidr;
+            public void setLeft(final String left) {
+                this.left = left;
             }
 
-            public String getLocalPublicGateway() {
-                return localPublicGateway;
+            public String getLeftSubnet() {
+                return leftSubnet;
             }
 
-            public void setLocalPublicGateway(final String localPublicGateway) {
-                this.localPublicGateway = localPublicGateway;
-            }
-
-            public String getLocalPublicIp() {
-                return localPublicIp;
-            }
-
-            public void setLocalPublicIp(final String localPublicIp) {
-                this.localPublicIp = localPublicIp;
+            public void setLeftSubnet(final String leftSubnet) {
+                this.leftSubnet = leftSubnet;
             }
 
             public Boolean getPassive() {
@@ -704,20 +695,20 @@ public class NetworkOverviewTO {
                 this.passive = passive;
             }
 
-            public String getPeerGatewayIp() {
-                return peerGatewayIp;
+            public String getRight() {
+                return right;
             }
 
-            public void setPeerGatewayIp(final String peerGatewayIp) {
-                this.peerGatewayIp = peerGatewayIp;
+            public void setRight(final String right) {
+                this.right = right;
             }
 
-            public String getPeerGuestCidrList() {
-                return peerGuestCidrList;
+            public String getPeerList() {
+                return peerList;
             }
 
-            public void setPeerGuestCidrList(final String peerGuestCidrList) {
-                this.peerGuestCidrList = peerGuestCidrList;
+            public void setPeerList(final String peerList) {
+                this.peerList = peerList;
             }
         }
     }
