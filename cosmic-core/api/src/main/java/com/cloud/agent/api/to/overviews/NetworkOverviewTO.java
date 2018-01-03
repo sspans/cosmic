@@ -494,6 +494,7 @@ public class NetworkOverviewTO {
 
     public static class VPNTO {
         private RemoteAccessTO remoteAccess;
+        private Site2SiteTO[] site2site;
 
         public RemoteAccessTO getRemoteAccess() {
             return remoteAccess;
@@ -501,6 +502,14 @@ public class NetworkOverviewTO {
 
         public void setRemoteAccess(final RemoteAccessTO remoteAccess) {
             this.remoteAccess = remoteAccess;
+        }
+
+        public Site2SiteTO[] getSite2site() {
+            return site2site;
+        }
+
+        public void setSite2site(final Site2SiteTO[] site2site) {
+            this.site2site = site2site;
         }
 
         public static class RemoteAccessTO {
@@ -586,6 +595,129 @@ public class NetworkOverviewTO {
                 public void setPassword(final String password) {
                     this.password = password;
                 }
+            }
+        }
+
+        public static class Site2SiteTO {
+            private Boolean dpd;
+            private Boolean encap;
+            private Long espLifetime;
+            private String espPolicy;
+            private Long ikeLifetime;
+            private String ikePolicy;
+            private String ipsecPsk;
+
+            private String localGuestCidr;
+            private String localPublicGateway;
+            private String localPublicIp;
+
+            private Boolean passive;
+
+            private String peerGatewayIp;
+            private String peerGuestCidrList;
+
+            public Boolean getDpd() {
+                return dpd;
+            }
+
+            public void setDpd(final Boolean dpd) {
+                this.dpd = dpd;
+            }
+
+            public Boolean getEncap() {
+                return encap;
+            }
+
+            public void setEncap(final Boolean encap) {
+                this.encap = encap;
+            }
+
+            public Long getEspLifetime() {
+                return espLifetime;
+            }
+
+            public void setEspLifetime(final Long espLifetime) {
+                this.espLifetime = espLifetime;
+            }
+
+            public String getEspPolicy() {
+                return espPolicy;
+            }
+
+            public void setEspPolicy(final String espPolicy) {
+                this.espPolicy = espPolicy;
+            }
+
+            public Long getIkeLifetime() {
+                return ikeLifetime;
+            }
+
+            public void setIkeLifetime(final Long ikeLifetime) {
+                this.ikeLifetime = ikeLifetime;
+            }
+
+            public String getIkePolicy() {
+                return ikePolicy;
+            }
+
+            public void setIkePolicy(final String ikePolicy) {
+                this.ikePolicy = ikePolicy;
+            }
+
+            public String getIpsecPsk() {
+                return ipsecPsk;
+            }
+
+            public void setIpsecPsk(final String ipsecPsk) {
+                this.ipsecPsk = ipsecPsk;
+            }
+
+            public String getLocalGuestCidr() {
+                return localGuestCidr;
+            }
+
+            public void setLocalGuestCidr(final String localGuestCidr) {
+                this.localGuestCidr = localGuestCidr;
+            }
+
+            public String getLocalPublicGateway() {
+                return localPublicGateway;
+            }
+
+            public void setLocalPublicGateway(final String localPublicGateway) {
+                this.localPublicGateway = localPublicGateway;
+            }
+
+            public String getLocalPublicIp() {
+                return localPublicIp;
+            }
+
+            public void setLocalPublicIp(final String localPublicIp) {
+                this.localPublicIp = localPublicIp;
+            }
+
+            public Boolean getPassive() {
+                return passive;
+            }
+
+            public void setPassive(final Boolean passive) {
+                this.passive = passive;
+            }
+
+            public String getPeerGatewayIp() {
+                return peerGatewayIp;
+            }
+
+            public void setPeerGatewayIp(final String peerGatewayIp) {
+                this.peerGatewayIp = peerGatewayIp;
+            }
+
+            public String getPeerGuestCidrList() {
+                return peerGuestCidrList;
+            }
+
+            public void setPeerGuestCidrList(final String peerGuestCidrList) {
+                this.peerGuestCidrList = peerGuestCidrList;
             }
         }
     }
