@@ -27,7 +27,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "scaleSystemVm", responseObject = SystemVmResponse.class, description = "Scale the service offering for a system vm (console proxy or secondary storage). "
+@APICommand(name = "scaleSystemVm", group = "System VM", responseObject = SystemVmResponse.class, description = "Scale the service offering for a system vm (console proxy or secondary storage). "
         + "The system vm must be in a \"Stopped\" state for " + "this command to take effect.", entityType = {VirtualMachine.class},
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class ScaleSystemVMCmd extends BaseAsyncCmd {

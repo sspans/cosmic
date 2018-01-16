@@ -18,7 +18,7 @@ import com.cloud.utils.exception.InvalidParameterValueException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "updateFirewallRule", description = "Updates firewall rule ", responseObject = FirewallResponse.class, since = "4.4",
+@APICommand(name = "updateFirewallRule", group = "Firewall", description = "Updates firewall rule ", responseObject = FirewallResponse.class, since = "4.4",
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class UpdateFirewallRuleCmd extends BaseAsyncCustomIdCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(UpdateFirewallRuleCmd.class.getName());

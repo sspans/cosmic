@@ -17,7 +17,7 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "releaseDedicatedPod", description = "Release the dedication for the pod", responseObject = SuccessResponse.class,
+@APICommand(name = "releaseDedicatedPod", group = "Affinity", description = "Release the dedication for the pod", responseObject = SuccessResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class ReleaseDedicatedPodCmd extends BaseAsyncCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(ReleaseDedicatedPodCmd.class.getName());

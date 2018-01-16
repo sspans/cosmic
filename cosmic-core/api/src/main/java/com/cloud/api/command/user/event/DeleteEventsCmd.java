@@ -19,7 +19,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "deleteEvents", description = "Delete one or more events.", responseObject = SuccessResponse.class, entityType = {Event.class},
+@APICommand(name = "deleteEvents", group = "Event", description = "Delete one or more events.", responseObject = SuccessResponse.class, entityType = {Event.class},
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class DeleteEventsCmd extends BaseCmd {
 

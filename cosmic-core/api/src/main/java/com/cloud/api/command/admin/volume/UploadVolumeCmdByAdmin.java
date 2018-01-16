@@ -16,7 +16,7 @@ import com.cloud.storage.Volume;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "uploadVolume", description = "Uploads a data disk.", responseObject = VolumeResponse.class, responseView = ResponseView.Full, entityType = {Volume.class},
+@APICommand(name = "uploadVolume", group = "Volume", description = "Uploads a data disk.", responseObject = VolumeResponse.class, responseView = ResponseView.Full, entityType = {Volume.class},
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class UploadVolumeCmdByAdmin extends UploadVolumeCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(UploadVolumeCmdByAdmin.class.getName());

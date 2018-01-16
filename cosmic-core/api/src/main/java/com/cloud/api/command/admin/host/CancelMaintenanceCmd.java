@@ -16,7 +16,7 @@ import com.cloud.user.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "cancelHostMaintenance", description = "Cancels host maintenance.", responseObject = HostResponse.class,
+@APICommand(name = "cancelHostMaintenance", group = "Host", description = "Cancels host maintenance.", responseObject = HostResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class CancelMaintenanceCmd extends BaseAsyncCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(CancelMaintenanceCmd.class.getName());

@@ -28,7 +28,7 @@ import com.cloud.user.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "updateLBHealthCheckPolicy", description = "Updates load balancer health check policy", responseObject = LBHealthCheckResponse.class, since = "4.4",
+@APICommand(name = "updateLBHealthCheckPolicy", group = "Load Balancer", description = "Updates load balancer health check policy", responseObject = LBHealthCheckResponse.class, since = "4.4",
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class UpdateLBHealthCheckPolicyCmd extends BaseAsyncCustomIdCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(UpdateLBHealthCheckPolicyCmd.class.getName());

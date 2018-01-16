@@ -33,7 +33,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "createPortForwardingRule", description = "Creates a port forwarding rule", responseObject = FirewallRuleResponse.class, entityType = {FirewallRule.class,
+@APICommand(name = "createPortForwardingRule", group = "Firewall", description = "Creates a port forwarding rule", responseObject = FirewallRuleResponse.class, entityType = {FirewallRule.class,
         VirtualMachine.class, IpAddress.class},
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class CreatePortForwardingRuleCmd extends BaseAsyncCreateCmd implements PortForwardingRule {

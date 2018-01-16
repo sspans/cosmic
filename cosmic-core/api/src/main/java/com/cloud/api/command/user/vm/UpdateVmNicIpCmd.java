@@ -31,7 +31,7 @@ import java.util.EnumSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "updateVmNicIp", description = "Update the default Ip of a VM Nic", responseObject = UserVmResponse.class)
+@APICommand(name = "updateVmNicIp", group = "Nic", description = "Update the default Ip of a VM Nic", responseObject = UserVmResponse.class)
 public class UpdateVmNicIpCmd extends BaseAsyncCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(AddIpToVmNicCmd.class.getName());
     private static final String s_name = "updatevmnicipresponse";

@@ -18,7 +18,7 @@ import com.cloud.user.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "enableStorageMaintenance", description = "Puts storage pool into maintenance state", responseObject = StoragePoolResponse.class,
+@APICommand(name = "enableStorageMaintenance", group = "Storage Pool", description = "Puts storage pool into maintenance state", responseObject = StoragePoolResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class PreparePrimaryStorageForMaintenanceCmd extends BaseAsyncCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(PreparePrimaryStorageForMaintenanceCmd.class.getName());

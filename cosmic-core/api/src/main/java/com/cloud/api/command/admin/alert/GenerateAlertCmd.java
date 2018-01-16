@@ -16,7 +16,7 @@ import com.cloud.event.EventTypes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "generateAlert", description = "Generates an alert", responseObject = SuccessResponse.class, since = "4.3",
+@APICommand(name = "generateAlert", group = "Alert", description = "Generates an alert", responseObject = SuccessResponse.class, since = "4.3",
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class GenerateAlertCmd extends BaseAsyncCmd {
 

@@ -18,7 +18,7 @@ import com.cloud.user.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "dedicateGuestVlanRange", description = "Dedicates a guest vlan range to an account", responseObject = GuestVlanRangeResponse.class,
+@APICommand(name = "dedicateGuestVlanRange", group = "VLAN", description = "Dedicates a guest vlan range to an account", responseObject = GuestVlanRangeResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class DedicateGuestVlanRangeCmd extends BaseCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(DedicateGuestVlanRangeCmd.class.getName());

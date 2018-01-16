@@ -14,7 +14,7 @@ import com.cloud.utils.exception.InvalidParameterValueException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "updateRemoteAccessVpn", description = "Updates remote access vpn", responseObject = RemoteAccessVpnResponse.class, since = "4.4",
+@APICommand(name = "updateRemoteAccessVpn", group = "VPN", description = "Updates remote access vpn", responseObject = RemoteAccessVpnResponse.class, since = "4.4",
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class UpdateRemoteAccessVpnCmd extends BaseAsyncCustomIdCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(UpdateRemoteAccessVpnCmd.class.getName());

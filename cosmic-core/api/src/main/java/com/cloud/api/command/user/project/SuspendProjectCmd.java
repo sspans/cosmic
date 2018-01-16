@@ -17,7 +17,7 @@ import com.cloud.utils.exception.InvalidParameterValueException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "suspendProject", description = "Suspends a project", responseObject = ProjectResponse.class, since = "3.0.0",
+@APICommand(name = "suspendProject", group = "Project", description = "Suspends a project", responseObject = ProjectResponse.class, since = "3.0.0",
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class SuspendProjectCmd extends BaseAsyncCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(SuspendProjectCmd.class.getName());

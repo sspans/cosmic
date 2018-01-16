@@ -12,7 +12,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "listAffinityGroupTypes", description = "Lists affinity group types available", responseObject = AffinityGroupTypeResponse.class,
+@APICommand(name = "listAffinityGroupTypes", group = "Affinity", description = "Lists affinity group types available", responseObject = AffinityGroupTypeResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class ListAffinityGroupTypesCmd extends BaseListCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(ListAffinityGroupTypesCmd.class.getName());

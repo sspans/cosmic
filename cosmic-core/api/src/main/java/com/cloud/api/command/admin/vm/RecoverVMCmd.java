@@ -16,7 +16,7 @@ import com.cloud.vm.VirtualMachine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "recoverVirtualMachine", description = "Recovers a virtual machine.", responseObject = UserVmResponse.class, entityType = {VirtualMachine.class},
+@APICommand(name = "recoverVirtualMachine", group = "Virtual Machine", description = "Recovers a virtual machine.", responseObject = UserVmResponse.class, entityType = {VirtualMachine.class},
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = true)
 public class RecoverVMCmd extends BaseCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(RecoverVMCmd.class.getName());

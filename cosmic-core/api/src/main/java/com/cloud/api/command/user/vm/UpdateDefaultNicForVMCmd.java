@@ -24,7 +24,7 @@ import java.util.EnumSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "updateDefaultNicForVirtualMachine", description = "Changes the default NIC on a VM", responseObject = UserVmResponse.class, responseView = ResponseView
+@APICommand(name = "updateDefaultNicForVirtualMachine", group = "Virtual Machine", description = "Changes the default NIC on a VM", responseObject = UserVmResponse.class, responseView = ResponseView
         .Restricted, entityType = {VirtualMachine.class},
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = true)
 public class UpdateDefaultNicForVMCmd extends BaseAsyncCmd {

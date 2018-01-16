@@ -5,7 +5,7 @@ import com.cloud.api.ResponseObject.ResponseView;
 import com.cloud.api.command.user.iso.CopyIsoCmd;
 import com.cloud.api.response.TemplateResponse;
 
-@APICommand(name = "copyIso", description = "Copies an iso from one zone to another.", responseObject = TemplateResponse.class, responseView = ResponseView.Full,
+@APICommand(name = "copyIso", group = "ISO", description = "Copies an iso from one zone to another.", responseObject = TemplateResponse.class, responseView = ResponseView.Full,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class CopyIsoCmdByAdmin extends CopyIsoCmd {
 

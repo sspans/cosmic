@@ -5,7 +5,7 @@ import com.cloud.api.ResponseObject.ResponseView;
 import com.cloud.api.command.user.iso.ListIsosCmd;
 import com.cloud.api.response.TemplateResponse;
 
-@APICommand(name = "listIsos", description = "Lists all available ISO files.", responseObject = TemplateResponse.class, responseView = ResponseView.Full,
+@APICommand(name = "listIsos", group = "ISO", description = "Lists all available ISO files.", responseObject = TemplateResponse.class, responseView = ResponseView.Full,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class ListIsosCmdByAdmin extends ListIsosCmd {
 }

@@ -18,7 +18,7 @@ import com.cloud.vm.VirtualMachine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "startSystemVm", responseObject = SystemVmResponse.class, description = "Starts a system virtual machine.", entityType = {VirtualMachine.class},
+@APICommand(name = "startSystemVm", group = "System VM", responseObject = SystemVmResponse.class, description = "Starts a system virtual machine.", entityType = {VirtualMachine.class},
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class StartSystemVMCmd extends BaseAsyncCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(StartSystemVMCmd.class.getName());

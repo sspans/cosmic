@@ -16,7 +16,7 @@ import com.cloud.user.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "removeGuestOsMapping", description = "Removes a Guest OS Mapping.", responseObject = SuccessResponse.class, since = "4.4.0",
+@APICommand(name = "removeGuestOsMapping", group = "Guest OS", description = "Removes a Guest OS Mapping.", responseObject = SuccessResponse.class, since = "4.4.0",
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class RemoveGuestOsMappingCmd extends BaseAsyncCmd {
 

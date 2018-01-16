@@ -9,7 +9,7 @@ import com.cloud.api.response.StorageTagResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "listStorageTags", description = "Lists storage tags", responseObject = StorageTagResponse.class, requestHasSensitiveInfo = false, responseHasSensitiveInfo =
+@APICommand(name = "listStorageTags", group = "Resource tags", description = "Lists storage tags", responseObject = StorageTagResponse.class, requestHasSensitiveInfo = false, responseHasSensitiveInfo =
         false)
 public class ListStorageTagsCmd extends BaseListCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(ListStorageTagsCmd.class.getName());

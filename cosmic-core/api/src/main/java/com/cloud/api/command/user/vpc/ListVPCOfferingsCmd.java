@@ -15,7 +15,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "listVPCOfferings", description = "Lists VPC offerings", responseObject = VpcOfferingResponse.class,
+@APICommand(name = "listVPCOfferings", group = "VPC", description = "Lists VPC offerings", responseObject = VpcOfferingResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class ListVPCOfferingsCmd extends BaseListCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(ListVPCOfferingsCmd.class.getName());

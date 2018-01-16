@@ -16,7 +16,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "listProjects",
+@APICommand(name = "listProjects", group = "Project",
         description = "Lists projects and provides detailed information for listed projects",
         responseObject = ProjectResponse.class,
         since = "3.0.0",

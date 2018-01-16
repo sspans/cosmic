@@ -19,7 +19,7 @@ import java.util.EnumSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "updateVMAffinityGroup", description = "Updates the affinity/anti-affinity group associations of a virtual machine. The VM has to be stopped and restarted for" +
+@APICommand(name = "updateVMAffinityGroup", group = "Affinity", description = "Updates the affinity/anti-affinity group associations of a virtual machine. The VM has to be stopped and restarted for" +
         " the "
         + "new properties to take effect.", responseObject = UserVmResponse.class, responseView = ResponseView.Full,
         entityType = {VirtualMachine.class},

@@ -12,7 +12,7 @@ import com.cloud.user.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "updateHostPassword", description = "Update password of a host/pool on management server.", responseObject = SuccessResponse.class,
+@APICommand(name = "updateHostPassword", group = "Host", description = "Update password of a host/pool on management server.", responseObject = SuccessResponse.class,
         requestHasSensitiveInfo = true, responseHasSensitiveInfo = false)
 public class UpdateHostPasswordCmd extends BaseCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(UpdateHostPasswordCmd.class.getName());

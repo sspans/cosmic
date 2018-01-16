@@ -21,7 +21,7 @@ import com.cloud.utils.exception.InvalidParameterValueException;
 
 import javax.inject.Inject;
 
-@APICommand(name = "addNiciraNvpDevice", responseObject = NiciraNvpDeviceResponse.class, description = "Adds a Nicira NVP device",
+@APICommand(name = "addNiciraNvpDevice", group = "Nicira NVP", responseObject = NiciraNvpDeviceResponse.class, description = "Adds a Nicira NVP device",
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class AddNiciraNvpDeviceCmd extends BaseAsyncCmd {
     private static final String s_name = "addniciranvpdeviceresponse";

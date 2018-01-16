@@ -27,7 +27,7 @@ import com.cloud.user.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "updateLBStickinessPolicy", description = "Updates load balancer stickiness policy", responseObject = LBStickinessResponse.class, since = "4.4",
+@APICommand(name = "updateLBStickinessPolicy", group = "Load Balancer", description = "Updates load balancer stickiness policy", responseObject = LBStickinessResponse.class, since = "4.4",
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class UpdateLBStickinessPolicyCmd extends BaseAsyncCustomIdCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(UpdateLBStickinessPolicyCmd.class.getName());

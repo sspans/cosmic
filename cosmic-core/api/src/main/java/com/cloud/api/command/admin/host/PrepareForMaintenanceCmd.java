@@ -16,7 +16,7 @@ import com.cloud.user.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "prepareHostForMaintenance", description = "Prepares a host for maintenance.", responseObject = HostResponse.class,
+@APICommand(name = "prepareHostForMaintenance", group = "Host", description = "Prepares a host for maintenance.", responseObject = HostResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class PrepareForMaintenanceCmd extends BaseAsyncCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(PrepareForMaintenanceCmd.class.getName());

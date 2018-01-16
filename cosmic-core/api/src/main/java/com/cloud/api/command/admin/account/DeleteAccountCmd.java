@@ -22,7 +22,7 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "deleteAccount", description = "Deletes a account, and all users associated with this account", responseObject = SuccessResponse.class, entityType = {Account
+@APICommand(name = "deleteAccount", group = "Account", description = "Deletes a account, and all users associated with this account", responseObject = SuccessResponse.class, entityType = {Account
         .class},
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class DeleteAccountCmd extends BaseAsyncCmd {

@@ -12,7 +12,7 @@ import com.cloud.utils.exception.CloudRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "lockAccount",
+@APICommand(name = "lockAccount", group = "Account",
         description = "This deprecated function used to locks an account. Look for the API DisableAccount instead",
         responseObject = AccountResponse.class,
         entityType = {Account.class},

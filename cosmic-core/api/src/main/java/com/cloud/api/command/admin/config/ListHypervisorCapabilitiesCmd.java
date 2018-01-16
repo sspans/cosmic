@@ -16,7 +16,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "listHypervisorCapabilities",
+@APICommand(name = "listHypervisorCapabilities", group = "Hypervisor",
         description = "Lists all hypervisor capabilities.",
         responseObject = HypervisorCapabilitiesResponse.class,
         since = "3.0.0",

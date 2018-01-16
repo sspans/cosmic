@@ -15,7 +15,7 @@ import com.cloud.vm.VirtualMachine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "changeServiceForRouter", description = "Upgrades domain router to a new service offering", responseObject = DomainRouterResponse.class, entityType =
+@APICommand(name = "changeServiceForRouter", group = "Router", description = "Upgrades domain router to a new service offering", responseObject = DomainRouterResponse.class, entityType =
         {VirtualMachine.class},
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class UpgradeRouterCmd extends BaseCmd {

@@ -9,7 +9,7 @@ import com.cloud.network.Networks;
 import java.util.ArrayList;
 import java.util.List;
 
-@APICommand(name = "listNetworkIsolationMethods",
+@APICommand(name = "listNetworkIsolationMethods", group = "Network",
         description = "Lists supported methods of network isolation",
         responseObject = IsolationMethodResponse.class,
         since = "4.2.0",

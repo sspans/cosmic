@@ -18,7 +18,7 @@ import com.cloud.utils.exception.InvalidParameterValueException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "deleteLBStickinessPolicy", description = "Deletes a load balancer stickiness policy.", responseObject = SuccessResponse.class, since = "3.0.0",
+@APICommand(name = "deleteLBStickinessPolicy", group = "Load Balancer", description = "Deletes a load balancer stickiness policy.", responseObject = SuccessResponse.class, since = "3.0.0",
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class DeleteLBStickinessPolicyCmd extends BaseAsyncCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(DeleteLBStickinessPolicyCmd.class.getName());

@@ -14,7 +14,7 @@ import com.cloud.user.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "createPod", description = "Creates a new Pod.", responseObject = PodResponse.class,
+@APICommand(name = "createPod", group = "Pod", description = "Creates a new Pod.", responseObject = PodResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class CreatePodCmd extends BaseCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(CreatePodCmd.class.getName());

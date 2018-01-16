@@ -23,7 +23,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "configureVirtualRouterElement", responseObject = VirtualRouterProviderResponse.class, description = "Configures a virtual router element.",
+@APICommand(name = "configureVirtualRouterElement", group = "Router", responseObject = VirtualRouterProviderResponse.class, description = "Configures a virtual router element.",
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class ConfigureVirtualRouterElementCmd extends BaseAsyncCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(ConfigureVirtualRouterElementCmd.class.getName());

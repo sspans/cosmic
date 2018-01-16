@@ -22,7 +22,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "dedicatePod", description = "Dedicates a Pod.", responseObject = DedicatePodResponse.class,
+@APICommand(name = "dedicatePod", group = "Affinity", description = "Dedicates a Pod.", responseObject = DedicatePodResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class DedicatePodCmd extends BaseAsyncCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(DedicatePodCmd.class.getName());

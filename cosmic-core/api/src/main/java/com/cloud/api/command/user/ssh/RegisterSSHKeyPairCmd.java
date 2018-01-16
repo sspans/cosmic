@@ -13,7 +13,7 @@ import com.cloud.user.SSHKeyPair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "registerSSHKeyPair", description = "Register a public key in a keypair under a certain name", responseObject = SSHKeyPairResponse.class, entityType =
+@APICommand(name = "registerSSHKeyPair", group = "SSH", description = "Register a public key in a keypair under a certain name", responseObject = SSHKeyPairResponse.class, entityType =
         {SSHKeyPair.class},
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class RegisterSSHKeyPairCmd extends BaseCmd {

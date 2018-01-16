@@ -39,7 +39,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "associateIpAddress", description = "Acquires and associates a public IP to an account.", responseObject = IPAddressResponse.class, responseView =
+@APICommand(name = "associateIpAddress", group = "Public IP Address", description = "Acquires and associates a public IP to an account.", responseObject = IPAddressResponse.class, responseView =
         ResponseView.Restricted,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class AssociateIPAddrCmd extends BaseAsyncCreateCmd {

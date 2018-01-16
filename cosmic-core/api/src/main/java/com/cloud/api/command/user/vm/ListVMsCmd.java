@@ -32,7 +32,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "listVirtualMachines", description = "List the virtual machines owned by the account.", responseObject = UserVmResponse.class, responseView = ResponseView
+@APICommand(name = "listVirtualMachines", group = "Virtual Machine", description = "List the virtual machines owned by the account.", responseObject = UserVmResponse.class, responseView = ResponseView
         .Restricted, entityType = {VirtualMachine.class},
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = true)
 public class ListVMsCmd extends BaseListTaggedResourcesCmd {

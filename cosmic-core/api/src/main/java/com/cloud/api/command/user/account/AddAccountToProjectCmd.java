@@ -16,7 +16,7 @@ import com.cloud.utils.exception.InvalidParameterValueException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "addAccountToProject", description = "Adds account to a project", responseObject = SuccessResponse.class, since = "3.0.0",
+@APICommand(name = "addAccountToProject", group = "Account", description = "Adds account to a project", responseObject = SuccessResponse.class, since = "3.0.0",
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class AddAccountToProjectCmd extends BaseAsyncCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(AddAccountToProjectCmd.class.getName());

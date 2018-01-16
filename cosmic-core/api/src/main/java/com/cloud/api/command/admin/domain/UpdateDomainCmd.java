@@ -17,7 +17,7 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "updateDomain", description = "Updates a domain with a new name", responseObject = DomainResponse.class,
+@APICommand(name = "updateDomain", group = "Domain", description = "Updates a domain with a new name", responseObject = DomainResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class UpdateDomainCmd extends BaseCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(UpdateDomainCmd.class.getName());

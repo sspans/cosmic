@@ -9,7 +9,7 @@ import com.cloud.api.response.VolumeResponse;
 import com.cloud.context.CallContext;
 import com.cloud.storage.Volume;
 
-@APICommand(name = "updateVolume", description = "Updates the volume.", responseObject = VolumeResponse.class, responseView = ResponseView.Full, entityType = {Volume.class},
+@APICommand(name = "updateVolume", group = "Volume", description = "Updates the volume.", responseObject = VolumeResponse.class, responseView = ResponseView.Full, entityType = {Volume.class},
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class UpdateVolumeCmdByAdmin extends UpdateVolumeCmd {
 

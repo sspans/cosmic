@@ -14,7 +14,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "listPublicIpAddresses", description = "Lists all public ip addresses", responseObject = IPAddressResponse.class, responseView = ResponseView.Full,
+@APICommand(name = "listPublicIpAddresses", group = "Public IP Address", description = "Lists all public ip addresses", responseObject = IPAddressResponse.class, responseView = ResponseView.Full,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false, entityType = {IpAddress.class})
 public class ListPublicIpAddressesCmdByAdmin extends ListPublicIpAddressesCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(ListPublicIpAddressesCmdByAdmin.class.getName());

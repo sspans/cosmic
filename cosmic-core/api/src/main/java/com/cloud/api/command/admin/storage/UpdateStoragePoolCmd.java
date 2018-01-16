@@ -15,7 +15,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "updateStoragePool", description = "Updates a storage pool.", responseObject = StoragePoolResponse.class, since = "3.0.0",
+@APICommand(name = "updateStoragePool", group = "Storage Pool", description = "Updates a storage pool.", responseObject = StoragePoolResponse.class, since = "3.0.0",
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class UpdateStoragePoolCmd extends BaseCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(UpdateStoragePoolCmd.class.getName());

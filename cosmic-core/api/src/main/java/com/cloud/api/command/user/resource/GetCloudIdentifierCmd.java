@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "getCloudIdentifier", description = "Retrieves a cloud identifier.", responseObject = CloudIdentifierResponse.class,
+@APICommand(name = "getCloudIdentifier", group = "System", description = "Retrieves a cloud identifier.", responseObject = CloudIdentifierResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class GetCloudIdentifierCmd extends BaseCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(GetCloudIdentifierCmd.class.getName());

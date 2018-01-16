@@ -12,7 +12,7 @@ import com.cloud.uservm.UserVm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "getVirtualMachineUserData", description = "Returns user data associated with the VM", responseObject = VMUserDataResponse.class, since = "4.4",
+@APICommand(name = "getVirtualMachineUserData", group = "User", description = "Returns user data associated with the VM", responseObject = VMUserDataResponse.class, since = "4.4",
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class GetVMUserDataCmd extends BaseCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(GetVMUserDataCmd.class);

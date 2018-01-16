@@ -24,7 +24,7 @@ import com.cloud.vm.snapshot.VMSnapshot;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "revertToVMSnapshot", description = "Revert VM from a vmsnapshot.", responseObject = UserVmResponse.class, since = "4.2.0", responseView = ResponseView
+@APICommand(name = "revertToVMSnapshot", group = "Snapshot", description = "Revert VM from a vmsnapshot.", responseObject = UserVmResponse.class, since = "4.2.0", responseView = ResponseView
         .Restricted,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = true)
 public class RevertToVMSnapshotCmd extends BaseAsyncCmd {

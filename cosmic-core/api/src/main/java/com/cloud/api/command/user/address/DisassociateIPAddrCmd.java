@@ -20,7 +20,7 @@ import com.cloud.utils.exception.InvalidParameterValueException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "disassociateIpAddress", description = "Disassociates an IP address from the account.", responseObject = SuccessResponse.class,
+@APICommand(name = "disassociateIpAddress", group = "Public IP Address", description = "Disassociates an IP address from the account.", responseObject = SuccessResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false, entityType = {IpAddress.class})
 public class DisassociateIPAddrCmd extends BaseAsyncCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(DisassociateIPAddrCmd.class.getName());

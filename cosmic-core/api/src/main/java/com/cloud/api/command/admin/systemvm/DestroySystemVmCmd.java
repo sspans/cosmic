@@ -18,7 +18,7 @@ import com.cloud.vm.VirtualMachine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "destroySystemVm", responseObject = SystemVmResponse.class, description = "Destroyes a system virtual machine.", entityType = {VirtualMachine.class},
+@APICommand(name = "destroySystemVm", group = "System VM", responseObject = SystemVmResponse.class, description = "Destroyes a system virtual machine.", entityType = {VirtualMachine.class},
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class DestroySystemVmCmd extends BaseAsyncCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(DestroySystemVmCmd.class.getName());

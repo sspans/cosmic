@@ -23,7 +23,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "listDedicatedClusters", description = "Lists dedicated clusters.", responseObject = DedicateClusterResponse.class,
+@APICommand(name = "listDedicatedClusters", group = "Affinity", description = "Lists dedicated clusters.", responseObject = DedicateClusterResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class ListDedicatedClustersCmd extends BaseListCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(ListDedicatedClustersCmd.class.getName());

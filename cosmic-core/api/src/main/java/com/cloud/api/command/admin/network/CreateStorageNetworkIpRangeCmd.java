@@ -19,7 +19,7 @@ import com.cloud.user.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "createStorageNetworkIpRange",
+@APICommand(name = "createStorageNetworkIpRange", group = "Network",
         description = "Creates a Storage network IP range.",
         responseObject = StorageNetworkIpRangeResponse.class,
         since = "3.0.0",

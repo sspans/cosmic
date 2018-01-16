@@ -20,7 +20,7 @@ import com.cloud.vm.VirtualMachine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "stopSystemVm", description = "Stops a system VM.", responseObject = SystemVmResponse.class, entityType = {VirtualMachine.class},
+@APICommand(name = "stopSystemVm", group = "System VM", description = "Stops a system VM.", responseObject = SystemVmResponse.class, entityType = {VirtualMachine.class},
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class StopSystemVmCmd extends BaseAsyncCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(StopSystemVmCmd.class.getName());

@@ -20,7 +20,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "createTags", description = "Creates resource tag(s)", responseObject = SuccessResponse.class, since = "4.0.0", entityType = {ResourceTag.class},
+@APICommand(name = "createTags", group = "Resource tags", description = "Creates resource tag(s)", responseObject = SuccessResponse.class, since = "4.0.0", entityType = {ResourceTag.class},
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class CreateTagsCmd extends BaseAsyncCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(CreateTagsCmd.class.getName());

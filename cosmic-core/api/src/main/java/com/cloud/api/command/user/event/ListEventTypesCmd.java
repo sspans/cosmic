@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "listEventTypes", description = "List Event Types", responseObject = EventTypeResponse.class,
+@APICommand(name = "listEventTypes", group = "Event", description = "List Event Types", responseObject = EventTypeResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class ListEventTypesCmd extends BaseCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(ListEventTypesCmd.class.getName());

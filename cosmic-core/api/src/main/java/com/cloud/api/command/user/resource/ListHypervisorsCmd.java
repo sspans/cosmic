@@ -16,7 +16,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "listHypervisors", description = "List hypervisors", responseObject = HypervisorResponse.class,
+@APICommand(name = "listHypervisors", group = "Hypervisor", description = "List hypervisors", responseObject = HypervisorResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class ListHypervisorsCmd extends BaseCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(UpgradeRouterCmd.class.getName());

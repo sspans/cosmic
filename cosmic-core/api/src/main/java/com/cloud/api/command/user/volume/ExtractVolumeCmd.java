@@ -22,7 +22,7 @@ import com.cloud.user.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "extractVolume", description = "Extracts volume", responseObject = ExtractResponse.class, entityType = {Volume.class},
+@APICommand(name = "extractVolume", group = "Volume", description = "Extracts volume", responseObject = ExtractResponse.class, entityType = {Volume.class},
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class ExtractVolumeCmd extends BaseAsyncCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(ExtractVolumeCmd.class.getName());

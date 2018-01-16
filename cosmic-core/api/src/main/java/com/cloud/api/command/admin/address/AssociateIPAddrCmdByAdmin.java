@@ -16,7 +16,7 @@ import com.cloud.network.IpAddress;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "associateIpAddress", description = "Acquires and associates a public IP to an account.", responseObject = IPAddressResponse.class, responseView =
+@APICommand(name = "associateIpAddress", group = "Public IP Address", description = "Acquires and associates a public IP to an account.", responseObject = IPAddressResponse.class, responseView =
         ResponseView.Full,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class AssociateIPAddrCmdByAdmin extends AssociateIPAddrCmd {

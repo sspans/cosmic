@@ -18,7 +18,7 @@ import com.cloud.user.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "addVpnUser", description = "Adds vpn users", responseObject = VpnUsersResponse.class, entityType = {VpnUser.class},
+@APICommand(name = "addVpnUser", group = "VPN", description = "Adds vpn users", responseObject = VpnUsersResponse.class, entityType = {VpnUser.class},
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class AddVpnUserCmd extends BaseAsyncCreateCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(AddVpnUserCmd.class.getName());

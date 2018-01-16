@@ -17,7 +17,7 @@ import com.cloud.user.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "updateConfiguration", description = "Updates a configuration.", responseObject = ConfigurationResponse.class,
+@APICommand(name = "updateConfiguration", group = "Configuration", description = "Updates a configuration.", responseObject = ConfigurationResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class UpdateCfgCmd extends BaseCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(UpdateCfgCmd.class.getName());

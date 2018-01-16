@@ -17,7 +17,7 @@ import com.cloud.utils.exception.InvalidParameterValueException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "deleteAccountFromProject", description = "Deletes account from the project", responseObject = SuccessResponse.class, since = "3.0.0",
+@APICommand(name = "deleteAccountFromProject", group = "Account", description = "Deletes account from the project", responseObject = SuccessResponse.class, since = "3.0.0",
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class DeleteAccountFromProjectCmd extends BaseAsyncCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(DeleteProjectCmd.class.getName());

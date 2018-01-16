@@ -12,7 +12,7 @@ import com.cloud.utils.exception.InvalidParameterValueException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "getUser", description = "Find user account by API key", responseObject = UserResponse.class,
+@APICommand(name = "getUser", group = "User", description = "Find user account by API key", responseObject = UserResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = true)
 public class GetUserCmd extends BaseCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(GetUserCmd.class.getName());

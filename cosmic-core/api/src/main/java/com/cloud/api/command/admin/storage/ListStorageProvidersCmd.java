@@ -19,7 +19,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "listStorageProviders", description = "Lists storage providers.", responseObject = StorageProviderResponse.class,
+@APICommand(name = "listStorageProviders", group = "Storage Pool", description = "Lists storage providers.", responseObject = StorageProviderResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class ListStorageProvidersCmd extends BaseListCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(ListStorageProvidersCmd.class.getName());

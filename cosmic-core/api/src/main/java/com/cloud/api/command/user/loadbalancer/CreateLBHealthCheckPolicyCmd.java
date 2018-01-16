@@ -21,7 +21,7 @@ import com.cloud.utils.exception.InvalidParameterValueException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "createLBHealthCheckPolicy",
+@APICommand(name = "createLBHealthCheckPolicy", group = "Load Balancer",
         description = "Creates a load balancer health check policy",
         responseObject = LBHealthCheckResponse.class,
         since = "4.2.0",

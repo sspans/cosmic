@@ -20,7 +20,7 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "disableUser", description = "Disables a user account", responseObject = UserResponse.class,
+@APICommand(name = "disableUser", group = "User", description = "Disables a user account", responseObject = UserResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = true)
 public class DisableUserCmd extends BaseAsyncCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(DisableUserCmd.class.getName());

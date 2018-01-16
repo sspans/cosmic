@@ -27,7 +27,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "migrateVirtualMachineWithVolume",
+@APICommand(name = "migrateVirtualMachineWithVolume", group = "Virtual Machine",
         description = "Attempts Migration of a VM with its volumes to a different host",
         responseObject = UserVmResponse.class, entityType = {VirtualMachine.class},
         requestHasSensitiveInfo = false,

@@ -16,7 +16,7 @@ import com.cloud.user.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "releaseHostReservation", description = "Releases host reservation.", responseObject = SuccessResponse.class,
+@APICommand(name = "releaseHostReservation", group = "Host", description = "Releases host reservation.", responseObject = SuccessResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class ReleaseHostReservationCmd extends BaseAsyncCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(ReleaseHostReservationCmd.class.getName());

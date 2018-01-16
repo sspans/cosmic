@@ -19,7 +19,7 @@ import com.cloud.user.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "revokeSecurityGroupIngress", responseObject = SuccessResponse.class, description = "Deletes a particular ingress rule from this security group", entityType =
+@APICommand(name = "revokeSecurityGroupIngress", group = "Security Group", responseObject = SuccessResponse.class, description = "Deletes a particular ingress rule from this security group", entityType =
         {SecurityGroup.class},
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class RevokeSecurityGroupIngressCmd extends BaseAsyncCmd {

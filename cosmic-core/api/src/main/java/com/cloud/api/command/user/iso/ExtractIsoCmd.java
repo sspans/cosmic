@@ -19,7 +19,7 @@ import com.cloud.user.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "extractIso", description = "Extracts an ISO", responseObject = ExtractResponse.class,
+@APICommand(name = "extractIso", group = "ISO", description = "Extracts an ISO", responseObject = ExtractResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class ExtractIsoCmd extends BaseAsyncCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(ExtractIsoCmd.class.getName());

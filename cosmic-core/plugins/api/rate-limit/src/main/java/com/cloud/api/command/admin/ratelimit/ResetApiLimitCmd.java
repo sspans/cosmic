@@ -21,7 +21,7 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "resetApiLimit", responseObject = ApiLimitResponse.class, description = "Reset api count",
+@APICommand(name = "resetApiLimit", group = "Limit", responseObject = ApiLimitResponse.class, description = "Reset api count",
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class ResetApiLimitCmd extends BaseCmd {
     private static final Logger s_logger = LoggerFactory.getLogger(ResetApiLimitCmd.class.getName());

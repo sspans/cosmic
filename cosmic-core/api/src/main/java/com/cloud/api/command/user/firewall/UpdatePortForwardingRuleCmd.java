@@ -18,7 +18,7 @@ import com.cloud.utils.net.Ip;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "updatePortForwardingRule",
+@APICommand(name = "updatePortForwardingRule", group = "Firewall",
         responseObject = FirewallRuleResponse.class,
         description = "Updates a port forwarding rule. Only the private port and the virtual machine can be updated.", entityType = {PortForwardingRule.class},
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)

@@ -16,7 +16,7 @@ import com.cloud.user.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "reconnectHost", description = "Reconnects a host.", responseObject = HostResponse.class,
+@APICommand(name = "reconnectHost", group = "Host", description = "Reconnects a host.", responseObject = HostResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class ReconnectHostCmd extends BaseAsyncCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(ReconnectHostCmd.class.getName());

@@ -15,7 +15,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "listDomainChildren", description = "Lists all children domains belonging to a specified domain", responseObject = DomainResponse.class,
+@APICommand(name = "listDomainChildren", group = "Domain", description = "Lists all children domains belonging to a specified domain", responseObject = DomainResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class ListDomainChildrenCmd extends BaseListCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(ListDomainChildrenCmd.class.getName());

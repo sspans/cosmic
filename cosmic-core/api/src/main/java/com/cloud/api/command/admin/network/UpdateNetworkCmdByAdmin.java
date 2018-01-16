@@ -17,7 +17,7 @@ import com.cloud.utils.exception.InvalidParameterValueException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "updateNetwork", description = "Updates a network", responseObject = NetworkResponse.class, responseView = ResponseView.Full, entityType = {Network.class},
+@APICommand(name = "updateNetwork", group = "Network", description = "Updates a network", responseObject = NetworkResponse.class, responseView = ResponseView.Full, entityType = {Network.class},
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class UpdateNetworkCmdByAdmin extends UpdateNetworkCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(UpdateNetworkCmdByAdmin.class.getName());

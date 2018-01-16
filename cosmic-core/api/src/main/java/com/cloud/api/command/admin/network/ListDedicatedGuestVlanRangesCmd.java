@@ -20,7 +20,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "listDedicatedGuestVlanRanges", description = "Lists dedicated guest vlan ranges", responseObject = GuestVlanRangeResponse.class,
+@APICommand(name = "listDedicatedGuestVlanRanges", group = "VLAN", description = "Lists dedicated guest vlan ranges", responseObject = GuestVlanRangeResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class ListDedicatedGuestVlanRangesCmd extends BaseListCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(ListDedicatedGuestVlanRangesCmd.class.getName());

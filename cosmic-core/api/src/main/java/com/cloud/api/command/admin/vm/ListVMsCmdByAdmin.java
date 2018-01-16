@@ -14,7 +14,7 @@ import com.cloud.vm.VirtualMachine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "listVirtualMachines", description = "List the virtual machines owned by the account.", responseObject = UserVmResponse.class, responseView = ResponseView
+@APICommand(name = "listVirtualMachines", group = "Virtual Machine", description = "List the virtual machines owned by the account.", responseObject = UserVmResponse.class, responseView = ResponseView
         .Full, entityType = {VirtualMachine.class},
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = true)
 public class ListVMsCmdByAdmin extends ListVMsCmd {

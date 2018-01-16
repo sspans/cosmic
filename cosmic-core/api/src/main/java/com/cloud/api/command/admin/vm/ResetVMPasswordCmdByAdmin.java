@@ -15,7 +15,7 @@ import com.cloud.vm.VirtualMachine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "resetPasswordForVirtualMachine", responseObject = UserVmResponse.class, description = "Resets the password for virtual machine. " +
+@APICommand(name = "resetPasswordForVirtualMachine", group = "Virtual Machine", responseObject = UserVmResponse.class, description = "Resets the password for virtual machine. " +
         "The virtual machine must be in a \"Stopped\" state and the template must already " +
         "support this feature for this command to take effect. [async]", responseView = ResponseView.Full, entityType = {VirtualMachine.class},
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = true)

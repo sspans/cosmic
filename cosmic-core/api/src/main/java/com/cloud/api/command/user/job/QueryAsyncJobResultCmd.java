@@ -10,7 +10,7 @@ import com.cloud.user.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "queryAsyncJobResult", description = "Retrieves the current status of asynchronous job.", responseObject = AsyncJobResponse.class,
+@APICommand(name = "queryAsyncJobResult", group = "Async job", description = "Retrieves the current status of asynchronous job.", responseObject = AsyncJobResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class QueryAsyncJobResultCmd extends BaseCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(QueryAsyncJobResultCmd.class.getName());

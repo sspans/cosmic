@@ -15,7 +15,7 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "deleteLdapConfiguration", description = "Remove an Ldap Configuration", responseObject = LdapConfigurationResponse.class, since = "4.2.0",
+@APICommand(name = "deleteLdapConfiguration", group = "Authentication", description = "Remove an Ldap Configuration", responseObject = LdapConfigurationResponse.class, since = "4.2.0",
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class LdapDeleteConfigurationCmd extends BaseCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(LdapDeleteConfigurationCmd.class.getName());

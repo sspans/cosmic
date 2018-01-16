@@ -13,7 +13,7 @@ import com.cloud.user.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "updateServiceOffering", description = "Updates a service offering.", responseObject = ServiceOfferingResponse.class,
+@APICommand(name = "updateServiceOffering", group = "Service Offering", description = "Updates a service offering.", responseObject = ServiceOfferingResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class UpdateServiceOfferingCmd extends BaseCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(UpdateServiceOfferingCmd.class.getName());

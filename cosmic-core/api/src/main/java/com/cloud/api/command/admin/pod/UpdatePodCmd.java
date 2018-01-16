@@ -13,7 +13,7 @@ import com.cloud.user.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "updatePod", description = "Updates a Pod.", responseObject = PodResponse.class,
+@APICommand(name = "updatePod", group = "Pod", description = "Updates a Pod.", responseObject = PodResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class UpdatePodCmd extends BaseCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(UpdatePodCmd.class.getName());

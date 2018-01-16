@@ -15,7 +15,7 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "addLdapConfiguration", description = "Add a new Ldap Configuration", responseObject = LdapConfigurationResponse.class, since = "4.2.0",
+@APICommand(name = "addLdapConfiguration", group = "Authentication", description = "Add a new Ldap Configuration", responseObject = LdapConfigurationResponse.class, since = "4.2.0",
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class LdapAddConfigurationCmd extends BaseCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(LdapAddConfigurationCmd.class.getName());

@@ -17,7 +17,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "updateNetworkServiceProvider",
+@APICommand(name = "updateNetworkServiceProvider", group = "Network",
         description = "Updates a network serviceProvider of a physical network",
         responseObject = ProviderResponse.class,
         since = "3.0.0",

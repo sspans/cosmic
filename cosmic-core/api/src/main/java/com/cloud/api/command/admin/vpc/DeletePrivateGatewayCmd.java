@@ -20,7 +20,7 @@ import com.cloud.utils.exception.InvalidParameterValueException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "deletePrivateGateway", description = "Deletes a Private gateway", responseObject = SuccessResponse.class, entityType = {VpcGateway.class},
+@APICommand(name = "deletePrivateGateway", group = "VPC", description = "Deletes a Private gateway", responseObject = SuccessResponse.class, entityType = {VpcGateway.class},
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class DeletePrivateGatewayCmd extends BaseAsyncCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(DeletePrivateGatewayCmd.class.getName());

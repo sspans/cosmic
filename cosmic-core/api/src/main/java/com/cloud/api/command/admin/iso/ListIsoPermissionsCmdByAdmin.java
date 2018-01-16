@@ -21,7 +21,7 @@ import com.cloud.api.ResponseObject.ResponseView;
 import com.cloud.api.command.user.iso.ListIsoPermissionsCmd;
 import com.cloud.api.response.TemplatePermissionsResponse;
 
-@APICommand(name = "listIsoPermissions", description = "List iso visibility and all accounts that have permissions to view this iso.", responseObject =
+@APICommand(name = "listIsoPermissions", group = "ISO", description = "List iso visibility and all accounts that have permissions to view this iso.", responseObject =
         TemplatePermissionsResponse.class, responseView = ResponseView.Full,
         requestHasSensitiveInfo = false,
         responseHasSensitiveInfo = false)

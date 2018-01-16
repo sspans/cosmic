@@ -17,7 +17,7 @@ import com.cloud.user.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "listTemplates", description = "List all public, private, and privileged templates.", responseObject = TemplateResponse.class, entityType =
+@APICommand(name = "listTemplates", group = "Template", description = "List all public, private, and privileged templates.", responseObject = TemplateResponse.class, entityType =
         {VirtualMachineTemplate.class}, responseView = ResponseView.Restricted,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class ListTemplatesCmd extends BaseListTaggedResourcesCmd {

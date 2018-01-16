@@ -12,7 +12,7 @@ import com.cloud.user.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "listProjectAccounts", description = "Lists project's accounts", responseObject = ProjectResponse.class, since = "3.0.0",
+@APICommand(name = "listProjectAccounts", group = "Account", description = "Lists project's accounts", responseObject = ProjectResponse.class, since = "3.0.0",
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class ListProjectAccountsCmd extends BaseListCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(ListProjectAccountsCmd.class.getName());

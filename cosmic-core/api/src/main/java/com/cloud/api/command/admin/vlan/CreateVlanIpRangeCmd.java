@@ -24,7 +24,7 @@ import com.cloud.utils.net.NetUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "createVlanIpRange", description = "Creates a VLAN IP range.", responseObject = VlanIpRangeResponse.class,
+@APICommand(name = "createVlanIpRange", group = "VLAN", description = "Creates a VLAN IP range.", responseObject = VlanIpRangeResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class CreateVlanIpRangeCmd extends BaseCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(CreateVlanIpRangeCmd.class.getName());

@@ -21,7 +21,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "listVlanIpRanges", description = "Lists all VLAN IP ranges.", responseObject = VlanIpRangeResponse.class,
+@APICommand(name = "listVlanIpRanges", group = "VLAN", description = "Lists all VLAN IP ranges.", responseObject = VlanIpRangeResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class ListVlanIpRangesCmd extends BaseListCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(ListVlanIpRangesCmd.class.getName());

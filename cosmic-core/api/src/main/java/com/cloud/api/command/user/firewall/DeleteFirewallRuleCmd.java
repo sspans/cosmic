@@ -21,7 +21,7 @@ import com.cloud.utils.exception.InvalidParameterValueException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "deleteFirewallRule", description = "Deletes a firewall rule", responseObject = SuccessResponse.class, entityType = {FirewallRule.class},
+@APICommand(name = "deleteFirewallRule", group = "Firewall", description = "Deletes a firewall rule", responseObject = SuccessResponse.class, entityType = {FirewallRule.class},
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class DeleteFirewallRuleCmd extends BaseAsyncCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(DeleteFirewallRuleCmd.class.getName());

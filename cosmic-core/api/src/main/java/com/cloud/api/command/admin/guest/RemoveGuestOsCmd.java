@@ -16,7 +16,7 @@ import com.cloud.user.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "removeGuestOs", description = "Removes a Guest OS from listing.", responseObject = SuccessResponse.class, since = "4.4.0",
+@APICommand(name = "removeGuestOs", group = "Guest OS", description = "Removes a Guest OS from listing.", responseObject = SuccessResponse.class, since = "4.4.0",
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class RemoveGuestOsCmd extends BaseAsyncCmd {
 

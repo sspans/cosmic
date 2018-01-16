@@ -20,7 +20,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "addNetworkServiceProvider",
+@APICommand(name = "addNetworkServiceProvider", group = "Network",
         description = "Adds a network serviceProvider to a physical network",
         responseObject = ProviderResponse.class,
         since = "3.0.0",

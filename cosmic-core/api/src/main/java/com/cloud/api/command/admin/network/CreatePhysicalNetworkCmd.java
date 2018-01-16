@@ -21,7 +21,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "createPhysicalNetwork", description = "Creates a physical network", responseObject = PhysicalNetworkResponse.class, since = "3.0.0",
+@APICommand(name = "createPhysicalNetwork", group = "Network", description = "Creates a physical network", responseObject = PhysicalNetworkResponse.class, since = "3.0.0",
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class CreatePhysicalNetworkCmd extends BaseAsyncCreateCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(CreatePhysicalNetworkCmd.class.getName());

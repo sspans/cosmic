@@ -26,7 +26,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "listNiciraNvpDeviceNetworks", responseObject = NetworkResponse.class, description = "lists network that are using a nicira nvp device",
+@APICommand(name = "listNiciraNvpDeviceNetworks", group = "Network", responseObject = NetworkResponse.class, description = "lists network that are using a nicira nvp device",
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class ListNiciraNvpDeviceNetworksCmd extends BaseListCmd {
 

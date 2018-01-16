@@ -17,7 +17,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "listOsTypes", description = "Lists all supported OS types for this cloud.", responseObject = GuestOSResponse.class,
+@APICommand(name = "listOsTypes", group = "Guest OS", description = "Lists all supported OS types for this cloud.", responseObject = GuestOSResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class ListGuestOsCmd extends BaseListCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(ListIsosCmd.class.getName());

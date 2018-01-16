@@ -16,7 +16,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "createUser", description = "Creates a user for an account that already exists", responseObject = UserResponse.class,
+@APICommand(name = "createUser", group = "User", description = "Creates a user for an account that already exists", responseObject = UserResponse.class,
         requestHasSensitiveInfo = true, responseHasSensitiveInfo = true)
 public class CreateUserCmd extends BaseCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(CreateUserCmd.class.getName());

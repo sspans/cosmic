@@ -18,7 +18,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "listZones", description = "Lists zones", responseObject = ZoneResponse.class, responseView = ResponseView.Restricted,
+@APICommand(name = "listZones", group = "Zone", description = "Lists zones", responseObject = ZoneResponse.class, responseView = ResponseView.Restricted,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class ListZonesCmd extends BaseListCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(ListZonesCmd.class.getName());

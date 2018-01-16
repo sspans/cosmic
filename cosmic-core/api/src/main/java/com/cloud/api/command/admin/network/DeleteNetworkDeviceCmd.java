@@ -21,7 +21,7 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "deleteNetworkDevice", description = "Deletes network device.", responseObject = SuccessResponse.class,
+@APICommand(name = "deleteNetworkDevice", group = "Network Device", description = "Deletes network device.", responseObject = SuccessResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class DeleteNetworkDeviceCmd extends BaseCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(DeleteNetworkDeviceCmd.class);

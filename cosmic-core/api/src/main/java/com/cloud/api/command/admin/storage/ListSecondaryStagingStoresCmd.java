@@ -11,7 +11,7 @@ import com.cloud.api.response.ZoneResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "listSecondaryStagingStores", description = "Lists secondary staging stores.", responseObject = ImageStoreResponse.class, since = "4.2.0",
+@APICommand(name = "listSecondaryStagingStores", group = "Image Store", description = "Lists secondary staging stores.", responseObject = ImageStoreResponse.class, since = "4.2.0",
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class ListSecondaryStagingStoresCmd extends BaseListCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(ListSecondaryStagingStoresCmd.class.getName());

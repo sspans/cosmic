@@ -17,7 +17,7 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "releaseDedicatedCluster", description = "Release the dedication for cluster", responseObject = SuccessResponse.class,
+@APICommand(name = "releaseDedicatedCluster", group = "Affinity", description = "Release the dedication for cluster", responseObject = SuccessResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class ReleaseDedicatedClusterCmd extends BaseAsyncCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(ReleaseDedicatedClusterCmd.class.getName());

@@ -13,7 +13,7 @@ import com.cloud.user.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "updateHypervisorCapabilities",
+@APICommand(name = "updateHypervisorCapabilities", group = "Hypervisor",
         description = "Updates a hypervisor capabilities.",
         responseObject = HypervisorCapabilitiesResponse.class,
         since = "3.0.0",

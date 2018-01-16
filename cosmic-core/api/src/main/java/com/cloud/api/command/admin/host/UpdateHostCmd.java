@@ -16,7 +16,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "updateHost", description = "Updates a host.", responseObject = HostResponse.class,
+@APICommand(name = "updateHost", group = "Host", description = "Updates a host.", responseObject = HostResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class UpdateHostCmd extends BaseCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(UpdateHostCmd.class.getName());

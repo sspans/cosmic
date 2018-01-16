@@ -23,7 +23,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "listDedicatedHosts", description = "Lists dedicated hosts.", responseObject = DedicateHostResponse.class,
+@APICommand(name = "listDedicatedHosts", group = "Affinity", description = "Lists dedicated hosts.", responseObject = DedicateHostResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class ListDedicatedHostsCmd extends BaseListCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(ListDedicatedHostsCmd.class.getName());

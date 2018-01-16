@@ -11,7 +11,7 @@ import com.cloud.template.VirtualMachineTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "updateIso", description = "Updates an ISO file.", responseObject = TemplateResponse.class, responseView = ResponseView.Full,
+@APICommand(name = "updateIso", group = "ISO", description = "Updates an ISO file.", responseObject = TemplateResponse.class, responseView = ResponseView.Full,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class UpdateIsoCmdByAdmin extends UpdateIsoCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(UpdateIsoCmdByAdmin.class.getName());

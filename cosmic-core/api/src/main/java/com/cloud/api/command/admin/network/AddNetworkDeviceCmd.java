@@ -22,7 +22,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "addNetworkDevice",
+@APICommand(name = "addNetworkDevice", group = "Network Device",
         description = "Adds a network device of one of the following types: ExternalDhcp, ExternalLoadBalancer",
         responseObject = NetworkDeviceResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)

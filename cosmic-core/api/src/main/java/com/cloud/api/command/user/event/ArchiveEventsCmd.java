@@ -19,7 +19,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "archiveEvents", description = "Archive one or more events.", responseObject = SuccessResponse.class, entityType = {Event.class},
+@APICommand(name = "archiveEvents", group = "Event", description = "Archive one or more events.", responseObject = SuccessResponse.class, entityType = {Event.class},
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class ArchiveEventsCmd extends BaseCmd {
 

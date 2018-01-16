@@ -14,7 +14,7 @@ import com.cloud.user.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "deleteZone", description = "Deletes a Zone.", responseObject = SuccessResponse.class,
+@APICommand(name = "deleteZone", group = "Zone", description = "Deletes a Zone.", responseObject = SuccessResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class DeleteZoneCmd extends BaseCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(DeleteZoneCmd.class.getName());

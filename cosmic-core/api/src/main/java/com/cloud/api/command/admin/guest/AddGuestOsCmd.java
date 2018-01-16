@@ -17,7 +17,7 @@ import com.cloud.user.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "addGuestOs", description = "Add a new guest OS type", responseObject = GuestOSResponse.class,
+@APICommand(name = "addGuestOs", group = "Guest OS", description = "Add a new guest OS type", responseObject = GuestOSResponse.class,
         since = "4.4.0", requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class AddGuestOsCmd extends BaseAsyncCreateCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(AddGuestOsCmd.class.getName());

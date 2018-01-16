@@ -14,7 +14,7 @@ import com.cloud.utils.exception.InvalidParameterValueException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "updateCluster", description = "Updates an existing cluster", responseObject = ClusterResponse.class,
+@APICommand(name = "updateCluster", group = "Cluster", description = "Updates an existing cluster", responseObject = ClusterResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class UpdateClusterCmd extends BaseCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(AddClusterCmd.class.getName());

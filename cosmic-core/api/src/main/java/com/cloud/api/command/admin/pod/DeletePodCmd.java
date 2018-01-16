@@ -13,7 +13,7 @@ import com.cloud.user.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "deletePod", description = "Deletes a Pod.", responseObject = SuccessResponse.class,
+@APICommand(name = "deletePod", group = "Pod", description = "Deletes a Pod.", responseObject = SuccessResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class DeletePodCmd extends BaseCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(DeletePodCmd.class.getName());

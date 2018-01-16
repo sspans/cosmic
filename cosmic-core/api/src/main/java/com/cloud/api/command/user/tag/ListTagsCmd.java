@@ -8,7 +8,7 @@ import com.cloud.api.response.ListResponse;
 import com.cloud.api.response.ResourceTagResponse;
 import com.cloud.server.ResourceTag;
 
-@APICommand(name = "listTags", description = "List resource tag(s)", responseObject = ResourceTagResponse.class, since = "4.0.0", entityType = {ResourceTag.class},
+@APICommand(name = "listTags", group = "Resource tags", description = "List resource tag(s)", responseObject = ResourceTagResponse.class, since = "4.0.0", entityType = {ResourceTag.class},
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class ListTagsCmd extends BaseListProjectAndAccountResourcesCmd {
     private static final String s_name = "listtagsresponse";

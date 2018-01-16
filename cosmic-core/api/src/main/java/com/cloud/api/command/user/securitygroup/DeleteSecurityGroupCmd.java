@@ -20,7 +20,7 @@ import com.cloud.utils.exception.InvalidParameterValueException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "deleteSecurityGroup", description = "Deletes security group", responseObject = SuccessResponse.class, entityType = {SecurityGroup.class},
+@APICommand(name = "deleteSecurityGroup", group = "Security Group", description = "Deletes security group", responseObject = SuccessResponse.class, entityType = {SecurityGroup.class},
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class DeleteSecurityGroupCmd extends BaseCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(DeleteSecurityGroupCmd.class.getName());

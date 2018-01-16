@@ -21,7 +21,7 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "deleteSslCert", description = "Delete a certificate to CloudStack", responseObject = SuccessResponse.class,
+@APICommand(name = "deleteSslCert", group = "Load Balancer", description = "Delete a certificate to CloudStack", responseObject = SuccessResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class DeleteSslCertCmd extends BaseCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(DeleteSslCertCmd.class.getName());

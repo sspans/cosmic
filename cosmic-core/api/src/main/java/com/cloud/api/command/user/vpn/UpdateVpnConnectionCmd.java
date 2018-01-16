@@ -13,7 +13,7 @@ import com.cloud.user.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "updateVpnConnection", description = "Updates site to site vpn connection", responseObject = Site2SiteVpnConnectionResponse.class, since = "4.4",
+@APICommand(name = "updateVpnConnection", group = "VPN", description = "Updates site to site vpn connection", responseObject = Site2SiteVpnConnectionResponse.class, since = "4.4",
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class UpdateVpnConnectionCmd extends BaseAsyncCustomIdCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(UpdateVpnConnectionCmd.class.getName());

@@ -13,7 +13,7 @@ import com.cloud.user.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "deleteImageStore", description = "Deletes an image store or Secondary Storage.", responseObject = SuccessResponse.class, since = "4.2.0",
+@APICommand(name = "deleteImageStore", group = "Image Store", description = "Deletes an image store or Secondary Storage.", responseObject = SuccessResponse.class, since = "4.2.0",
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class DeleteImageStoreCmd extends BaseCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(DeleteImageStoreCmd.class.getName());

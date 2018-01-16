@@ -22,7 +22,7 @@ import com.cloud.utils.exception.InvalidParameterValueException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "restartNetwork",
+@APICommand(name = "restartNetwork", group = "Network",
         description = "Restarts the network; includes 1) restarting network elements - virtual routers, DHCP servers 2) reapplying all public IPs 3) reapplying " +
                 "loadBalancing/portForwarding rules",
         responseObject = IPAddressResponse.class, entityType = {Network.class},

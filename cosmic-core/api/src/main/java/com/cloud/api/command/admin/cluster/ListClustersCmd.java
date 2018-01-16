@@ -18,7 +18,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "listClusters", description = "Lists clusters.", responseObject = ClusterResponse.class,
+@APICommand(name = "listClusters", group = "Cluster", description = "Lists clusters.", responseObject = ClusterResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class ListClustersCmd extends BaseListCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(ListServiceOfferingsCmd.class.getName());

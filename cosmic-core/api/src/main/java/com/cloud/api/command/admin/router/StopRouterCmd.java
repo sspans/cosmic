@@ -21,7 +21,7 @@ import com.cloud.vm.VirtualMachine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "stopRouter", description = "Stops a router.", responseObject = DomainRouterResponse.class, entityType = {VirtualMachine.class},
+@APICommand(name = "stopRouter", group = "Router", description = "Stops a router.", responseObject = DomainRouterResponse.class, entityType = {VirtualMachine.class},
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class StopRouterCmd extends BaseAsyncCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(StopRouterCmd.class.getName());

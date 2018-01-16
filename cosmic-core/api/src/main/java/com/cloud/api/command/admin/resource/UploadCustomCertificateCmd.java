@@ -13,7 +13,7 @@ import com.cloud.user.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "uploadCustomCertificate",
+@APICommand(name = "uploadCustomCertificate", group = "Certificate",
         responseObject = CustomCertificateResponse.class,
         description = "Uploads a custom certificate for the console proxy VMs to use for SSL. Can be used to upload a single certificate signed by a known CA. Can also be used, " +
                 "through multiple calls, to upload a chain of certificates from CA to the custom certificate itself.",

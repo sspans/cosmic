@@ -15,7 +15,7 @@ import com.cloud.user.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "updateGuestOs", description = "Updates the information about Guest OS", responseObject = GuestOSResponse.class,
+@APICommand(name = "updateGuestOs", group = "Guest OS", description = "Updates the information about Guest OS", responseObject = GuestOSResponse.class,
         since = "4.4.0", requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class UpdateGuestOsCmd extends BaseAsyncCmd {
 

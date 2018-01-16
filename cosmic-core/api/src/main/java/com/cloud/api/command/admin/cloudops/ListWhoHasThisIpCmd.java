@@ -7,7 +7,7 @@ import com.cloud.api.Parameter;
 import com.cloud.api.response.ListResponse;
 import com.cloud.api.response.WhoHasThisAddressResponse;
 
-@APICommand(name = "listWhoHasThisIp", description = "Lists all for this IP address", responseObject = WhoHasThisAddressResponse.class)
+@APICommand(name = "listWhoHasThisIp", group = "CloudOps", description = "Lists all for this IP address", responseObject = WhoHasThisAddressResponse.class)
 public class ListWhoHasThisIpCmd extends BaseListDomainResourcesCmd {
 
     private static final String COMMAND_NAME = "listwhohasthisipresponse";

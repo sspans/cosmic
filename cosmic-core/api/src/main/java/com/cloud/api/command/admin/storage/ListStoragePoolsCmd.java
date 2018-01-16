@@ -14,7 +14,7 @@ import com.cloud.api.response.ZoneResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "listStoragePools", description = "Lists storage pools.", responseObject = StoragePoolResponse.class,
+@APICommand(name = "listStoragePools", group = "Storage Pool", description = "Lists storage pools.", responseObject = StoragePoolResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class ListStoragePoolsCmd extends BaseListCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(ListStoragePoolsCmd.class.getName());

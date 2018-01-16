@@ -19,7 +19,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "updateNetworkACLItem", description = "Updates ACL item with specified ID", responseObject = NetworkACLItemResponse.class,
+@APICommand(name = "updateNetworkACLItem", group = "Network ACL", description = "Updates ACL item with specified ID", responseObject = NetworkACLItemResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class UpdateNetworkACLItemCmd extends BaseAsyncCustomIdCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(UpdateNetworkACLItemCmd.class.getName());

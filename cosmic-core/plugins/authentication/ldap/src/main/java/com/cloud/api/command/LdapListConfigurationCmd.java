@@ -17,7 +17,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "listLdapConfigurations", responseObject = LdapConfigurationResponse.class, description = "Lists all LDAP configurations", since = "4.2.0",
+@APICommand(name = "listLdapConfigurations", group = "Authentication", responseObject = LdapConfigurationResponse.class, description = "Lists all LDAP configurations", since = "4.2.0",
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class LdapListConfigurationCmd extends BaseListCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(LdapListConfigurationCmd.class.getName());

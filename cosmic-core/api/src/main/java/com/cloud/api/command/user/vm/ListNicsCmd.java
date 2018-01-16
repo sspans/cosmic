@@ -26,7 +26,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "listNics", description = "list the vm nics  IP to NIC", responseObject = NicResponse.class,
+@APICommand(name = "listNics", group = "Nic", description = "list the vm nics  IP to NIC", responseObject = NicResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class ListNicsCmd extends BaseListCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(ListNicsCmd.class.getName());

@@ -18,7 +18,7 @@ import com.cloud.user.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "deleteTemplate",
+@APICommand(name = "deleteTemplate", group = "Template",
         responseObject = SuccessResponse.class,
         description = "Deletes a template from the system. All virtual machines using the deleted template will not be affected.",
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)

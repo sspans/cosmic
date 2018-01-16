@@ -11,7 +11,7 @@ import com.cloud.network.vpc.Vpc;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "updateVPC", description = "Updates a VPC", responseObject = VpcResponse.class, responseView = ResponseView.Full, entityType = {Vpc.class},
+@APICommand(name = "updateVPC", group = "VPC", description = "Updates a VPC", responseObject = VpcResponse.class, responseView = ResponseView.Full, entityType = {Vpc.class},
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class UpdateVPCCmdByAdmin extends UpdateVPCCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(UpdateVPCCmdByAdmin.class.getName());

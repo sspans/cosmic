@@ -17,7 +17,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "deleteAlerts", description = "Delete one or more alerts.", responseObject = SuccessResponse.class,
+@APICommand(name = "deleteAlerts", group = "Alert", description = "Delete one or more alerts.", responseObject = SuccessResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class DeleteAlertsCmd extends BaseCmd {
 

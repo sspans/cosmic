@@ -17,7 +17,7 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "listApis",
+@APICommand(name = "listApis", group = "System",
         responseObject = ApiDiscoveryResponse.class,
         description = "lists all available apis on the server, provided by the Api Discovery plugin",
         since = "4.1.0",

@@ -9,7 +9,7 @@ import com.cloud.api.response.ListResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "listHostTags", description = "Lists host tags", responseObject = HostTagResponse.class, requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
+@APICommand(name = "listHostTags", group = "Host", description = "Lists host tags", responseObject = HostTagResponse.class, requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class ListHostTagsCmd extends BaseListCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(ListHostTagsCmd.class.getName());
 

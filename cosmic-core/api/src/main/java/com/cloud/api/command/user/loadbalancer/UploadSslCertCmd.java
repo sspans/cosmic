@@ -22,7 +22,7 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "uploadSslCert", description = "Upload a certificate to CloudStack", responseObject = SslCertResponse.class,
+@APICommand(name = "uploadSslCert", group = "Load Balancer", description = "Upload a certificate to CloudStack", responseObject = SslCertResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class UploadSslCertCmd extends BaseCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(UploadSslCertCmd.class.getName());

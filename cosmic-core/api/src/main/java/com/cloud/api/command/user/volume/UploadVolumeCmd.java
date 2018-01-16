@@ -24,7 +24,7 @@ import com.cloud.storage.Volume;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "uploadVolume", description = "Uploads a data disk.", responseObject = VolumeResponse.class, responseView = ResponseView.Restricted, entityType = {Volume.class},
+@APICommand(name = "uploadVolume", group = "Volume", description = "Uploads a data disk.", responseObject = VolumeResponse.class, responseView = ResponseView.Restricted, entityType = {Volume.class},
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class UploadVolumeCmd extends BaseAsyncCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(UploadVolumeCmd.class.getName());

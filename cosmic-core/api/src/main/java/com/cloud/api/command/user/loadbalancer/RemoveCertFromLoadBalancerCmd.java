@@ -20,7 +20,7 @@ import com.cloud.user.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "removeCertFromLoadBalancer", description = "Removes a certificate from a load balancer rule", responseObject = SuccessResponse.class,
+@APICommand(name = "removeCertFromLoadBalancer", group = "Load Balancer", description = "Removes a certificate from a load balancer rule", responseObject = SuccessResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class RemoveCertFromLoadBalancerCmd extends BaseAsyncCmd {
 

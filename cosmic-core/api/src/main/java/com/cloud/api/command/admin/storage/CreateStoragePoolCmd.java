@@ -21,7 +21,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "createStoragePool", description = "Creates a storage pool.", responseObject = StoragePoolResponse.class,
+@APICommand(name = "createStoragePool", group = "Storage Pool", description = "Creates a storage pool.", responseObject = StoragePoolResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class CreateStoragePoolCmd extends BaseCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(CreateStoragePoolCmd.class.getName());

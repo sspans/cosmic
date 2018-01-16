@@ -8,7 +8,7 @@ import com.cloud.api.response.HAWorkerResponse;
 import com.cloud.api.response.HostResponse;
 import com.cloud.api.response.ListResponse;
 
-@APICommand(name = "listHAWorkers", description = "Lists all HA workers", responseObject = HAWorkerResponse.class)
+@APICommand(name = "listHAWorkers", group = "CloudOps", description = "Lists all HA workers", responseObject = HAWorkerResponse.class)
 public class ListHAWorkersCmd extends BaseListDomainResourcesCmd {
 
     private static final String COMMAND_NAME = "listhaworkersresponse";

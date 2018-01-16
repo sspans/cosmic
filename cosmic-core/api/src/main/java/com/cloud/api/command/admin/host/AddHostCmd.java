@@ -21,7 +21,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "addHost", description = "Adds a new host.", responseObject = HostResponse.class,
+@APICommand(name = "addHost", group = "Host", description = "Adds a new host.", responseObject = HostResponse.class,
         requestHasSensitiveInfo = true, responseHasSensitiveInfo = false)
 public class AddHostCmd extends BaseCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(AddHostCmd.class.getName());

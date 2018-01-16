@@ -13,7 +13,7 @@ import com.cloud.user.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "deleteVlanIpRange", description = "Creates a VLAN IP range.", responseObject = SuccessResponse.class,
+@APICommand(name = "deleteVlanIpRange", group = "VLAN", description = "Creates a VLAN IP range.", responseObject = SuccessResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class DeleteVlanIpRangeCmd extends BaseCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(DeleteVlanIpRangeCmd.class.getName());

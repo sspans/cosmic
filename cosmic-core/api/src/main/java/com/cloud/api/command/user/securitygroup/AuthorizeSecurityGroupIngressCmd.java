@@ -29,7 +29,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "authorizeSecurityGroupIngress", responseObject = SecurityGroupRuleResponse.class, description = "Authorizes a particular ingress rule for this security " +
+@APICommand(name = "authorizeSecurityGroupIngress", group = "Security Group", responseObject = SecurityGroupRuleResponse.class, description = "Authorizes a particular ingress rule for this security " +
         "group", entityType = {SecurityGroup.class},
         requestHasSensitiveInfo = false,
         responseHasSensitiveInfo = false)

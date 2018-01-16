@@ -17,7 +17,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "listSupportedNetworkServices",
+@APICommand(name = "listSupportedNetworkServices", group = "Network",
         description = "Lists all network services provided by CloudStack or for the given Provider.",
         responseObject = ServiceResponse.class,
         since = "3.0.0",

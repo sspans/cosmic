@@ -18,7 +18,7 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "enableUser", description = "Enables a user account", responseObject = UserResponse.class,
+@APICommand(name = "enableUser", group = "User", description = "Enables a user account", responseObject = UserResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = true)
 public class EnableUserCmd extends BaseCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(EnableUserCmd.class.getName());

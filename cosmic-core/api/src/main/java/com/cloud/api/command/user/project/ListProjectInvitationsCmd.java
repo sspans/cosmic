@@ -11,7 +11,7 @@ import com.cloud.api.response.ProjectResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "listProjectInvitations",
+@APICommand(name = "listProjectInvitations", group = "Project",
         description = "Lists project invitations and provides detailed information for listed invitations",
         responseObject = ProjectInvitationResponse.class,
         since = "3.0.0",

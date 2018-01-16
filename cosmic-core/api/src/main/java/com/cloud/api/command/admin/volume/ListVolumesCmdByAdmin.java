@@ -14,7 +14,7 @@ import com.cloud.storage.Volume;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "listVolumes", description = "Lists all volumes.", responseObject = VolumeResponse.class, responseView = ResponseView.Full, entityType = {Volume.class},
+@APICommand(name = "listVolumes", group = "Volume", description = "Lists all volumes.", responseObject = VolumeResponse.class, responseView = ResponseView.Full, entityType = {Volume.class},
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class ListVolumesCmdByAdmin extends ListVolumesCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(ListVolumesCmdByAdmin.class.getName());

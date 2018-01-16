@@ -16,7 +16,7 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "updateRegion", description = "Updates a region", responseObject = RegionResponse.class,
+@APICommand(name = "updateRegion", group = "Region", description = "Updates a region", responseObject = RegionResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class UpdateRegionCmd extends BaseCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(UpdateRegionCmd.class.getName());

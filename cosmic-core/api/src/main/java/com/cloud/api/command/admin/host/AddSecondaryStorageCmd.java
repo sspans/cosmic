@@ -15,7 +15,7 @@ import com.cloud.user.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "addSecondaryStorage", description = "Adds secondary storage.", responseObject = ImageStoreResponse.class,
+@APICommand(name = "addSecondaryStorage", group = "Host", description = "Adds secondary storage.", responseObject = ImageStoreResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class AddSecondaryStorageCmd extends BaseCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(AddSecondaryStorageCmd.class.getName());

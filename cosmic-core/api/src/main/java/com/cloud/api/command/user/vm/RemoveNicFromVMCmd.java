@@ -24,7 +24,7 @@ import java.util.EnumSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "removeNicFromVirtualMachine", description = "Removes VM from specified network by deleting a NIC", responseObject = UserVmResponse.class, responseView =
+@APICommand(name = "removeNicFromVirtualMachine", group = "Virtual Machine", description = "Removes VM from specified network by deleting a NIC", responseObject = UserVmResponse.class, responseView =
         ResponseView.Restricted, entityType = {VirtualMachine.class},
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = true)
 public class RemoveNicFromVMCmd extends BaseAsyncCmd {

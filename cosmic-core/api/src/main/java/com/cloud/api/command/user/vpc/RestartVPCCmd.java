@@ -20,7 +20,7 @@ import com.cloud.user.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "restartVPC", description = "Restarts a VPC", responseObject = VpcResponse.class, entityType = {Vpc.class},
+@APICommand(name = "restartVPC", group = "VPC", description = "Restarts a VPC", responseObject = VpcResponse.class, entityType = {Vpc.class},
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class RestartVPCCmd extends BaseAsyncCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(RestartVPCCmd.class.getName());

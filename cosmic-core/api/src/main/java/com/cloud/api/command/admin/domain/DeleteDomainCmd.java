@@ -19,7 +19,7 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "deleteDomain", description = "Deletes a specified domain", responseObject = SuccessResponse.class,
+@APICommand(name = "deleteDomain", group = "Domain", description = "Deletes a specified domain", responseObject = SuccessResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class DeleteDomainCmd extends BaseAsyncCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(DeleteDomainCmd.class.getName());

@@ -18,7 +18,7 @@ import com.cloud.utils.exception.InvalidParameterValueException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "deleteLBHealthCheckPolicy", description = "Deletes a load balancer health check policy.", responseObject = SuccessResponse.class, since = "4.2.0",
+@APICommand(name = "deleteLBHealthCheckPolicy", group = "Load Balancer", description = "Deletes a load balancer health check policy.", responseObject = SuccessResponse.class, since = "4.2.0",
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class DeleteLBHealthCheckPolicyCmd extends BaseAsyncCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(DeleteLBHealthCheckPolicyCmd.class.getName());

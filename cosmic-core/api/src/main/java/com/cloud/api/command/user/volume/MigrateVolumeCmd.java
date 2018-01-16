@@ -13,7 +13,7 @@ import com.cloud.event.EventTypes;
 import com.cloud.storage.Volume;
 import com.cloud.user.Account;
 
-@APICommand(name = "migrateVolume", description = "Migrate volume", responseObject = VolumeResponse.class, since = "3.0.0", responseView = ResponseView.Restricted, entityType =
+@APICommand(name = "migrateVolume", group = "Volume", description = "Migrate volume", responseObject = VolumeResponse.class, since = "3.0.0", responseView = ResponseView.Restricted, entityType =
         {Volume.class},
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class MigrateVolumeCmd extends BaseAsyncCmd {

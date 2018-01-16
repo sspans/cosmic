@@ -25,7 +25,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "listNetworkDevice", description = "List network devices", responseObject = NetworkDeviceResponse.class,
+@APICommand(name = "listNetworkDevice", group = "Network Device", description = "List network devices", responseObject = NetworkDeviceResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class ListNetworkDeviceCmd extends BaseListCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(ListNetworkDeviceCmd.class);

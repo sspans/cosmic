@@ -13,7 +13,7 @@ import com.cloud.uservm.UserVm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "attachIso", description = "Attaches an ISO to a virtual machine.", responseObject = UserVmResponse.class, responseView = ResponseView.Full,
+@APICommand(name = "attachIso", group = "ISO", description = "Attaches an ISO to a virtual machine.", responseObject = UserVmResponse.class, responseView = ResponseView.Full,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = true)
 public class AttachIsoCmdByAdmin extends AttachIsoCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(AttachIsoCmdByAdmin.class.getName());

@@ -14,7 +14,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "listResourceLimits", description = "Lists resource limits.", responseObject = ResourceLimitResponse.class,
+@APICommand(name = "listResourceLimits", group = "Limit", description = "Lists resource limits.", responseObject = ResourceLimitResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class ListResourceLimitsCmd extends BaseListProjectAndAccountResourcesCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(ListResourceLimitsCmd.class.getName());

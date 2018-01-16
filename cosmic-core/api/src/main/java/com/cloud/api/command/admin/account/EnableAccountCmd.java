@@ -19,7 +19,7 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "enableAccount", description = "Enables an account", responseObject = AccountResponse.class, entityType = {Account.class},
+@APICommand(name = "enableAccount", group = "Account", description = "Enables an account", responseObject = AccountResponse.class, entityType = {Account.class},
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = true)
 public class EnableAccountCmd extends BaseCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(EnableAccountCmd.class.getName());

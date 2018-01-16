@@ -18,7 +18,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "listPortForwardingRules", description = "Lists all port forwarding rules for an IP address.", responseObject = FirewallRuleResponse.class, entityType =
+@APICommand(name = "listPortForwardingRules", group = "Firewall", description = "Lists all port forwarding rules for an IP address.", responseObject = FirewallRuleResponse.class, entityType =
         {PortForwardingRule.class},
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class ListPortForwardingRulesCmd extends BaseListTaggedResourcesCmd {

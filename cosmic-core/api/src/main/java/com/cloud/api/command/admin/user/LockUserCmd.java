@@ -14,7 +14,7 @@ import com.cloud.user.UserAccount;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "lockUser", description = "Locks a user account", responseObject = UserResponse.class,
+@APICommand(name = "lockUser", group = "User", description = "Locks a user account", responseObject = UserResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = true)
 public class LockUserCmd extends BaseCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(LockUserCmd.class.getName());

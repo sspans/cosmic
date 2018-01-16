@@ -12,7 +12,7 @@ import com.cloud.domain.Domain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "listDomains", description = "Lists domains and provides detailed information for listed domains", responseObject = DomainResponse.class, responseView =
+@APICommand(name = "listDomains", group = "Domain", description = "Lists domains and provides detailed information for listed domains", responseObject = DomainResponse.class, responseView =
         ResponseView.Restricted, entityType = {Domain.class},
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class ListDomainsCmd extends BaseListCmd {

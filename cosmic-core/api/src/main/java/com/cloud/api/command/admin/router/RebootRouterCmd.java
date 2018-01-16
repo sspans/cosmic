@@ -20,7 +20,7 @@ import com.cloud.vm.VirtualMachine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "rebootRouter", description = "Starts a router.", responseObject = DomainRouterResponse.class, entityType = {VirtualMachine.class},
+@APICommand(name = "rebootRouter", group = "Router", description = "Starts a router.", responseObject = DomainRouterResponse.class, entityType = {VirtualMachine.class},
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class RebootRouterCmd extends BaseAsyncCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(RebootRouterCmd.class.getName());

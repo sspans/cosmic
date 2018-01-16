@@ -18,7 +18,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "listTrafficTypes", description = "Lists traffic types of a given physical network.", responseObject = ProviderResponse.class, since = "3.0.0",
+@APICommand(name = "listTrafficTypes", group = "Usage", description = "Lists traffic types of a given physical network.", responseObject = ProviderResponse.class, since = "3.0.0",
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class ListTrafficTypesCmd extends BaseListCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(ListTrafficTypesCmd.class.getName());

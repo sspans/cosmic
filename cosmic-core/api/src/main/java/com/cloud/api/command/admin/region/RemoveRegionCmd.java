@@ -15,7 +15,7 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "removeRegion", description = "Removes specified region", responseObject = SuccessResponse.class,
+@APICommand(name = "removeRegion", group = "Region", description = "Removes specified region", responseObject = SuccessResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class RemoveRegionCmd extends BaseCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(RemoveRegionCmd.class.getName());

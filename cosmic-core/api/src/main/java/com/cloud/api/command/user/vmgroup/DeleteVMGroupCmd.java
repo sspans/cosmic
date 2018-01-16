@@ -16,7 +16,7 @@ import com.cloud.vm.InstanceGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "deleteInstanceGroup", description = "Deletes a vm group", responseObject = SuccessResponse.class, entityType = {InstanceGroup.class},
+@APICommand(name = "deleteInstanceGroup", group = "VM Group", description = "Deletes a vm group", responseObject = SuccessResponse.class, entityType = {InstanceGroup.class},
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class DeleteVMGroupCmd extends BaseCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(DeleteVMGroupCmd.class.getName());

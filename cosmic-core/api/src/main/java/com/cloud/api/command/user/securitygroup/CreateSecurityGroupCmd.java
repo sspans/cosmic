@@ -16,7 +16,7 @@ import com.cloud.user.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "createSecurityGroup", responseObject = SecurityGroupResponse.class, description = "Creates a security group", entityType = {SecurityGroup.class},
+@APICommand(name = "createSecurityGroup", group = "Security Group", responseObject = SecurityGroupResponse.class, description = "Creates a security group", entityType = {SecurityGroup.class},
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class CreateSecurityGroupCmd extends BaseCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(CreateSecurityGroupCmd.class.getName());

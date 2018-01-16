@@ -16,7 +16,7 @@ import com.cloud.user.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "addGuestOsMapping", description = "Adds a guest OS name to hypervisor OS name mapping", responseObject = GuestOsMappingResponse.class,
+@APICommand(name = "addGuestOsMapping", group = "Guest OS", description = "Adds a guest OS name to hypervisor OS name mapping", responseObject = GuestOsMappingResponse.class,
         since = "4.4.0", requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class AddGuestOsMappingCmd extends BaseAsyncCreateCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(AddGuestOsMappingCmd.class.getName());

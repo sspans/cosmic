@@ -13,7 +13,7 @@ import com.cloud.user.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "updateDiskOffering", description = "Updates a disk offering.", responseObject = DiskOfferingResponse.class,
+@APICommand(name = "updateDiskOffering", group = "Disk Offering", description = "Updates a disk offering.", responseObject = DiskOfferingResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class UpdateDiskOfferingCmd extends BaseCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(UpdateDiskOfferingCmd.class.getName());

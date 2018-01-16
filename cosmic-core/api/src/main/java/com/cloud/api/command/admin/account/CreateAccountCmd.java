@@ -20,7 +20,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "createAccount", description = "Creates an account", responseObject = AccountResponse.class, entityType = {Account.class},
+@APICommand(name = "createAccount", group = "Account", description = "Creates an account", responseObject = AccountResponse.class, entityType = {Account.class},
         requestHasSensitiveInfo = true, responseHasSensitiveInfo = true)
 public class CreateAccountCmd extends BaseCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(CreateAccountCmd.class.getName());

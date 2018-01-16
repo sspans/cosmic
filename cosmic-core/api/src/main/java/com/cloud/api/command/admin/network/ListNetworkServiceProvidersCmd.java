@@ -17,7 +17,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "listNetworkServiceProviders",
+@APICommand(name = "listNetworkServiceProviders", group = "Network",
         description = "Lists network serviceproviders for a given physical network.",
         responseObject = ProviderResponse.class,
         since = "3.0.0",

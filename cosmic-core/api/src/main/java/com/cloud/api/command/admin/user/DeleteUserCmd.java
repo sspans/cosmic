@@ -18,7 +18,7 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "deleteUser", description = "Deletes a user for an account", responseObject = SuccessResponse.class,
+@APICommand(name = "deleteUser", group = "User", description = "Deletes a user for an account", responseObject = SuccessResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class DeleteUserCmd extends BaseCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(DeleteUserCmd.class.getName());

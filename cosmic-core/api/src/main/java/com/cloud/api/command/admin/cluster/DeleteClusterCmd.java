@@ -13,7 +13,7 @@ import com.cloud.user.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "deleteCluster", description = "Deletes a cluster.", responseObject = SuccessResponse.class,
+@APICommand(name = "deleteCluster", group = "Cluster", description = "Deletes a cluster.", responseObject = SuccessResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class DeleteClusterCmd extends BaseCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(DeleteClusterCmd.class.getName());

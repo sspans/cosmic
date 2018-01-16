@@ -18,7 +18,7 @@ import com.cloud.vm.VirtualMachine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "rebootSystemVm", description = "Reboots a system VM.", responseObject = SystemVmResponse.class, entityType = {VirtualMachine.class},
+@APICommand(name = "rebootSystemVm", group = "System VM", description = "Reboots a system VM.", responseObject = SystemVmResponse.class, entityType = {VirtualMachine.class},
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class RebootSystemVmCmd extends BaseAsyncCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(RebootSystemVmCmd.class.getName());

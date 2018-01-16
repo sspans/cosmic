@@ -19,7 +19,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "listSslCerts", description = "Lists SSL certificates", responseObject = SslCertResponse.class,
+@APICommand(name = "listSslCerts", group = "Load Balancer", description = "Lists SSL certificates", responseObject = SslCertResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class ListSslCertsCmd extends BaseCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(DeleteSslCertCmd.class.getName());

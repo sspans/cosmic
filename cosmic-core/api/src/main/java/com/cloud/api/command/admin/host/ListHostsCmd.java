@@ -26,7 +26,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "listHosts", description = "Lists hosts.", responseObject = HostResponse.class,
+@APICommand(name = "listHosts", group = "Host", description = "Lists hosts.", responseObject = HostResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class ListHostsCmd extends BaseListCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(ListHostsCmd.class.getName());

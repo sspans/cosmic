@@ -5,7 +5,7 @@ import com.cloud.api.ResponseObject.ResponseView;
 import com.cloud.api.command.user.zone.ListZonesCmd;
 import com.cloud.api.response.ZoneResponse;
 
-@APICommand(name = "listZones", description = "Lists zones", responseObject = ZoneResponse.class, responseView = ResponseView.Full,
+@APICommand(name = "listZones", group = "Zone", description = "Lists zones", responseObject = ZoneResponse.class, responseView = ResponseView.Full,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class ListZonesCmdByAdmin extends ListZonesCmd {
 }

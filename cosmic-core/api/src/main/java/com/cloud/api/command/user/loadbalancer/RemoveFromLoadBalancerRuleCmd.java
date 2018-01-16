@@ -27,7 +27,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "removeFromLoadBalancerRule",
+@APICommand(name = "removeFromLoadBalancerRule", group = "Load Balancer",
         description = "Removes a virtual machine or a list of virtual machines from a load balancer rule.",
         responseObject = SuccessResponse.class,
         requestHasSensitiveInfo = false,

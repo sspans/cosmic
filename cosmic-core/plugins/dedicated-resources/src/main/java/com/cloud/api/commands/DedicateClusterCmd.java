@@ -22,7 +22,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "dedicateCluster", description = "Dedicate an existing cluster", responseObject = DedicateClusterResponse.class,
+@APICommand(name = "dedicateCluster", group = "Affinity", description = "Dedicate an existing cluster", responseObject = DedicateClusterResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class DedicateClusterCmd extends BaseAsyncCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(DedicateClusterCmd.class.getName());

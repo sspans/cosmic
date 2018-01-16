@@ -9,7 +9,7 @@ import com.cloud.user.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "updateTemplatePermissions", responseObject = SuccessResponse.class, description = "Updates a template visibility permissions. "
+@APICommand(name = "updateTemplatePermissions", group = "Template", responseObject = SuccessResponse.class, description = "Updates a template visibility permissions. "
         + "A public template is visible to all accounts within the same domain. " + "A private template is visible only to the owner of the template. "
         + "A priviledged template is a private template with account permissions added. " + "Only accounts specified under the template permissions are visible to them.",
         entityType = {VirtualMachineTemplate.class},

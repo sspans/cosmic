@@ -11,7 +11,7 @@ import com.cloud.api.response.ZoneResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "listImageStores", description = "Lists image stores.", responseObject = ImageStoreResponse.class, since = "4.2.0",
+@APICommand(name = "listImageStores", group = "Image Store", description = "Lists image stores.", responseObject = ImageStoreResponse.class, since = "4.2.0",
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class ListImageStoresCmd extends BaseListCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(ListImageStoresCmd.class.getName());

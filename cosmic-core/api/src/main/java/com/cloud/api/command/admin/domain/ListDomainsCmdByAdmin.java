@@ -5,7 +5,7 @@ import com.cloud.api.ResponseObject.ResponseView;
 import com.cloud.api.response.DomainResponse;
 import com.cloud.domain.Domain;
 
-@APICommand(name = "listDomains", description = "Lists domains and provides detailed information for listed domains", responseObject = DomainResponse.class, responseView =
+@APICommand(name = "listDomains", group = "Domain", description = "Lists domains and provides detailed information for listed domains", responseObject = DomainResponse.class, responseView =
         ResponseView.Full, entityType = {Domain.class},
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class ListDomainsCmdByAdmin extends ListDomainsCmd {

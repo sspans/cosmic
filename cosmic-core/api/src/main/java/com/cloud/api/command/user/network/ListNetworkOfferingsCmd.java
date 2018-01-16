@@ -17,7 +17,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "listNetworkOfferings", description = "Lists all available network offerings.", responseObject = NetworkOfferingResponse.class,
+@APICommand(name = "listNetworkOfferings", group = "Network Offering", description = "Lists all available network offerings.", responseObject = NetworkOfferingResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class ListNetworkOfferingsCmd extends BaseListCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(ListNetworkOfferingsCmd.class.getName());

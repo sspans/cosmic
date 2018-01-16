@@ -19,7 +19,7 @@ import com.cloud.vm.VirtualMachine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "destroyRouter", description = "Destroys a router.", responseObject = DomainRouterResponse.class, entityType = {VirtualMachine.class},
+@APICommand(name = "destroyRouter", group = "Router", description = "Destroys a router.", responseObject = DomainRouterResponse.class, entityType = {VirtualMachine.class},
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class DestroyRouterCmd extends BaseAsyncCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(DestroyRouterCmd.class.getName());

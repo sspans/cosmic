@@ -17,7 +17,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "archiveAlerts", description = "Archive one or more alerts.", responseObject = SuccessResponse.class,
+@APICommand(name = "archiveAlerts", group = "Alert", description = "Archive one or more alerts.", responseObject = SuccessResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class ArchiveAlertsCmd extends BaseCmd {
 

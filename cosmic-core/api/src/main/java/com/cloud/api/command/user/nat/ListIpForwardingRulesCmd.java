@@ -19,7 +19,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "listIpForwardingRules", description = "List the IP forwarding rules", responseObject = FirewallRuleResponse.class,
+@APICommand(name = "listIpForwardingRules", group = "NAT", description = "List the IP forwarding rules", responseObject = FirewallRuleResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class ListIpForwardingRulesCmd extends BaseListProjectAndAccountResourcesCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(ListIpForwardingRulesCmd.class.getName());

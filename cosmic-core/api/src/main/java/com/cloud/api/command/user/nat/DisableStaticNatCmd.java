@@ -19,7 +19,7 @@ import com.cloud.utils.exception.InvalidParameterValueException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "disableStaticNat", description = "Disables static rule for given IP address", responseObject = SuccessResponse.class,
+@APICommand(name = "disableStaticNat", group = "NAT", description = "Disables static rule for given IP address", responseObject = SuccessResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class DisableStaticNatCmd extends BaseAsyncCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(DeletePortForwardingRuleCmd.class.getName());

@@ -17,7 +17,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "findStoragePoolsForMigration", description = "Lists storage pools available for migration of a volume.", responseObject = StoragePoolResponse.class,
+@APICommand(name = "findStoragePoolsForMigration", group = "Storage Pool", description = "Lists storage pools available for migration of a volume.", responseObject = StoragePoolResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class FindStoragePoolsForMigrationCmd extends BaseListCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(FindStoragePoolsForMigrationCmd.class.getName());

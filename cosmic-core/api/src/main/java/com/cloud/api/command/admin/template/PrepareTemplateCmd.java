@@ -19,7 +19,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "prepareTemplate", responseObject = TemplateResponse.class, description = "load template into primary storage", entityType = {VirtualMachineTemplate.class},
+@APICommand(name = "prepareTemplate", group = "Template", responseObject = TemplateResponse.class, description = "load template into primary storage", entityType = {VirtualMachineTemplate.class},
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class PrepareTemplateCmd extends BaseCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(PrepareTemplateCmd.class.getName());

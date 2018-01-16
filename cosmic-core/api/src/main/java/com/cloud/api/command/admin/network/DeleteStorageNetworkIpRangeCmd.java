@@ -18,7 +18,7 @@ import com.cloud.user.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "deleteStorageNetworkIpRange", description = "Deletes a storage network IP Range.", responseObject = SuccessResponse.class, since = "3.0.0",
+@APICommand(name = "deleteStorageNetworkIpRange", group = "Network", description = "Deletes a storage network IP Range.", responseObject = SuccessResponse.class, since = "3.0.0",
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class DeleteStorageNetworkIpRangeCmd extends BaseAsyncCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(DeleteStorageNetworkIpRangeCmd.class);

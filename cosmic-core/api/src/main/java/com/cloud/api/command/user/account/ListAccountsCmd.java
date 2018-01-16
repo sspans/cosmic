@@ -12,7 +12,7 @@ import com.cloud.user.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "listAccounts", description = "Lists accounts and provides detailed account information for listed accounts", responseObject = AccountResponse.class,
+@APICommand(name = "listAccounts", group = "Account", description = "Lists accounts and provides detailed account information for listed accounts", responseObject = AccountResponse.class,
         responseView = ResponseView.Restricted, entityType = {Account.class},
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = true)
 public class ListAccountsCmd extends BaseListDomainResourcesCmd {

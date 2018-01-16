@@ -27,7 +27,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "changeServiceForVirtualMachine", responseObject = UserVmResponse.class, description = "Changes the service offering for a virtual machine. " +
+@APICommand(name = "changeServiceForVirtualMachine", group = "Virtual Machine", responseObject = UserVmResponse.class, description = "Changes the service offering for a virtual machine. " +
         "The virtual machine must be in a \"Stopped\" state for " +
         "this command to take effect.", responseView = ResponseView.Restricted, entityType = {VirtualMachine.class},
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = true)

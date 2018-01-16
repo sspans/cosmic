@@ -17,7 +17,7 @@ import com.cloud.user.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "revokeSecurityGroupEgress", responseObject = SuccessResponse.class, description = "Deletes a particular egress rule from this security group", since = "3.0" +
+@APICommand(name = "revokeSecurityGroupEgress", group = "Security Group", responseObject = SuccessResponse.class, description = "Deletes a particular egress rule from this security group", since = "3.0" +
         ".0", entityType = {SecurityGroup.class},
         requestHasSensitiveInfo = false,
         responseHasSensitiveInfo = false)

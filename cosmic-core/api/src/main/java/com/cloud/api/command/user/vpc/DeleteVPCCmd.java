@@ -19,7 +19,7 @@ import com.cloud.user.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "deleteVPC", description = "Deletes a VPC", responseObject = SuccessResponse.class, entityType = {Vpc.class},
+@APICommand(name = "deleteVPC", group = "VPC", description = "Deletes a VPC", responseObject = SuccessResponse.class, entityType = {Vpc.class},
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class DeleteVPCCmd extends BaseAsyncCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(DeleteVPCCmd.class.getName());

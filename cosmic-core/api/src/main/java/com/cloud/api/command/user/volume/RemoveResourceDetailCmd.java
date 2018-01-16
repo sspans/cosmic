@@ -12,7 +12,7 @@ import com.cloud.server.ResourceTag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "removeResourceDetail", description = "Removes detail for the Resource.", responseObject = SuccessResponse.class,
+@APICommand(name = "removeResourceDetail", group = "Resource metadata", description = "Removes detail for the Resource.", responseObject = SuccessResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class RemoveResourceDetailCmd extends BaseAsyncCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(RemoveResourceDetailCmd.class.getName());

@@ -18,7 +18,7 @@ import com.cloud.utils.exception.InvalidParameterValueException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "deleteLoadBalancerRule", description = "Deletes a load balancer rule.", responseObject = SuccessResponse.class,
+@APICommand(name = "deleteLoadBalancerRule", group = "Load Balancer", description = "Deletes a load balancer rule.", responseObject = SuccessResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class DeleteLoadBalancerRuleCmd extends BaseAsyncCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(DeleteLoadBalancerRuleCmd.class.getName());

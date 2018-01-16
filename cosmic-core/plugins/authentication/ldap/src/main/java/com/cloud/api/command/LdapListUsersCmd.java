@@ -21,7 +21,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "listLdapUsers", responseObject = LdapUserResponse.class, description = "Lists all LDAP Users", since = "4.2.0",
+@APICommand(name = "listLdapUsers", group = "Authentication", responseObject = LdapUserResponse.class, description = "Lists all LDAP Users", since = "4.2.0",
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class LdapListUsersCmd extends BaseListCmd {
 

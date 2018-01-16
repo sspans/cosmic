@@ -14,7 +14,7 @@ import com.cloud.vm.VirtualMachine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "stopVirtualMachine", responseObject = UserVmResponse.class, description = "Stops a virtual machine.", responseView = ResponseView.Full, entityType =
+@APICommand(name = "stopVirtualMachine", group = "Virtual Machine", responseObject = UserVmResponse.class, description = "Stops a virtual machine.", responseView = ResponseView.Full, entityType =
         {VirtualMachine.class},
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = true)
 public class StopVMCmdByAdmin extends StopVMCmd {

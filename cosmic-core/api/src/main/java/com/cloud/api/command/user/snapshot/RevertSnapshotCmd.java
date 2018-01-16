@@ -19,7 +19,7 @@ import com.cloud.user.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "revertSnapshot", description = "revert a volume snapshot.", responseObject = SnapshotResponse.class, entityType = {Snapshot.class},
+@APICommand(name = "revertSnapshot", group = "Snapshot", description = "revert a volume snapshot.", responseObject = SnapshotResponse.class, entityType = {Snapshot.class},
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class RevertSnapshotCmd extends BaseAsyncCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(RevertSnapshotCmd.class.getName());

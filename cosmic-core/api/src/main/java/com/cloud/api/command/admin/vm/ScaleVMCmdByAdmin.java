@@ -19,7 +19,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "scaleVirtualMachine", description = "Scales the virtual machine to a new service offering.", responseObject = SuccessResponse.class, responseView =
+@APICommand(name = "scaleVirtualMachine", group = "Virtual Machine", description = "Scales the virtual machine to a new service offering.", responseObject = SuccessResponse.class, responseView =
         ResponseView.Full, entityType = {VirtualMachine.class},
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class ScaleVMCmdByAdmin extends ScaleVMCmd {

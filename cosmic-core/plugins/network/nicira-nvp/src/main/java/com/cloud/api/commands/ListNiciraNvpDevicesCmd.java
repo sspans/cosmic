@@ -21,7 +21,7 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
-@APICommand(name = "listNiciraNvpDevices", responseObject = NiciraNvpDeviceResponse.class, description = "Lists Nicira NVP devices",
+@APICommand(name = "listNiciraNvpDevices", group = "Nicira NVP", responseObject = NiciraNvpDeviceResponse.class, description = "Lists Nicira NVP devices",
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class ListNiciraNvpDevicesCmd extends BaseListCmd {
     private static final String s_name = "listniciranvpdeviceresponse";

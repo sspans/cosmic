@@ -25,7 +25,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "createLBStickinessPolicy", description = "Creates a load balancer stickiness policy ", responseObject = LBStickinessResponse.class, since = "3.0.0",
+@APICommand(name = "createLBStickinessPolicy", group = "Load Balancer", description = "Creates a load balancer stickiness policy ", responseObject = LBStickinessResponse.class, since = "3.0.0",
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class CreateLBStickinessPolicyCmd extends BaseAsyncCreateCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(CreateLBStickinessPolicyCmd.class.getName());

@@ -21,7 +21,7 @@ import com.cloud.user.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "assignCertToLoadBalancer", description = "Assigns a certificate to a load balancer rule", responseObject = SuccessResponse.class,
+@APICommand(name = "assignCertToLoadBalancer", group = "Load Balancer", description = "Assigns a certificate to a load balancer rule", responseObject = SuccessResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class AssignCertToLoadBalancerCmd extends BaseAsyncCmd {
 

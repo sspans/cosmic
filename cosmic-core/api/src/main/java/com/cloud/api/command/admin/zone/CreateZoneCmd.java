@@ -16,7 +16,7 @@ import com.cloud.user.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "createZone", description = "Creates a Zone.", responseObject = ZoneResponse.class,
+@APICommand(name = "createZone", group = "Zone", description = "Creates a Zone.", responseObject = ZoneResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class CreateZoneCmd extends BaseCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(CreateZoneCmd.class.getName());

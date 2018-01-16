@@ -18,7 +18,7 @@ import com.cloud.utils.exception.InvalidParameterValueException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "updateEgressFirewallRule", description = "Updates egress firewall rule ", responseObject = FirewallResponse.class, since = "4.4",
+@APICommand(name = "updateEgressFirewallRule", group = "Firewall", description = "Updates egress firewall rule ", responseObject = FirewallResponse.class, since = "4.4",
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class UpdateEgressFirewallRuleCmd extends BaseAsyncCustomIdCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(UpdateEgressFirewallRuleCmd.class.getName());

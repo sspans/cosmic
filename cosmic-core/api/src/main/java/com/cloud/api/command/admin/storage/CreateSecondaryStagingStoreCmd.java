@@ -17,7 +17,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "createSecondaryStagingStore", description = "create secondary staging store.", responseObject = ImageStoreResponse.class,
+@APICommand(name = "createSecondaryStagingStore", group = "Image Store", description = "create secondary staging store.", responseObject = ImageStoreResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class CreateSecondaryStagingStoreCmd extends BaseCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(AddImageStoreCmd.class.getName());

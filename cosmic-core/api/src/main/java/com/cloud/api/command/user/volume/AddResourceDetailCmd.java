@@ -16,7 +16,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "addResourceDetail", description = "Adds detail for the Resource.", responseObject = SuccessResponse.class,
+@APICommand(name = "addResourceDetail", group = "Resource metadata", description = "Adds detail for the Resource.", responseObject = SuccessResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class AddResourceDetailCmd extends BaseAsyncCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(AddResourceDetailCmd.class.getName());

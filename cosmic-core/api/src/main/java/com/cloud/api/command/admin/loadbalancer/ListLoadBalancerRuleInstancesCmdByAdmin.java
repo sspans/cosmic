@@ -16,7 +16,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "listLoadBalancerRuleInstances", description = "List all virtual machine instances that are assigned to a load balancer rule.", responseObject =
+@APICommand(name = "listLoadBalancerRuleInstances", group = "Load Balancer", description = "List all virtual machine instances that are assigned to a load balancer rule.", responseObject =
         LoadBalancerRuleVmMapResponse.class, responseView = ResponseView.Full,
         requestHasSensitiveInfo = false,
         responseHasSensitiveInfo = true)

@@ -18,7 +18,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "findHostsForMigration", description = "Find hosts suitable for migrating a virtual machine.", responseObject = HostForMigrationResponse.class,
+@APICommand(name = "findHostsForMigration", group = "Host", description = "Find hosts suitable for migrating a virtual machine.", responseObject = HostForMigrationResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class FindHostsForMigrationCmd extends BaseListCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(FindHostsForMigrationCmd.class.getName());

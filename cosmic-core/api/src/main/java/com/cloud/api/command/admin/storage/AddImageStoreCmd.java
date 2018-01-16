@@ -20,7 +20,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "addImageStore", description = "Adds backup image store.", responseObject = ImageStoreResponse.class, since = "4.2.0",
+@APICommand(name = "addImageStore", group = "Image Store", description = "Adds backup image store.", responseObject = ImageStoreResponse.class, since = "4.2.0",
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class AddImageStoreCmd extends BaseCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(AddImageStoreCmd.class.getName());

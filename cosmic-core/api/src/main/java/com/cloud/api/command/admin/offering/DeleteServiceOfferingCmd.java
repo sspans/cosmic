@@ -13,7 +13,7 @@ import com.cloud.user.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "deleteServiceOffering", description = "Deletes a service offering.", responseObject = SuccessResponse.class,
+@APICommand(name = "deleteServiceOffering", group = "Service Offering", description = "Deletes a service offering.", responseObject = SuccessResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class DeleteServiceOfferingCmd extends BaseCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(DeleteServiceOfferingCmd.class.getName());

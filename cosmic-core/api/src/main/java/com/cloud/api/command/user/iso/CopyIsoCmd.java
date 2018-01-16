@@ -8,7 +8,7 @@ import com.cloud.api.response.TemplateResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "copyIso", description = "Copies an ISO from one zone to another.", responseObject = TemplateResponse.class, responseView = ResponseView.Restricted,
+@APICommand(name = "copyIso", group = "ISO", description = "Copies an ISO from one zone to another.", responseObject = TemplateResponse.class, responseView = ResponseView.Restricted,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class CopyIsoCmd extends CopyTemplateCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(CopyIsoCmd.class.getName());

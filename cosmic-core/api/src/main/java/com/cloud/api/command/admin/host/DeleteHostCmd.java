@@ -13,7 +13,7 @@ import com.cloud.user.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "deleteHost", description = "Deletes a host.", responseObject = SuccessResponse.class,
+@APICommand(name = "deleteHost", group = "Host", description = "Deletes a host.", responseObject = SuccessResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class DeleteHostCmd extends BaseCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(DeleteHostCmd.class.getName());

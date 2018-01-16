@@ -21,7 +21,7 @@ import com.cloud.vm.NicSecondaryIp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "removeIpFromNic", description = "Removes secondary IP from the NIC.", responseObject = SuccessResponse.class,
+@APICommand(name = "removeIpFromNic", group = "Nic", description = "Removes secondary IP from the NIC.", responseObject = SuccessResponse.class,
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class RemoveIpFromVmNicCmd extends BaseAsyncCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(RemoveIpFromVmNicCmd.class.getName());

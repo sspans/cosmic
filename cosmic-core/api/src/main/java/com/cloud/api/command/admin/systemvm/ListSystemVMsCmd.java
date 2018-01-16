@@ -20,7 +20,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "listSystemVms", description = "List system virtual machines.", responseObject = SystemVmResponse.class, entityType = {VirtualMachine.class},
+@APICommand(name = "listSystemVms", group = "System VM", description = "List system virtual machines.", responseObject = SystemVmResponse.class, entityType = {VirtualMachine.class},
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class ListSystemVMsCmd extends BaseListCmd {
     public static final Logger s_logger = LoggerFactory.getLogger(ListSystemVMsCmd.class.getName());

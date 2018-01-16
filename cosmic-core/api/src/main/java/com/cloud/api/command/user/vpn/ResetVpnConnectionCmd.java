@@ -17,7 +17,7 @@ import com.cloud.user.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "resetVpnConnection", description = "Reset site to site vpn connection", responseObject = Site2SiteVpnConnectionResponse.class, entityType =
+@APICommand(name = "resetVpnConnection", group = "VPN", description = "Reset site to site vpn connection", responseObject = Site2SiteVpnConnectionResponse.class, entityType =
         {Site2SiteVpnConnection.class},
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class ResetVpnConnectionCmd extends BaseAsyncCmd {

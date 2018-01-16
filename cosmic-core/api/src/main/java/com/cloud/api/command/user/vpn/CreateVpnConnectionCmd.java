@@ -21,7 +21,7 @@ import com.cloud.network.vpc.Vpc;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "createVpnConnection", description = "Create site to site vpn connection", responseObject = Site2SiteVpnConnectionResponse.class, entityType =
+@APICommand(name = "createVpnConnection", group = "VPN", description = "Create site to site vpn connection", responseObject = Site2SiteVpnConnectionResponse.class, entityType =
         {Site2SiteVpnConnection.class},
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class CreateVpnConnectionCmd extends BaseAsyncCreateCmd {

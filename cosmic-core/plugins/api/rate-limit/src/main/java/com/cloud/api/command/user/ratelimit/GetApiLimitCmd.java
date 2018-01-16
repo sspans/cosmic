@@ -16,7 +16,7 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@APICommand(name = "getApiLimit", responseObject = ApiLimitResponse.class, description = "Get API limit count for the caller",
+@APICommand(name = "getApiLimit", group = "Limit", responseObject = ApiLimitResponse.class, description = "Get API limit count for the caller",
         requestHasSensitiveInfo = false, responseHasSensitiveInfo = false)
 public class GetApiLimitCmd extends BaseCmd {
     private static final Logger s_logger = LoggerFactory.getLogger(GetApiLimitCmd.class.getName());
